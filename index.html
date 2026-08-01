@@ -1,0 +1,2056 @@
+<meta charset="UTF-8">
+<title>Telangana Water Storage &amp; Flow Atlas</title>
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  :root {
+    --ink-950:#071A26; --ink-900:#0B2436; --ink-850:#0F2C40; --ink-800:#14364C;
+    --ink-750:#183E58; --ink-700:#1D465F; --ink-600:#2B5875; --ink-500:#3E6E8C; --ink-400:#5E8CA8;
+    --paper-100:#F5F9FA; --paper-200:#EAF0F2; --paper-300:#DCE6EA; --paper-400:#C7D6DB;
+
+    --font-display: ui-sans-serif, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-body: ui-sans-serif, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", "Consolas", "SFMono-Regular", "Roboto Mono", monospace;
+
+    --bg: var(--ink-950);
+    --surface: var(--ink-900);
+    --surface-2: var(--ink-850);
+    --surface-3: var(--ink-800);
+    --border: rgba(148,197,214,0.16);
+    --border-strong: rgba(148,197,214,0.34);
+    --text-primary: #EAF3F6;
+    --text-secondary: #A9C2CE;
+    --text-muted: #6E8A97;
+    --gravity-c: #12A0B8;
+    --lift-c: #C77F1B;
+    --both-c: #E0629B;
+    --godavari-river: #2FB8CE;
+    --krishna-river: #5C7CFA;
+    --terrain-fill: rgba(94,140,168,0.10);
+    --shadow: 0 12px 40px rgba(2,10,16,0.45);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: var(--paper-300);
+      --surface: var(--paper-200);
+      --surface-2: var(--paper-100);
+      --surface-3: #FFFFFF;
+      --border: rgba(11,36,54,0.14);
+      --border-strong: rgba(11,36,54,0.30);
+      --text-primary: #0B2436;
+      --text-secondary: #2F4C5C;
+      --text-muted: #5C7686;
+      --gravity-c: #0B93AA;
+      --lift-c: #A8630F;
+      --both-c: #C14A80;
+      --godavari-river: #0E93A8;
+      --krishna-river: #3D5FCF;
+      --terrain-fill: rgba(11,36,54,0.05);
+      --shadow: 0 12px 32px rgba(11,36,54,0.12);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: var(--paper-300); --surface: var(--paper-200); --surface-2: var(--paper-100); --surface-3: #FFFFFF;
+    --border: rgba(11,36,54,0.14); --border-strong: rgba(11,36,54,0.30);
+    --text-primary: #0B2436; --text-secondary: #2F4C5C; --text-muted: #5C7686;
+    --gravity-c: #0B93AA; --lift-c: #A8630F; --both-c: #C14A80;
+    --godavari-river: #0E93A8; --krishna-river: #3D5FCF;
+    --terrain-fill: rgba(11,36,54,0.05); --shadow: 0 12px 32px rgba(11,36,54,0.12);
+  }
+  :root[data-theme="dark"] {
+    --bg: var(--ink-950); --surface: var(--ink-900); --surface-2: var(--ink-850); --surface-3: var(--ink-800);
+    --border: rgba(148,197,214,0.16); --border-strong: rgba(148,197,214,0.34);
+    --text-primary: #EAF3F6; --text-secondary: #A9C2CE; --text-muted: #6E8A97;
+    --gravity-c: #12A0B8; --lift-c: #C77F1B; --both-c: #E0629B;
+    --godavari-river: #2FB8CE; --krishna-river: #5C7CFA;
+    --terrain-fill: rgba(94,140,168,0.10); --shadow: 0 12px 40px rgba(2,10,16,0.45);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--gravity-c); color: var(--ink-950); }
+
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px 24px 64px;
+  }
+
+  /* ---------- Title block ---------- */
+  .titleblock {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-strong);
+  }
+  .titleblock .id {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gravity-c);
+    margin: 0 0 8px;
+  }
+  .titleblock h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(26px, 3.4vw, 40px);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .titleblock .sub {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 14.5px;
+    max-width: 62ch;
+  }
+  .flow-word {
+    background: linear-gradient(90deg, var(--gravity-c), var(--lift-c), var(--gravity-c));
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: flowGradient 7s ease-in-out infinite;
+  }
+  @keyframes flowGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .meta-strip {
+    display: flex;
+    gap: 22px;
+    font-family: var(--font-mono);
+  }
+  .meta-strip .stat { text-align: right; }
+  .meta-strip .stat .n { font-size: 22px; font-weight: 600; color: var(--text-primary); display: block; }
+  .meta-strip .stat .l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .compass {
+    width: 30px; height: 30px; flex: none;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);
+  }
+  .titleblock-right { display: flex; align-items: center; gap: 18px; }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .tabs {
+    display: inline-flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .tabs button {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 7px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] {
+    background: var(--gravity-c);
+    color: var(--ink-950);
+  }
+  .rail .sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 2px; }
+  .chipset { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .chip[aria-pressed="true"] {
+    background: var(--surface-3);
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 6px 10px;
+    min-width: 168px;
+  }
+  .search-box input {
+    border: none; background: transparent; outline: none;
+    color: var(--text-primary); font-family: var(--font-body); font-size: 13px; width: 100%;
+  }
+  .search-box svg { flex: none; opacity: 0.6; }
+  .slider-group { display: flex; align-items: center; gap: 8px; }
+  .slider-group label { font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap; }
+  input[type="range"] {
+    -webkit-appearance: none; width: 130px; height: 3px;
+    background: var(--border-strong); border-radius: 2px; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gravity-c); cursor: pointer; border: 2px solid var(--surface);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%; background: var(--gravity-c); cursor: pointer; border: 2px solid var(--surface);
+  }
+  .slider-group .val { font-family: var(--font-mono); font-size: 12px; color: var(--text-primary); min-width: 62px; }
+  .spacer { flex: 1; }
+  .reset-btn {
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em;
+    background: transparent; border: 1px solid var(--border-strong); color: var(--text-secondary);
+    padding: 6px 10px; border-radius: 8px; cursor: pointer;
+  }
+  .reset-btn:hover { color: var(--text-primary); border-color: var(--text-primary); }
+
+  /* ---------- Stage ---------- */
+  .stage {
+    position: relative;
+    margin-top: 14px;
+    background:
+      radial-gradient(140% 100% at 15% -10%, color-mix(in srgb, var(--gravity-c) 11%, transparent), transparent 55%),
+      radial-gradient(120% 90% at 92% 108%, color-mix(in srgb, var(--lift-c) 9%, transparent), transparent 55%),
+      var(--surface);
+    background-size: 200% 200%, 200% 200%, 100% 100%;
+    animation: ambientDrift 28s ease-in-out infinite alternate;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  @keyframes ambientDrift {
+    0% { background-position: 0% 0%, 100% 100%, 0 0; }
+    100% { background-position: 14% 9%, 86% 91%, 0 0; }
+  }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .map-toolbar {
+    position: absolute; top: 12px; right: 12px; z-index: 5;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .icon-btn {
+    width: 30px; height: 30px; display: grid; place-items: center;
+    background: var(--surface-3); border: 1px solid var(--border-strong); border-radius: 7px;
+    color: var(--text-secondary); cursor: pointer; font-family: var(--font-mono); font-size: 15px;
+  }
+  .icon-btn:hover { color: var(--text-primary); }
+
+  .map-topbar {
+    position: absolute; top: 12px; left: 12px; z-index: 6;
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; max-width: calc(100% - 110px);
+  }
+  .dim-toggle {
+    display: inline-flex; background: var(--surface-3); border: 1px solid var(--border-strong);
+    border-radius: 8px; padding: 3px; gap: 2px;
+  }
+  .dim-toggle button {
+    font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.04em;
+    border: none; background: transparent; color: var(--text-secondary); padding: 6px 11px; border-radius: 6px; cursor: pointer;
+  }
+  .dim-toggle button[aria-pressed="true"] { background: var(--gravity-c); color: var(--ink-950); }
+
+  .tour-launchers { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tour-btn {
+    font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.03em;
+    background: var(--surface-3); border: 1px solid var(--border-strong); color: var(--lift-c);
+    padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  }
+  .tour-btn:hover { border-color: var(--lift-c); }
+
+  #mapsvg, .scene-wrap { transition: opacity 180ms ease; }
+  #mapsvg.dim-fade, .scene-wrap.dim-fade { opacity: 0; }
+  #mapsvg { width: 100%; height: auto; display: block; cursor: grab; touch-action: none; }
+  #mapsvg.dragging { cursor: grabbing; }
+  .district { fill: var(--surface-2); stroke: var(--border-strong); stroke-width: 0.6; }
+  .district-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 6.5px; text-anchor: middle; pointer-events: none; opacity: 0.55; }
+
+  .river { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .river.godavari { stroke: var(--godavari-river); }
+  .river.krishna { stroke: var(--krishna-river); }
+  .river-glow { fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.4; filter: blur(4.5px); }
+  .river-glow.godavari { stroke: var(--godavari-river); }
+  .river-glow.krishna { stroke: var(--krishna-river); }
+  .river-flow {
+    stroke-dasharray: 1 9;
+    animation: flowdash 1.1s linear infinite;
+  }
+  @keyframes flowdash { to { stroke-dashoffset: -20; } }
+  .water-drop { fill: white; filter: drop-shadow(0 0 2.5px rgba(255,255,255,0.9)); }
+  .water-drop.godavari { fill: color-mix(in srgb, var(--godavari-river) 30%, white); }
+  .water-drop.krishna { fill: color-mix(in srgb, var(--krishna-river) 30%, white); }
+  .link-line { fill: none; stroke-linecap: round; }
+  .link-line.gravity { stroke: var(--gravity-c); }
+  .link-line.lift { stroke: var(--lift-c); }
+  .link-line.schematic { stroke-dasharray: 3 4; opacity: 0.65; }
+  .link-line-glow { fill: none; stroke-linecap: round; opacity: 0.26; filter: blur(3px); }
+  .link-line-glow.gravity { stroke: var(--gravity-c); }
+  .link-line-glow.lift { stroke: var(--lift-c); }
+  .link-drop.gravity { fill: color-mix(in srgb, var(--gravity-c) 30%, white); }
+  .link-drop.lift { fill: color-mix(in srgb, var(--lift-c) 30%, white); }
+  .river-label {
+    font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.03em;
+    fill: var(--text-secondary); opacity: 0.85;
+    paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round;
+  }
+
+  .marker { cursor: pointer; }
+  .marker circle.dot { stroke-width: 1.4; transition: r 120ms ease; }
+  .marker .dot-glow { filter: blur(3.2px); opacity: 0.55; pointer-events: none; transition: opacity 150ms ease; }
+  .marker .dot-shine { fill: rgba(255,255,255,0.55); pointer-events: none; }
+  .marker .gauge-bg { fill: var(--border); opacity: 0.7; }
+  .marker .gauge-fill { fill: var(--lift-c); }
+  .marker:hover circle.dot, .marker.selected circle.dot { stroke-width: 2.4; }
+  .marker:hover .dot-glow, .marker.selected .dot-glow { opacity: 0.85; }
+  .marker .lbl {
+    font-family: var(--font-display); font-weight: 700; font-size: 7.6px;
+    fill: var(--text-primary); paint-order: stroke; stroke: var(--surface); stroke-width: 2.5px;
+    pointer-events: none; opacity: 0; transition: opacity 120ms ease;
+  }
+  .marker.show-label .lbl, .marker:hover .lbl, .marker.selected .lbl { opacity: 1; }
+  .marker.dim { opacity: 0.16; }
+
+  .fill-gravity { fill: var(--gravity-c); }
+  .fill-lift { fill: var(--lift-c); }
+  .fill-both { fill: var(--both-c); }
+  .fill-muted { fill: var(--text-muted); }
+  .stroke-godavari { stroke: var(--godavari-river); }
+  .stroke-krishna { stroke: var(--krishna-river); }
+
+  /* ---------- 3D relief scene ---------- */
+  .scene-wrap {
+    position: relative; width: 100%; aspect-ratio: 1000 / 1000; overflow: hidden;
+    perspective: 1900px; background: radial-gradient(120% 100% at 50% 15%, var(--surface-2), var(--surface) 70%);
+    cursor: grab; touch-action: none;
+  }
+  .scene-wrap.dragging { cursor: grabbing; }
+  .scene3d {
+    position: absolute; inset: 0; transform-style: preserve-3d;
+    transform: translate3d(127%, 24%, 0) rotateX(58deg) rotateZ(-18deg) scale(2.1);
+  }
+  .ground3d {
+    position: absolute; left: -50%; top: -50%; width: 1000px; height: 1000px;
+    transform-style: preserve-3d;
+  }
+  #groundsvg { width: 100%; height: 100%; display: block; }
+  .ground-district { fill: var(--surface-2); stroke: var(--border); stroke-width: 0.7; }
+  #pillars3d { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .anchor3d { position: absolute; left: -50%; top: -50%; width: 0; height: 0; transform-style: preserve-3d; }
+  .pillar-cap {
+    position: absolute; border-radius: 50%; stroke-width: 1.4px;
+    transform: translate(-50%, -50%); cursor: pointer;
+    box-shadow: 0 0 0 1.4px var(--surface-3) inset, 0 0 10px -2px currentColor;
+    transition: box-shadow 150ms ease;
+  }
+  .pillar-cap.gravity { background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--gravity-c) 55%, white), var(--gravity-c) 55%, color-mix(in srgb, var(--gravity-c) 65%, black)); color: var(--gravity-c); }
+  .pillar-cap.lift { background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--lift-c) 55%, white), var(--lift-c) 55%, color-mix(in srgb, var(--lift-c) 65%, black)); color: var(--lift-c); }
+  .pillar-cap.both { background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--both-c) 55%, white), var(--both-c) 55%, color-mix(in srgb, var(--both-c) 65%, black)); color: var(--both-c); }
+  .pillar-cap.flat { background: var(--text-muted); outline: 1.5px dashed var(--border-strong); outline-offset: 2px; box-shadow: none; }
+  .pillar-cap.dim { opacity: 0.14; }
+  .pillar-cap.selected, .pillar-cap:hover { box-shadow: 0 0 0 1.4px var(--surface-3) inset, 0 0 16px 1px currentColor; }
+  .pillar-cap.selected { outline: 2.5px solid var(--text-primary); outline-offset: 2px; }
+
+  .overlay2d { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+  .stem-line { stroke-linecap: round; }
+  .stem-line.gravity { stroke: var(--gravity-c); }
+  .stem-line.lift { stroke: var(--lift-c); }
+  .stem-line.both { stroke: var(--both-c); }
+  .stem-line.dim { opacity: 0.1; }
+  .stem-flow { stroke-linecap: round; stroke-dasharray: 2 11; animation: flowdash 0.9s linear infinite; opacity: 0.95; }
+  .stem-flow.gravity { stroke: color-mix(in srgb, var(--gravity-c) 45%, white); }
+  .stem-flow.lift { stroke: color-mix(in srgb, var(--lift-c) 45%, white); }
+  .stem-flow.both { stroke: color-mix(in srgb, var(--both-c) 45%, white); }
+  .ground-shadow { fill: rgba(0,0,0,0.28); }
+  .cap-label3d {
+    font-family: var(--font-display); font-weight: 700; font-size: 11.5px; fill: var(--text-primary);
+    paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round;
+  }
+  .cap-label3d.dim { opacity: 0.12; }
+  .river3d { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .river3d.godavari { stroke: var(--godavari-river); }
+  .river3d.krishna { stroke: var(--krishna-river); }
+  .river3d.flat { opacity: 0.55; }
+  .river3d-glow { fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.32; filter: blur(4px); }
+  .river3d-glow.godavari { stroke: var(--godavari-river); }
+  .river3d-glow.krishna { stroke: var(--krishna-river); }
+  .link3d { stroke-linecap: round; }
+  .link3d.gravity { stroke: var(--gravity-c); }
+  .link3d.lift { stroke: var(--lift-c); }
+  .link3d.schematic { stroke-dasharray: 3 4; opacity: 0.6; }
+  .link3d-glow { stroke-linecap: round; opacity: 0.24; filter: blur(3px); }
+  .link3d-glow.gravity { stroke: var(--gravity-c); }
+  .link3d-glow.lift { stroke: var(--lift-c); }
+  .link3d-flow { stroke-linecap: round; stroke-dasharray: 2 10; animation: flowdash 1s linear infinite; opacity: 0.9; }
+  .link3d-flow.gravity { stroke: color-mix(in srgb, var(--gravity-c) 45%, white); }
+  .link3d-flow.lift { stroke: color-mix(in srgb, var(--lift-c) 45%, white); }
+
+  .scene-hint {
+    position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 6;
+    background: var(--surface-3); border: 1px solid var(--border-strong); border-radius: 999px;
+    padding: 6px 14px; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); white-space: nowrap;
+  }
+
+  /* ---------- Guided tour HUD ---------- */
+  .fly-hud {
+    position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 50;
+    width: min(680px, 94vw);
+    background: var(--surface-3); border: 1px solid var(--border-strong); border-radius: 12px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .fly-progress-track { height: 3px; background: var(--border); }
+  .fly-progress-bar { height: 100%; background: var(--lift-c); transition: width 300ms ease; }
+  .fly-body {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px 16px; flex-wrap: wrap;
+  }
+  .fly-eyebrow { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--lift-c); }
+  .fly-title { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-top: 2px; }
+  .fly-stats { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+  .fly-controls { display: flex; align-items: center; gap: 6px; flex: none; }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 12px);
+    background: var(--surface-3); border: 1px solid var(--border-strong); color: var(--text-primary);
+    padding: 9px 16px; border-radius: 999px; font-size: 13px; box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: opacity 180ms ease, transform 180ms ease; z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---------- Focus-visible ---------- */
+  .marker:focus-visible circle.dot { stroke-width: 2.6px; stroke: var(--text-primary); }
+  .pillar-cap:focus-visible { outline: 2.5px solid var(--text-primary); outline-offset: 2px; }
+  tr.rowlink:focus-visible { outline: 2px solid var(--gravity-c); outline-offset: -2px; }
+  .pillar-cap.touring { outline: 2.5px solid var(--text-primary); outline-offset: 3px; animation: tourpulse 1.4s ease-in-out infinite; }
+  @keyframes tourpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.35); } 50% { box-shadow: 0 0 0 8px rgba(255,255,255,0); } }
+
+  /* ---------- Tooltip ---------- */
+  #tooltip {
+    position: absolute; pointer-events: none; z-index: 20;
+    background: var(--surface-3); border: 1px solid var(--border-strong);
+    border-radius: 8px; padding: 9px 12px; font-size: 12.5px;
+    box-shadow: var(--shadow); max-width: 240px; opacity: 0; transform: translate(-50%, -110%);
+    transition: opacity 100ms ease;
+  }
+  #tooltip.show { opacity: 1; }
+  #tooltip .t-name { font-family: var(--font-display); font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+  #tooltip .t-row { color: var(--text-secondary); display: flex; justify-content: space-between; gap: 14px; }
+  #tooltip .t-row b { color: var(--text-primary); font-family: var(--font-mono); font-weight: 600; }
+
+  /* ---------- Legend ---------- */
+  .legend {
+    position: absolute; left: 12px; bottom: 12px; z-index: 5;
+    background: var(--surface-3); border: 1px solid var(--border-strong); border-radius: 9px;
+    padding: 10px 14px; font-size: 11.5px; color: var(--text-secondary);
+    display: flex; flex-wrap: wrap; gap: 14px; align-items: center; max-width: min(560px, 90%);
+    box-shadow: var(--shadow);
+  }
+  .legend .grp { display: flex; align-items: center; gap: 8px; }
+  .legend .grp-title { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-right: 2px; }
+  .legend .swatch { display: inline-flex; align-items: center; gap: 4px; }
+  .legend .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .legend .ln { width: 16px; height: 2px; border-radius: 1px; }
+  .legend .circ-scale { display: flex; align-items: flex-end; gap: 8px; }
+  .legend .circ-scale .c { border-radius: 50%; border: 1.4px solid var(--text-muted); background: transparent; }
+
+  /* ---------- Detail drawer ---------- */
+  #drawer {
+    position: absolute; top: 0; right: 0; bottom: 0; width: 328px; max-width: 88%;
+    background: var(--surface-3); border-left: 1px solid var(--border-strong);
+    transform: translateX(100%); transition: transform 220ms ease; z-index: 15;
+    overflow-y: auto; padding: 18px;
+  }
+  #drawer.open { transform: translateX(0); }
+  #drawer .close-btn {
+    position: absolute; top: 12px; right: 12px; background: transparent; border: none;
+    color: var(--text-muted); font-size: 18px; cursor: pointer; line-height: 1;
+  }
+  #drawer .d-eyebrow { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  #drawer h2 { font-family: var(--font-display); font-size: 20px; margin: 4px 0 2px; text-wrap: balance; }
+  #drawer .d-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 14px; }
+  .badge {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em;
+    padding: 2px 7px; border-radius: 999px; border: 1px solid var(--border-strong); color: var(--text-secondary);
+    margin: 0 5px 5px 0;
+  }
+  .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin: 12px 0; }
+  .kv { border-top: 1px solid var(--border); padding-top: 6px; }
+  .kv .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-family: var(--font-mono); }
+  .kv .v { font-family: var(--font-mono); font-size: 15px; font-weight: 600; margin-top: 2px; }
+  .kv .v small { font-family: var(--font-body); font-weight: 400; color: var(--text-muted); font-size: 11px; }
+  .capbar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin-top: 4px; }
+  .capbar .f { height: 100%; }
+  .elev-context { margin: 14px 0; }
+  .elev-context .rail-bg { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--gravity-c), var(--lift-c)); position: relative; margin-top: 18px; }
+  .elev-context .marker-pt { position: absolute; top: -13px; transform: translateX(-50%); font-family: var(--font-mono); font-size: 10px; color: var(--text-primary); white-space: nowrap; }
+  .elev-context .marker-pt::after { content: ""; position: absolute; left: 50%; top: 15px; width: 2px; height: 8px; background: var(--text-primary); transform: translateX(-1px); }
+  .d-notes { font-size: 13px; color: var(--text-secondary); margin-top: 14px; line-height: 1.55; }
+  .d-src { font-size: 11px; color: var(--text-muted); margin-top: 10px; font-family: var(--font-mono); }
+
+  /* ---------- Profile view ---------- */
+  .profile-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px 0; flex-wrap: wrap; }
+  .profile-head .subtabs { display: inline-flex; gap: 6px; }
+  .profile-head p { color: var(--text-secondary); font-size: 13px; margin: 8px 16px 0; max-width: 74ch; }
+  .profile-scroll { overflow-x: auto; }
+  #profilesvg { width: 1360px; min-width: 1360px; height: auto; display: block; }
+  .node-lbl { font-family: var(--font-display); font-weight: 700; font-size: 10px; fill: var(--text-primary); }
+  .node-sub { font-family: var(--font-mono); font-size: 8.2px; fill: var(--text-muted); }
+  .node-pump { font-family: var(--font-mono); font-size: 7.4px; fill: var(--text-muted); opacity: 0.8; }
+  .elev-axis-lbl { font-family: var(--font-mono); font-size: 9px; fill: var(--text-muted); }
+  .lift-lbl { font-family: var(--font-mono); font-size: 9px; fill: var(--lift-c); font-weight: 600; }
+  .gravity-lbl { font-family: var(--font-mono); font-size: 9px; fill: var(--gravity-c); font-weight: 600; }
+  .profile-flow { stroke-linecap: round; stroke-dasharray: 2 9; animation: flowdash 0.9s linear infinite; opacity: 0.85; }
+  .totals-box {
+    margin: 14px 16px 0; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 12.5px; color: var(--text-secondary);
+  }
+  .totals-box b { color: var(--text-primary); font-family: var(--font-mono); }
+  .lift-scheme-row {
+    display: grid; grid-template-columns: 1.4fr 2fr auto; gap: 10px; align-items: center;
+    padding: 9px 16px; border-top: 1px solid var(--border); font-size: 12.5px;
+  }
+  .lift-scheme-row .name { font-weight: 600; }
+  .lift-scheme-row .bar-track { position: relative; height: 10px; background: var(--surface-2); border-radius: 5px; }
+  .lift-scheme-row .bar-fill { position: absolute; top: 0; bottom: 0; background: var(--lift-c); border-radius: 5px; opacity: 0.85; }
+  .lift-scheme-row .lift-val { font-family: var(--font-mono); text-align: right; color: var(--lift-c); font-weight: 600; white-space: nowrap; }
+  .lift-schemes-wrap { padding-bottom: 10px; }
+  .lift-schemes-hd { padding: 16px 16px 0; font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
+
+  /* ---------- Table view ---------- */
+  .table-wrap { overflow-x: auto; padding: 4px 4px 8px; }
+  table.data { border-collapse: collapse; width: 100%; min-width: 920px; font-size: 12.8px; }
+  table.data th, table.data td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  table.data th {
+    position: sticky; top: 0; background: var(--surface); font-family: var(--font-mono); font-size: 10.5px;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); cursor: pointer; user-select: none;
+  }
+  table.data th:hover { color: var(--text-primary); }
+  table.data th.sorted { color: var(--gravity-c); }
+  table.data td.num { font-family: var(--font-mono); text-align: right; }
+  table.data tr.rowlink:hover { background: var(--surface-2); cursor: pointer; }
+  .type-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; }
+  .type-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  footer.notes { margin-top: 16px; }
+  details.notes-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
+  }
+  details.notes-box summary {
+    cursor: pointer; font-family: var(--font-display); font-weight: 700; font-size: 13px;
+    letter-spacing: 0.02em; color: var(--text-secondary);
+  }
+  details.notes-box ul { margin: 10px 0 0; padding-left: 18px; color: var(--text-secondary); font-size: 12.8px; line-height: 1.6; }
+  .fineprint { margin-top: 10px; font-size: 11px; color: var(--text-muted); }
+
+  @media (max-width: 760px) {
+    #drawer { width: 100%; max-width: 100%; }
+    .meta-strip { display: none; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="titleblock">
+    <div>
+      <p class="id">Telangana &middot; Irrigation &amp; Water Resources Survey</p>
+      <h1>Water Storage &amp; <span class="flow-word">Flow</span> Atlas</h1>
+      <p class="sub">Every reservoir, barrage and lake in Telangana holding at least 1 TMC, mapped by capacity and elevation &mdash; and how gravity and the Kaleshwaram lift scheme move Godavari and Krishna water between them.</p>
+    </div>
+    <div class="titleblock-right">
+      <div class="meta-strip">
+        <div class="stat"><span class="n tabular" id="statCount">&mdash;</span><span class="l">Structures</span></div>
+        <div class="stat"><span class="n tabular" id="statTmc">&mdash;</span><span class="l">Total TMC</span></div>
+        <div class="stat"><span class="n tabular" id="statLift">&mdash;</span><span class="l">Max lift, m</span></div>
+      </div>
+      <div class="compass" title="North">N&uarr;</div>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail">
+    <div class="tabs" role="tablist" aria-label="View">
+      <button role="tab" aria-selected="true" data-view="map">Map</button>
+      <button role="tab" aria-selected="false" data-view="profile">Elevation profile</button>
+      <button role="tab" aria-selected="false" data-view="table">Table</button>
+    </div>
+    <div class="sep"></div>
+    <div class="chipset" id="basinChips">
+      <button class="chip" data-basin="all" aria-pressed="true">All basins</button>
+      <button class="chip" data-basin="Godavari" aria-pressed="false"><span class="dot" style="color:var(--godavari-river)"></span>Godavari</button>
+      <button class="chip" data-basin="Krishna" aria-pressed="false"><span class="dot" style="color:var(--krishna-river)"></span>Krishna</button>
+    </div>
+    <div class="chipset" id="irrChips">
+      <button class="chip" data-irr="all" aria-pressed="true">All flow types</button>
+      <button class="chip" data-irr="gravity" aria-pressed="false"><span class="dot" style="color:var(--gravity-c)"></span>Gravity</button>
+      <button class="chip" data-irr="lift" aria-pressed="false"><span class="dot" style="color:var(--lift-c)"></span>Lift-irrigated</button>
+      <button class="chip" data-irr="both" aria-pressed="false"><span class="dot" style="color:var(--both-c)"></span>Both</button>
+    </div>
+    <div class="slider-group">
+      <label for="capSlider">Min. capacity</label>
+      <input type="range" id="capSlider" min="0" max="100" value="0" />
+      <span class="val tabular" id="capVal">&ge; 1 TMC</span>
+    </div>
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
+      <input type="text" id="searchBox" placeholder="Search reservoirs&hellip;" />
+    </div>
+    <div class="spacer"></div>
+    <button class="reset-btn" id="copyLinkBtn">Copy link</button>
+    <button class="reset-btn" id="resetBtn">Reset filters</button>
+  </nav>
+  <div class="toast" id="toast"></div>
+
+  <div class="stage">
+
+    <section class="view active" id="view-map">
+      <div class="map-topbar">
+        <div class="dim-toggle" id="dimToggle" role="tablist" aria-label="Map dimension">
+          <button data-dim="2d" aria-pressed="true">2D plan</button>
+          <button data-dim="3d" aria-pressed="false">3D relief</button>
+        </div>
+        <div class="tour-launchers" id="tourLaunchers">
+          <button class="tour-btn" id="tourGodavari" data-chain="godavari">&#9654; Kaleshwaram tour</button>
+          <button class="tour-btn" id="tourKrishna" data-chain="krishna">&#9654; Krishna tour</button>
+        </div>
+      </div>
+
+      <div class="fly-hud" id="flyHud" hidden>
+        <div class="fly-progress-track"><div class="fly-progress-bar" id="flyProgress"></div></div>
+        <div class="fly-body">
+          <div class="fly-caption">
+            <div class="fly-eyebrow" id="flyEyebrow"></div>
+            <div class="fly-title" id="flyTitle"></div>
+            <div class="fly-stats" id="flyStats"></div>
+          </div>
+          <div class="fly-controls">
+            <button class="icon-btn fly-nav-btn" id="flyPrev" title="Previous stage">&lsaquo;</button>
+            <button class="reset-btn" id="flyPlayPause" title="Pause">Pause</button>
+            <button class="icon-btn fly-nav-btn" id="flyNext" title="Next stage">&rsaquo;</button>
+            <button class="reset-btn" id="flyExit">Exit tour</button>
+          </div>
+        </div>
+      </div>
+
+      <svg id="mapsvg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <clipPath id="stateclip"><rect id="stateclipRect" x="-9999" y="-9999" width="20000" height="20000"/></clipPath>
+
+          <filter id="waterRipple" x="-30%" y="-30%" width="160%" height="160%">
+            <feTurbulence type="fractalNoise" numOctaves="2" seed="7" result="noise">
+              <animate attributeName="baseFrequency" dur="22s" values="0.012 0.05;0.02 0.07;0.012 0.05" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+
+          <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3.4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" /><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="pillarGlow" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation="2.2" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+
+          <radialGradient id="pool-gravity" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" style="stop-color:color-mix(in srgb, var(--gravity-c) 55%, white)" />
+            <stop offset="55%" style="stop-color:var(--gravity-c)" />
+            <stop offset="100%" style="stop-color:color-mix(in srgb, var(--gravity-c) 65%, black)" />
+          </radialGradient>
+          <radialGradient id="pool-lift" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" style="stop-color:color-mix(in srgb, var(--lift-c) 55%, white)" />
+            <stop offset="55%" style="stop-color:var(--lift-c)" />
+            <stop offset="100%" style="stop-color:color-mix(in srgb, var(--lift-c) 65%, black)" />
+          </radialGradient>
+          <radialGradient id="pool-both" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" style="stop-color:color-mix(in srgb, var(--both-c) 55%, white)" />
+            <stop offset="55%" style="stop-color:var(--both-c)" />
+            <stop offset="100%" style="stop-color:color-mix(in srgb, var(--both-c) 65%, black)" />
+          </radialGradient>
+
+          <linearGradient id="godavariFlowGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" style="stop-color:var(--godavari-river); stop-opacity:0.55" />
+            <stop offset="50%" style="stop-color:color-mix(in srgb, var(--godavari-river) 55%, white); stop-opacity:0.95" />
+            <stop offset="100%" style="stop-color:var(--godavari-river); stop-opacity:0.55" />
+          </linearGradient>
+          <linearGradient id="krishnaFlowGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" style="stop-color:var(--krishna-river); stop-opacity:0.55" />
+            <stop offset="50%" style="stop-color:color-mix(in srgb, var(--krishna-river) 55%, white); stop-opacity:0.95" />
+            <stop offset="100%" style="stop-color:var(--krishna-river); stop-opacity:0.55" />
+          </linearGradient>
+        </defs>
+        <g id="zoomLayer">
+          <g id="districtsLayer"></g>
+          <g id="riversLayer"></g>
+          <g id="linksLayer"></g>
+          <g id="districtLabelsLayer"></g>
+          <g id="markersLayer"></g>
+        </g>
+      </svg>
+
+      <div class="scene-wrap" id="scene3dWrap" hidden>
+        <div class="scene3d" id="scene3d">
+          <div class="ground3d"><svg id="groundsvg" viewBox="0 0 1000 1000"></svg></div>
+          <div id="pillars3d"></div>
+        </div>
+        <svg class="overlay2d" id="overlay2d"></svg>
+        <div class="scene-hint">Drag to rotate &middot; scroll to zoom &middot; pillar height = real elevation (m MSL)</div>
+      </div>
+
+      <div class="map-toolbar">
+        <button class="icon-btn" id="zoomIn" title="Zoom in">+</button>
+        <button class="icon-btn" id="zoomOut" title="Zoom out">&minus;</button>
+        <button class="icon-btn" id="zoomReset" title="Reset view">&#8634;</button>
+      </div>
+      <div class="legend" id="mapLegend"></div>
+    </section>
+
+    <section class="view" id="view-profile">
+      <div class="profile-head">
+        <div class="subtabs tabs" role="tablist" aria-label="Chain">
+          <button role="tab" aria-selected="true" data-chain="godavari">Godavari &middot; Kaleshwaram lift chain</button>
+          <button role="tab" aria-selected="false" data-chain="krishna">Krishna &middot; gravity chain</button>
+        </div>
+      </div>
+      <p id="profileSummary"></p>
+      <div class="profile-scroll"><svg id="profilesvg" viewBox="0 0 1300 520" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="totals-box" id="profileTotals"></div>
+      <div id="liftSchemesPanel"></div>
+    </section>
+
+    <section class="view" id="view-table">
+      <div class="table-wrap">
+        <table class="data" id="dataTable">
+          <thead><tr id="tableHead"></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div id="tooltip"></div>
+    <aside id="drawer"><button class="close-btn" id="drawerClose">&times;</button><div id="drawerContent"></div></aside>
+  </div>
+
+  <footer class="notes">
+    <details class="notes-box">
+      <summary>Data quality notes &amp; sources</summary>
+      <ul id="dataNotesList"></ul>
+      <p class="fineprint">Coordinates marked &ldquo;approximate&rdquo; are estimated from district/mandal locations, not surveyed dam sites. Elevation figures marked &ldquo;interpolated&rdquo; are not independently confirmed. River courses are schematic polylines through known waypoints, not GPS-traced channels. Sources: Wikipedia, Telangana Irrigation Department, CWC and press reporting (Telangana Today, Deccan Chronicle) &mdash; compiled August 2026.</p>
+    </details>
+  </footer>
+
+</div>
+
+<script>
+const DISTRICTS = [{"name":"Adilabad","rings":[[[78.9501,19.5333],[78.949,19.5012],[78.9745,19.4908],[78.9269,19.4622],[78.9037,19.474],[78.8847,19.4455],[78.8531,19.4472],[78.8097,19.3865],[78.8542,19.3684],[78.8558,19.2785],[78.7998,19.214],[78.7587,19.2781],[78.7199,19.2966],[78.7226,19.3266],[78.675,19.3161],[78.6153,19.261],[78.5879,19.2879],[78.5704,19.2865],[78.5217,19.2506],[78.5095,19.2147],[78.4566,19.2269],[78.4486,19.1788],[78.3885,19.176],[78.3173,19.2157],[78.2994,19.2593],[78.2755,19.2659],[78.2667,19.2844],[78.2302,19.3088],[78.1975,19.3092],[78.1762,19.3349],[78.1876,19.3946],[78.1762,19.4123],[78.1952,19.4068],[78.2115,19.4284],[78.2447,19.4287],[78.2705,19.4563],[78.3044,19.4566],[78.2934,19.5424],[78.2743,19.5539],[78.3036,19.5692],[78.3055,19.6072],[78.2903,19.6459],[78.2625,19.6651],[78.2762,19.6923],[78.312,19.6909],[78.3432,19.7132],[78.3645,19.7808],[78.3588,19.8028],[78.3341,19.8146],[78.3364,19.838],[78.2998,19.8411],[78.2854,19.8565],[78.3071,19.9143],[78.3306,19.9147],[78.3246,19.8948],[78.3356,19.8837],[78.3809,19.8805],[78.4003,19.8342],[78.4319,19.815],[78.4726,19.8174],[78.4901,19.7927],[78.5152,19.8188],[78.5521,19.8241],[78.6929,19.7909],[78.7192,19.7665],[78.7401,19.7833],[78.7823,19.7784],[78.8021,19.7564],[78.8409,19.762],[78.8599,19.6895],[78.852,19.6585],[78.8866,19.655],[78.9037,19.67],[78.9555,19.656],[78.9555,19.6002],[78.973,19.5825],[78.9376,19.5619],[78.9501,19.5333]]]},{"name":"Hyderabad","rings":[[[78.476,17.4636],[78.4855,17.4563],[78.5049,17.4685],[78.5004,17.4831],[78.5224,17.4824],[78.5179,17.4406],[78.5491,17.4375],[78.5224,17.4026],[78.5278,17.374],[78.5407,17.3716],[78.5319,17.3458],[78.5061,17.3489],[78.5072,17.3186],[78.4771,17.3175],[78.4642,17.3022],[78.4235,17.3405],[78.4421,17.3489],[78.4284,17.3726],[78.3695,17.3775],[78.395,17.3862],[78.4041,17.4078],[78.395,17.4232],[78.4094,17.442],[78.4539,17.4448],[78.4771,17.4807],[78.476,17.4636]]]},{"name":"Jagtial","rings":[[[79.0658,19.0494],[79.113,18.9396],[79.1822,18.8685],[79.2374,18.8577],[79.3017,18.8166],[79.2302,18.7493],[79.1628,18.7556],[79.1503,18.7256],[79.1122,18.7102],[79.1255,18.6837],[79.1031,18.6496],[79.065,18.6534],[79.0597,18.6656],[79.0361,18.6447],[79.0064,18.6754],[78.9874,18.667],[78.9676,18.6091],[78.9832,18.5687],[78.9391,18.5837],[78.9029,18.5499],[78.8934,18.5969],[78.8508,18.5882],[78.7914,18.621],[78.7055,18.6409],[78.6701,18.6234],[78.6316,18.6775],[78.6396,18.7203],[78.5818,18.7228],[78.5529,18.7427],[78.5635,18.7789],[78.5418,18.8152],[78.5434,18.8598],[78.5361,18.8842],[78.5141,18.8922],[78.5274,18.9396],[78.5468,18.9456],[78.5567,18.9776],[78.5886,19.0055],[78.6362,18.978],[78.6944,19.032],[78.7621,19.0114],[78.7789,19.0376],[78.8447,19.0704],[78.914,19.0306],[78.9475,19.0728],[79.0224,19.0752],[79.0658,19.0494]]]},{"name":"Jangaon","rings":[[[79.2633,17.9837],[79.2675,17.9527],[79.3242,17.944],[79.3889,17.9008],[79.4201,17.8959],[79.4433,17.9112],[79.449,17.8791],[79.4817,17.892],[79.5034,17.8645],[79.4908,17.8213],[79.5144,17.8188],[79.5144,17.7742],[79.5053,17.7488],[79.4809,17.7453],[79.5041,17.7244],[79.4809,17.7052],[79.4905,17.6961],[79.4813,17.6749],[79.5224,17.6613],[79.5243,17.633],[79.5726,17.6215],[79.554,17.5975],[79.511,17.5874],[79.5395,17.5236],[79.5217,17.4946],[79.4303,17.5166],[79.4124,17.4985],[79.3831,17.5117],[79.363,17.5009],[79.3698,17.4824],[79.328,17.4507],[79.2854,17.4692],[79.2937,17.4866],[79.2747,17.4978],[79.2538,17.4727],[79.2298,17.4967],[79.2424,17.5016],[79.2325,17.5277],[79.1975,17.5211],[79.1723,17.5424],[79.1678,17.5755],[79.1514,17.5874],[79.1575,17.6219],[79.1347,17.6428],[79.1301,17.6721],[79.0997,17.6776],[79.0688,17.7191],[79.046,17.7261],[79.0376,17.7094],[79.0251,17.7129],[78.9958,17.7509],[78.9908,17.7937],[78.9486,17.7882],[78.9075,17.8126],[78.8664,17.8101],[78.8889,17.8415],[78.9223,17.8366],[78.9281,17.875],[78.9988,17.845],[79.0201,17.876],[79.0437,17.861],[79.0921,17.8732],[79.1244,17.9022],[79.1023,17.9144],[79.1533,17.9921],[79.2039,17.9973],[79.2633,17.9837]]]},{"name":"Mulugu","rings":[[[79.842,18.1326],[79.8588,18.1504],[79.8363,18.1863],[79.863,18.203],[79.8443,18.2145],[79.8535,18.2598],[79.8892,18.2853],[79.893,18.317],[79.9444,18.3184],[79.9539,18.3397],[79.8995,18.371],[79.8911,18.3993],[79.9223,18.4062],[79.9897,18.3864],[80.0422,18.4042],[80.0738,18.3881],[80.1126,18.3927],[80.1727,18.3494],[80.2168,18.3895],[80.2321,18.5562],[80.2678,18.59],[80.3527,18.5952],[80.3736,18.6116],[80.3881,18.5959],[80.4547,18.6304],[80.5148,18.6193],[80.5346,18.5882],[80.6377,18.5227],[80.6552,18.476],[80.7054,18.4397],[80.6963,18.424],[80.7347,18.4129],[80.7195,18.3913],[80.7488,18.3083],[80.7941,18.2602],[80.737,18.2222],[80.737,18.1772],[80.756,18.1716],[80.7549,18.0737],[80.7146,18.1267],[80.6986,18.127],[80.6822,18.1479],[80.6963,18.1584],[80.6815,18.1657],[80.6613,18.1312],[80.6324,18.1423],[80.6232,18.1295],[80.643,18.1253],[80.635,18.1096],[80.6164,18.1183],[80.6023,18.0827],[80.5711,18.0552],[80.5422,18.1162],[80.4863,18.0737],[80.4653,18.0904],[80.4566,18.0604],[80.3919,18.0817],[80.3097,17.9754],[80.2751,17.9663],[80.2705,17.9433],[80.2401,17.9921],[80.2153,17.9949],[80.2199,18.0461],[80.1449,18.0949],[80.0795,18.0705],[80.0285,18.1162],[79.9794,18.112],[79.9364,18.0838],[79.8847,18.0859],[79.8873,18.0981],[79.8146,18.0918],[79.842,18.1326]]]},{"name":"Jogulamba Gadwal","rings":[[[77.7751,16.3069],[77.9125,16.2128],[77.9319,16.1933],[77.9471,16.119],[78.0696,16.0144],[78.1362,15.9963],[78.1579,15.951],[78.2214,15.944],[78.2511,15.975],[78.2515,15.9353],[78.1845,15.9098],[78.1754,15.8582],[78.1354,15.8548],[78.1339,15.8363],[78.0837,15.8408],[78.0319,15.9074],[78.0087,15.8617],[77.8881,15.906],[77.8584,15.8837],[77.8036,15.8743],[77.7241,15.8959],[77.6594,15.8854],[77.6115,15.9179],[77.5133,15.9269],[77.5141,16.0081],[77.4939,16.0371],[77.5068,16.0796],[77.4935,16.0862],[77.5133,16.1082],[77.4897,16.1197],[77.4863,16.1629],[77.5011,16.2218],[77.5156,16.2278],[77.4924,16.2292],[77.4901,16.2553],[77.5049,16.2759],[77.5369,16.2668],[77.5632,16.3017],[77.5978,16.293],[77.5886,16.3341],[77.6438,16.3634],[77.6754,16.3616],[77.7751,16.3069]]]},{"name":"Kamareddy","rings":[[[77.7614,18.5255],[77.7568,18.5025],[77.8649,18.508],[77.8893,18.4924],[77.9376,18.4913],[77.9749,18.4704],[77.9749,18.4463],[78.0221,18.4362],[78.038,18.4648],[78.0396,18.5178],[78.1598,18.4774],[78.1921,18.5087],[78.25,18.4864],[78.2599,18.4526],[78.3295,18.4669],[78.3828,18.4537],[78.3988,18.4819],[78.4452,18.4833],[78.4692,18.446],[78.492,18.4376],[78.5399,18.4613],[78.554,18.431],[78.5418,18.4125],[78.565,18.3906],[78.5316,18.3874],[78.5494,18.3365],[78.5213,18.2787],[78.5532,18.2581],[78.5688,18.18],[78.5312,18.1849],[78.516,18.1664],[78.5023,18.1755],[78.4798,18.126],[78.4418,18.1301],[78.433,18.1629],[78.4121,18.1308],[78.3847,18.1235],[78.3577,18.172],[78.3128,18.2023],[78.3139,18.179],[78.2778,18.143],[78.2568,18.1396],[78.2165,18.1755],[78.207,18.217],[78.1807,18.2044],[78.1689,18.1674],[78.1796,18.0974],[78.1431,18.0684],[78.1168,18.0726],[78.1065,18.0935],[78.094,18.0684],[78.0742,18.0723],[78.0715,18.0597],[78.0441,18.0796],[78.0346,18.0643],[78.0293,18.0838],[78.0007,18.0813],[77.995,18.1068],[77.9756,18.1148],[77.8984,18.0918],[77.9056,18.1057],[77.9269,18.104],[77.9296,18.1159],[77.909,18.1242],[77.9357,18.1493],[77.9026,18.1444],[77.9037,18.1922],[77.8687,18.1891],[77.8542,18.2075],[77.8268,18.1939],[77.7964,18.2048],[77.7698,18.188],[77.742,18.2051],[77.7226,18.2584],[77.6876,18.2602],[77.6651,18.2835],[77.6008,18.2759],[77.5514,18.2919],[77.5704,18.318],[77.5202,18.3571],[77.5517,18.3888],[77.5567,18.4191],[77.5281,18.4289],[77.5274,18.4422],[77.5852,18.4467],[77.5487,18.4686],[77.573,18.4697],[77.5765,18.4868],[77.6031,18.477],[77.6046,18.4962],[77.586,18.5039],[77.6004,18.5223],[77.5906,18.5265],[77.5963,18.5488],[77.6294,18.5537],[77.6339,18.5439],[77.6434,18.5551],[77.6545,18.5307],[77.7017,18.5551],[77.7386,18.5568],[77.7614,18.5255]]]},{"name":"Karimnagar","rings":[[[78.957,18.5767],[78.9893,18.5764],[78.9676,18.6091],[78.9984,18.6743],[79.0361,18.6447],[79.0597,18.6656],[79.065,18.6534],[79.1031,18.6496],[79.1103,18.6604],[79.1111,18.622],[79.1476,18.628],[79.1758,18.6541],[79.1849,18.6105],[79.2054,18.5778],[79.2298,18.567],[79.2157,18.492],[79.2366,18.4477],[79.2819,18.4802],[79.3063,18.4805],[79.4855,18.386],[79.5669,18.424],[79.5806,18.4132],[79.5631,18.263],[79.5532,18.2672],[79.5346,18.2351],[79.4737,18.2299],[79.4619,18.1643],[79.4475,18.1591],[79.3991,18.1661],[79.3968,18.1479],[79.3272,18.1483],[79.3013,18.1301],[79.2907,18.1511],[79.2507,18.1542],[79.2446,18.1842],[79.2108,18.1748],[79.2123,18.1615],[79.1879,18.1702],[79.1624,18.1573],[79.1373,18.2061],[79.108,18.2215],[79.1335,18.2713],[79.1149,18.2905],[79.0609,18.2936],[79.0719,18.3163],[79.0597,18.3425],[79.0373,18.3438],[79.019,18.317],[79.0114,18.3456],[79.0247,18.3662],[79.0053,18.3867],[79.0182,18.3996],[78.9969,18.4],[78.9741,18.4275],[78.9916,18.4411],[78.9874,18.462],[78.9478,18.4439],[78.9227,18.4756],[78.9539,18.5129],[78.957,18.5767]]]},{"name":"Khammam","rings":[[[80.3238,17.5609],[80.3687,17.5678],[80.3561,17.5312],[80.3436,17.5351],[80.3398,17.5225],[80.3466,17.4852],[80.3968,17.5281],[80.4315,17.4974],[80.3759,17.4169],[80.4463,17.4106],[80.4771,17.3848],[80.4661,17.3705],[80.5011,17.3667],[80.535,17.3841],[80.5403,17.3608],[80.5559,17.3681],[80.5563,17.3412],[80.6061,17.3824],[80.6194,17.3716],[80.6149,17.343],[80.6286,17.3388],[80.6343,17.3629],[80.6799,17.3378],[80.6925,17.2889],[80.7226,17.3053],[80.7484,17.2914],[80.761,17.314],[80.7754,17.3081],[80.7789,17.3374],[80.8127,17.3371],[80.8318,17.3632],[80.8592,17.3646],[80.8763,17.2649],[80.8652,17.236],[80.9189,17.2199],[80.9238,17.1579],[80.8793,17.161],[80.8679,17.123],[80.877,17.0704],[80.8455,17.04],[80.7389,17.0798],[80.6993,17.084],[80.6537,17.0686],[80.6704,17.1014],[80.5799,17.153],[80.5631,17.1331],[80.514,17.122],[80.5053,17.0686],[80.4714,17.0505],[80.4649,17.0299],[80.4387,17.0376],[80.4189,17.0923],[80.3873,17.0714],[80.4071,17.016],[80.3633,16.9762],[80.4497,16.955],[80.4935,16.9274],[80.4992,16.9564],[80.5262,16.948],[80.5346,16.9616],[80.6019,16.9187],[80.5871,16.9041],[80.5958,16.8846],[80.5684,16.8696],[80.5627,16.833],[80.613,16.7936],[80.5703,16.7681],[80.4646,16.7957],[80.4642,16.8201],[80.3839,16.8654],[80.3782,16.8521],[80.4079,16.8483],[80.3805,16.8176],[80.374,16.8525],[80.3219,16.8797],[80.3165,16.9484],[80.2903,16.9811],[80.2937,16.9965],[80.2827,17.0076],[80.2648,16.9972],[80.2115,17.0104],[80.1967,17.0439],[80.1872,17.0202],[80.1404,16.9905],[80.0951,16.9905],[80.0917,16.9682],[80.0555,16.9714],[80.062,17.0094],[80.0369,17.0244],[80.0399,17.0512],[79.9965,17.0759],[79.9463,17.1349],[79.9185,17.1296],[79.8812,17.1736],[79.8767,17.1938],[79.9018,17.2116],[79.9006,17.2537],[79.8405,17.2792],[79.8306,17.2701],[79.8017,17.3123],[79.8314,17.336],[79.8755,17.3304],[79.879,17.3534],[79.9033,17.3758],[79.9307,17.3663],[79.9368,17.3953],[79.9699,17.4064],[79.9916,17.3995],[79.9923,17.3642],[80.0525,17.3465],[80.086,17.367],[80.1084,17.3587],[80.1438,17.3939],[80.1609,17.3768],[80.17,17.4385],[80.2032,17.442],[80.2001,17.487],[80.2165,17.4755],[80.2279,17.5047],[80.2283,17.5305],[80.202,17.5581],[80.2302,17.5525],[80.2336,17.5664],[80.2808,17.5427],[80.2884,17.5724],[80.3238,17.5609]]]},{"name":"Komaram Bheem","rings":[[[78.8558,19.2785],[78.8542,19.3684],[78.8097,19.3865],[78.8531,19.4472],[78.8847,19.4455],[78.9037,19.474],[78.9269,19.4622],[78.9745,19.4908],[78.949,19.5012],[78.9501,19.5333],[78.9353,19.55],[78.9741,19.5493],[78.9813,19.5609],[78.9981,19.5399],[79.046,19.5483],[79.0962,19.5326],[79.191,19.4591],[79.2237,19.4692],[79.2039,19.4943],[79.2401,19.5354],[79.2465,19.6166],[79.3067,19.5964],[79.3139,19.5664],[79.3185,19.5769],[79.3656,19.5762],[79.4052,19.5358],[79.4334,19.5371],[79.4714,19.5002],[79.5186,19.5201],[79.5186,19.5431],[79.5376,19.5542],[79.5529,19.5242],[79.5947,19.5068],[79.6293,19.5741],[79.7089,19.5846],[79.7431,19.6086],[79.7808,19.5982],[79.8645,19.5107],[79.9143,19.496],[79.9448,19.4699],[79.9798,19.3886],[79.9589,19.3343],[79.9661,19.3043],[79.9246,19.2258],[79.9452,19.1676],[79.9311,19.1554],[79.8542,19.1728],[79.799,19.1516],[79.7724,19.1899],[79.734,19.1861],[79.7096,19.2074],[79.6761,19.199],[79.6792,19.2255],[79.6624,19.2182],[79.6548,19.2408],[79.6617,19.26],[79.6229,19.2555],[79.6141,19.2764],[79.5586,19.259],[79.5498,19.2642],[79.5627,19.2827],[79.5159,19.2921],[79.5045,19.2684],[79.5308,19.2572],[79.5479,19.2021],[79.4806,19.2014],[79.4623,19.1718],[79.3401,19.2213],[79.3481,19.1774],[79.3173,19.1634],[79.3265,19.1453],[79.3162,19.0923],[79.277,19.1167],[79.2671,19.0337],[79.2443,19.0299],[79.226,19.0331],[79.1956,19.0826],[79.1507,19.0927],[79.1046,19.1697],[79.0578,19.2088],[78.9714,19.2321],[78.8938,19.29],[78.8854,19.2729],[78.8558,19.2785]]]},{"name":"Mahabubabad","rings":[[[79.5395,17.5236],[79.511,17.5874],[79.554,17.5975],[79.5776,17.6285],[79.6537,17.6281],[79.6613,17.6494],[79.6826,17.6546],[79.6914,17.6867],[79.7142,17.6839],[79.7214,17.701],[79.7678,17.6867],[79.7911,17.7087],[79.8245,17.6951],[79.8215,17.7136],[79.8637,17.7195],[79.8691,17.7425],[79.8934,17.7303],[79.9037,17.7617],[79.8755,17.8084],[79.9105,17.8136],[79.9155,17.799],[79.9528,17.8607],[79.9752,17.8614],[79.9943,17.8896],[79.9767,17.9524],[79.9939,18.0008],[79.9794,18.0203],[79.992,18.1075],[80.0285,18.1162],[80.0795,18.0705],[80.1449,18.0949],[80.2199,18.0461],[80.2153,17.9949],[80.2401,17.9921],[80.2701,17.9471],[80.277,17.8812],[80.2477,17.8244],[80.2595,17.7502],[80.2366,17.6553],[80.207,17.6529],[80.2096,17.6139],[80.2233,17.6062],[80.202,17.5581],[80.2283,17.5305],[80.2279,17.5047],[80.2165,17.4755],[80.2001,17.487],[80.2032,17.442],[80.17,17.4385],[80.1609,17.3768],[80.1438,17.3939],[80.1084,17.3587],[80.086,17.367],[80.0525,17.3465],[79.9923,17.3642],[79.9916,17.3995],[79.9699,17.4064],[79.9368,17.3953],[79.9307,17.3663],[79.9033,17.3758],[79.879,17.3534],[79.8755,17.3304],[79.793,17.3259],[79.796,17.3541],[79.7777,17.3691],[79.7968,17.3939],[79.7621,17.4078],[79.7519,17.4399],[79.7248,17.4329],[79.6564,17.4709],[79.6556,17.4939],[79.6392,17.4863],[79.6035,17.4988],[79.5905,17.5288],[79.5947,17.4992],[79.5658,17.4974],[79.5395,17.5236]]]},{"name":"Mahabubnagar","rings":[[[77.7511,16.4035],[77.7393,16.4662],[77.7686,16.4847],[77.7496,16.5666],[77.7877,16.5743],[77.7812,16.6158],[77.7991,16.6165],[77.7979,16.6304],[77.7736,16.6548],[77.7648,16.6883],[77.7492,16.6935],[77.7454,16.7395],[77.6796,16.7566],[77.6743,16.7768],[77.6796,16.795],[77.7081,16.7831],[77.7416,16.7932],[77.7294,16.811],[77.7439,16.8274],[77.7275,16.8504],[77.7462,16.9107],[77.7302,16.9438],[77.7504,16.9529],[77.7603,17.0024],[77.844,16.9919],[77.8478,16.9515],[77.8717,16.9682],[77.8843,16.9588],[77.8695,16.9274],[77.9147,16.9212],[77.93,16.9532],[77.9528,16.9497],[77.9711,16.971],[77.9966,16.9658],[78.0255,17.0101],[78.1198,16.9829],[78.1495,17.0128],[78.1743,17.0083],[78.1811,16.9735],[78.2195,16.9389],[78.2332,16.9403],[78.2405,16.9633],[78.2694,16.9647],[78.2755,16.9233],[78.3017,16.9191],[78.2994,16.879],[78.3284,16.8514],[78.3333,16.7978],[78.3702,16.7507],[78.3497,16.682],[78.2983,16.69],[78.2351,16.742],[78.1982,16.7012],[78.1826,16.7036],[78.183,16.7308],[78.1628,16.7287],[78.1404,16.6747],[78.1507,16.6479],[78.1214,16.5928],[78.0612,16.6234],[78.0061,16.6088],[77.9889,16.5924],[78.0194,16.53],[77.9981,16.5311],[77.9821,16.5025],[77.9414,16.5004],[77.9163,16.4425],[77.8638,16.4467],[77.8679,16.4265],[77.8234,16.4073],[77.7542,16.4213],[77.7618,16.3941],[77.7492,16.3878],[77.7511,16.4035]]]},{"name":"Mancherial","rings":[[[79.3017,18.8166],[79.2374,18.8577],[79.1822,18.8685],[79.113,18.9396],[79.0658,19.0494],[79.0224,19.0752],[78.9475,19.0728],[78.9307,19.1185],[78.9136,19.1164],[78.9212,19.1063],[78.9029,19.0937],[78.8801,19.1132],[78.8881,19.1314],[78.8774,19.1603],[78.9212,19.1837],[78.9178,19.2014],[78.9528,19.2488],[78.9984,19.2203],[79.0578,19.2088],[79.1046,19.1697],[79.1507,19.0927],[79.1956,19.0826],[79.226,19.0331],[79.2443,19.0299],[79.2671,19.0337],[79.277,19.1167],[79.3162,19.0923],[79.3265,19.1453],[79.3173,19.1634],[79.3481,19.1774],[79.3401,19.2213],[79.4623,19.1718],[79.4806,19.2014],[79.5479,19.2021],[79.5308,19.2572],[79.5045,19.2684],[79.5159,19.2921],[79.5627,19.2827],[79.5498,19.2642],[79.5586,19.259],[79.6141,19.2764],[79.6229,19.2555],[79.6617,19.26],[79.6548,19.2408],[79.6624,19.2182],[79.6792,19.2255],[79.6761,19.199],[79.7096,19.2074],[79.734,19.1861],[79.7724,19.1899],[79.799,19.1516],[79.8542,19.1728],[79.9311,19.1554],[79.8736,19.124],[79.8584,19.0958],[79.8717,19.0407],[79.9379,19.0411],[79.9611,18.8647],[79.914,18.826],[79.8873,18.8263],[79.8356,18.8675],[79.8249,18.8281],[79.847,18.7939],[79.8177,18.758],[79.8245,18.7242],[79.7975,18.6963],[79.6796,18.6729],[79.6328,18.7298],[79.5327,18.7859],[79.5003,18.7901],[79.4806,18.8176],[79.4083,18.8535],[79.3774,18.8521],[79.344,18.8166],[79.3017,18.8166]]]},{"name":"Medak","rings":[[[77.8984,18.0918],[77.9756,18.1148],[77.995,18.1068],[78.0007,18.0813],[78.0293,18.0838],[78.0346,18.0643],[78.0441,18.0796],[78.0715,18.0597],[78.0742,18.0723],[78.094,18.0684],[78.1065,18.0935],[78.1168,18.0726],[78.1431,18.0684],[78.1796,18.0974],[78.1689,18.1674],[78.1807,18.2044],[78.207,18.217],[78.2165,18.1755],[78.2568,18.1396],[78.2778,18.143],[78.3139,18.179],[78.3128,18.2023],[78.3577,18.172],[78.3847,18.1235],[78.4121,18.1308],[78.433,18.1629],[78.4418,18.1301],[78.4798,18.126],[78.5023,18.1755],[78.516,18.1664],[78.5259,18.1835],[78.5688,18.1849],[78.581,18.1633],[78.5666,18.1622],[78.5453,18.1172],[78.5791,18.1068],[78.57,18.066],[78.5898,18.0555],[78.5822,18.0325],[78.5593,18.0461],[78.5316,17.951],[78.5418,17.9412],[78.5297,17.9248],[78.546,17.9151],[78.5243,17.8966],[78.5609,17.8704],[78.5392,17.8603],[78.5201,17.8066],[78.511,17.7554],[78.5266,17.7509],[78.5255,17.7285],[78.5061,17.7195],[78.4992,17.6857],[78.4478,17.7045],[78.4402,17.7268],[78.4163,17.7327],[78.3885,17.6996],[78.3607,17.7397],[78.3181,17.7435],[78.32,17.6801],[78.2317,17.6916],[78.2351,17.7352],[78.2013,17.7359],[78.2039,17.8028],[78.1735,17.7885],[78.1632,17.7976],[78.1876,17.8307],[78.1491,17.8059],[78.1484,17.8363],[78.1077,17.8084],[78.0947,17.86],[78.0734,17.869],[78.0791,17.9053],[78.0681,17.9224],[78.0464,17.914],[78.0346,17.8785],[77.9368,17.8896],[77.9406,17.9189],[77.9288,17.9318],[77.8813,17.9342],[77.8797,17.9478],[77.8451,17.9022],[77.8223,17.9032],[77.8211,17.9273],[77.7949,17.9245],[77.809,17.959],[77.8219,17.9583],[77.8253,17.9869],[77.8657,18.0228],[77.8512,18.073],[77.8881,18.0705],[77.8984,18.0918]]]},{"name":"Medchal Malkajgiri","rings":[[[78.5285,17.374],[78.5262,17.4221],[78.5491,17.4375],[78.5179,17.4406],[78.5224,17.4824],[78.5004,17.4831],[78.5049,17.4685],[78.4855,17.4563],[78.4771,17.4807],[78.4539,17.4448],[78.4068,17.4385],[78.3733,17.4779],[78.382,17.5089],[78.3478,17.5225],[78.355,17.5619],[78.3771,17.5633],[78.39,17.5989],[78.3714,17.6149],[78.3908,17.6215],[78.3813,17.6424],[78.3953,17.6759],[78.4212,17.6717],[78.4501,17.7076],[78.5087,17.6836],[78.519,17.7021],[78.5616,17.6839],[78.5928,17.6968],[78.6339,17.6689],[78.6693,17.6982],[78.718,17.6738],[78.7112,17.64],[78.6853,17.6219],[78.702,17.6114],[78.6914,17.5846],[78.6765,17.5759],[78.7055,17.5577],[78.6948,17.5515],[78.7123,17.5208],[78.7093,17.4762],[78.7606,17.4605],[78.7549,17.4047],[78.7374,17.3862],[78.6876,17.405],[78.6621,17.3782],[78.5791,17.3897],[78.5814,17.3639],[78.5285,17.374]]]},{"name":"Nagarkurnool","rings":[[[78.3489,16.7796],[78.355,16.7964],[78.3892,16.7838],[78.4132,16.7981],[78.4345,16.7782],[78.465,16.774],[78.4829,16.8211],[78.5376,16.8215],[78.6332,16.7765],[78.6663,16.8033],[78.6666,16.8323],[78.683,16.7887],[78.6526,16.7671],[78.7386,16.7573],[78.7572,16.7409],[78.7557,16.7061],[78.71,16.6782],[78.7134,16.6506],[78.6674,16.6517],[78.7161,16.582],[78.6621,16.5464],[78.6723,16.5293],[78.7245,16.5394],[78.8006,16.514],[78.8558,16.5509],[78.9098,16.5509],[78.9395,16.5105],[79.1518,16.3996],[79.172,16.3679],[79.234,16.3358],[79.2195,16.232],[79.1586,16.2093],[79.1198,16.232],[79.1016,16.2229],[79.0095,16.2403],[78.9859,16.2107],[78.9048,16.1828],[78.9242,16.1357],[78.9204,16.1019],[78.8892,16.0848],[78.8729,16.1434],[78.8348,16.1452],[78.8371,16.0706],[78.7907,16.0235],[78.7408,16.0088],[78.6811,16.035],[78.6503,16.0789],[78.621,16.088],[78.5517,16.0427],[78.4079,16.0747],[78.3265,16.0367],[78.3162,16.013],[78.2637,16.027],[78.2564,16.0085],[78.2131,16.0106],[78.218,16.0298],[78.1899,16.042],[78.2024,16.0542],[78.1762,16.0678],[78.1784,16.0845],[78.2157,16.095],[78.2062,16.1072],[78.2271,16.1748],[78.2093,16.18],[78.2112,16.2009],[78.1967,16.2086],[78.199,16.2598],[78.1644,16.2672],[78.1628,16.2961],[78.1899,16.3219],[78.2135,16.3216],[78.2542,16.2881],[78.2637,16.3327],[78.293,16.3261],[78.3143,16.3798],[78.2469,16.4157],[78.2013,16.4094],[78.2009,16.4471],[78.148,16.4561],[78.1001,16.4871],[78.1628,16.7287],[78.183,16.7308],[78.1826,16.7036],[78.1982,16.7012],[78.2351,16.742],[78.2983,16.69],[78.3497,16.682],[78.3702,16.7507],[78.3489,16.7796]]]},{"name":"Nalgonda","rings":[[[79.374,17.3437],[79.4478,17.3465],[79.4749,17.3308],[79.4939,17.2335],[79.5198,17.2332],[79.5255,17.1861],[79.592,17.0836],[79.6168,16.9236],[79.6682,16.8413],[79.6682,16.7333],[79.6997,16.7186],[79.635,16.6611],[79.5989,16.6733],[79.5422,16.6322],[79.4505,16.621],[79.4185,16.5802],[79.3401,16.5827],[79.2911,16.5617],[79.2568,16.5659],[79.2169,16.4993],[79.2332,16.4593],[79.2115,16.4474],[79.2108,16.3561],[78.9395,16.5105],[78.9098,16.5509],[78.8558,16.5509],[78.8006,16.514],[78.7245,16.5394],[78.6723,16.5293],[78.6621,16.5464],[78.7161,16.582],[78.6674,16.6517],[78.7134,16.6506],[78.71,16.6782],[78.7557,16.7061],[78.7545,16.7503],[78.7808,16.7462],[78.8021,16.8263],[78.7758,16.8438],[78.772,16.8825],[78.75,16.8546],[78.7302,16.8643],[78.729,16.895],[78.7454,16.9149],[78.6959,16.9355],[78.702,16.9647],[78.7564,16.9696],[78.7538,16.9843],[78.7892,16.9762],[78.8249,17.0195],[78.7766,17.0317],[78.7827,17.0404],[78.8341,17.0366],[78.8417,17.0739],[78.8911,17.0442],[78.9022,17.0787],[78.9151,17.0906],[78.9284,17.0812],[78.9513,17.1321],[78.9733,17.1289],[78.9927,17.1554],[78.9574,17.199],[78.9867,17.2506],[78.9817,17.2795],[79.1035,17.2426],[79.1172,17.2778],[79.1556,17.2813],[79.1567,17.2597],[79.1781,17.2516],[79.1841,17.2733],[79.2051,17.2621],[79.2195,17.3137],[79.2481,17.3154],[79.2507,17.3587],[79.3322,17.3594],[79.374,17.3437]]]},{"name":"Nirmal","rings":[[[78.1956,19.3147],[78.2667,19.2844],[78.2755,19.2659],[78.2994,19.2593],[78.3173,19.2157],[78.3885,19.176],[78.4486,19.1788],[78.4566,19.2269],[78.5095,19.2147],[78.5217,19.2506],[78.5704,19.2865],[78.5879,19.2879],[78.6153,19.261],[78.675,19.3161],[78.7226,19.3266],[78.7199,19.2966],[78.7587,19.2781],[78.7998,19.214],[78.8539,19.2781],[78.8854,19.2729],[78.8938,19.29],[78.9528,19.2488],[78.9178,19.2014],[78.9212,19.1837],[78.8774,19.1603],[78.8881,19.1314],[78.8801,19.1132],[78.9029,19.0937],[78.9212,19.1063],[78.9136,19.1164],[78.9307,19.1185],[78.9475,19.0728],[78.914,19.0306],[78.8447,19.0704],[78.7789,19.0376],[78.7621,19.0114],[78.6944,19.032],[78.6362,18.978],[78.5886,19.0055],[78.5567,18.9776],[78.5468,18.9456],[78.5083,18.9724],[78.457,18.9557],[78.4102,19.0038],[78.371,18.9961],[78.285,18.9424],[78.2797,18.9888],[78.2412,19.0163],[78.1674,18.9975],[78.1495,18.9675],[78.1134,18.9612],[78.0898,18.9403],[78.0525,18.94],[78.0377,18.8776],[77.9711,18.8727],[77.949,18.8434],[77.9033,18.8668],[77.8854,18.9041],[77.8432,18.9086],[77.8584,18.949],[77.8192,18.9459],[77.8219,18.9787],[77.7717,18.979],[77.7648,19.0627],[77.8002,19.0512],[77.8101,19.1049],[77.8314,19.086],[77.8504,19.0885],[77.8341,19.1341],[77.8603,19.1805],[77.8478,19.1896],[77.8714,19.2551],[77.903,19.2565],[77.9075,19.2684],[77.8657,19.2837],[77.8634,19.3043],[77.9117,19.3161],[77.944,19.3426],[78.0137,19.2949],[78.0148,19.2792],[78.0426,19.2705],[78.0361,19.2506],[78.0555,19.237],[78.0791,19.2548],[78.089,19.2394],[78.1172,19.2485],[78.1446,19.2293],[78.1754,19.2377],[78.1765,19.2785],[78.1956,19.3147]]]},{"name":"Nizamabad","rings":[[[78.535,18.9476],[78.5141,18.8922],[78.5361,18.8842],[78.5434,18.8598],[78.5418,18.8152],[78.5635,18.7789],[78.5529,18.7427],[78.5818,18.7228],[78.6396,18.7203],[78.6316,18.6775],[78.6701,18.6234],[78.6541,18.5962],[78.6141,18.59],[78.5974,18.5506],[78.5601,18.5523],[78.5696,18.5439],[78.53,18.4655],[78.492,18.4376],[78.4692,18.446],[78.4452,18.4833],[78.3988,18.4819],[78.3828,18.4537],[78.3295,18.4669],[78.2599,18.4526],[78.25,18.4864],[78.1921,18.5087],[78.1598,18.4774],[78.0396,18.5178],[78.038,18.4648],[78.0221,18.4362],[77.9749,18.4463],[77.9749,18.4704],[77.9376,18.4913],[77.8893,18.4924],[77.8649,18.508],[77.7568,18.5025],[77.7614,18.5255],[77.737,18.5638],[77.7504,18.5893],[77.7298,18.667],[77.761,18.7071],[77.7873,18.6827],[77.8402,18.8047],[77.9433,18.8249],[77.9711,18.8727],[78.0377,18.8776],[78.0525,18.94],[78.0898,18.9403],[78.1134,18.9612],[78.1495,18.9675],[78.1674,18.9975],[78.2412,19.0163],[78.2797,18.9888],[78.285,18.9424],[78.371,18.9961],[78.4102,19.0038],[78.457,18.9557],[78.5083,18.9724],[78.535,18.9476]]]},{"name":"Peddapalli","rings":[[[79.1103,18.6604],[79.1255,18.6837],[79.1122,18.7102],[79.1503,18.7256],[79.1628,18.7556],[79.2302,18.7493],[79.3017,18.8166],[79.344,18.8166],[79.3847,18.8542],[79.4303,18.8476],[79.5003,18.7901],[79.5327,18.7859],[79.6328,18.7298],[79.6796,18.6729],[79.8093,18.7029],[79.8306,18.6806],[79.7914,18.5732],[79.7248,18.5736],[79.7058,18.5206],[79.6701,18.4802],[79.6229,18.4864],[79.5468,18.4076],[79.4855,18.386],[79.3063,18.4805],[79.2819,18.4802],[79.2366,18.4477],[79.2157,18.492],[79.2298,18.567],[79.2054,18.5778],[79.1849,18.6105],[79.1758,18.6541],[79.1476,18.628],[79.1111,18.622],[79.1103,18.6604]]]},{"name":"Rajanna Sircilla","rings":[[[78.6701,18.6234],[78.7055,18.6409],[78.7914,18.621],[78.8508,18.5882],[78.8934,18.5969],[78.9029,18.5499],[78.9144,18.5715],[78.9288,18.5663],[78.9391,18.5837],[78.957,18.5767],[78.9539,18.5129],[78.9227,18.4756],[78.9478,18.4439],[78.9874,18.462],[78.9916,18.4411],[78.9741,18.4275],[78.9969,18.4],[79.0182,18.3996],[79.0053,18.3867],[79.0247,18.3662],[79.0114,18.3456],[79.019,18.317],[78.9912,18.301],[78.9889,18.2598],[78.9147,18.2556],[78.8558,18.2347],[78.8284,18.2532],[78.769,18.2626],[78.75,18.2211],[78.729,18.2152],[78.7184,18.2319],[78.6902,18.2299],[78.6419,18.2563],[78.5886,18.2487],[78.5673,18.2229],[78.5532,18.2581],[78.5213,18.2787],[78.5494,18.3365],[78.5316,18.3874],[78.565,18.3906],[78.5418,18.4125],[78.554,18.431],[78.53,18.4655],[78.5696,18.5439],[78.5601,18.5523],[78.5974,18.5506],[78.6141,18.59],[78.6541,18.5962],[78.6701,18.6234]]]},{"name":"Ranga Reddy","rings":[[[78.218,17.4385],[78.288,17.4312],[78.2979,17.4908],[78.3177,17.4946],[78.3074,17.51],[78.3371,17.5037],[78.3478,17.5225],[78.3714,17.519],[78.382,17.5089],[78.3733,17.4779],[78.4098,17.435],[78.395,17.4232],[78.4041,17.4078],[78.395,17.3862],[78.3695,17.3775],[78.4284,17.3726],[78.4421,17.3489],[78.4235,17.3405],[78.4642,17.3022],[78.4771,17.3175],[78.5072,17.3186],[78.5061,17.3489],[78.5319,17.3458],[78.5407,17.3716],[78.5285,17.374],[78.5814,17.3639],[78.5791,17.3897],[78.6621,17.3782],[78.6876,17.405],[78.7374,17.3862],[78.7325,17.3541],[78.7161,17.359],[78.707,17.3465],[78.7199,17.3283],[78.7534,17.3294],[78.7621,17.3036],[78.7412,17.2959],[78.7534,17.2611],[78.8192,17.2321],[78.8162,17.2123],[78.7979,17.2028],[78.7591,17.214],[78.7892,17.1648],[78.7755,17.1516],[78.8329,17.1129],[78.8154,17.0962],[78.8413,17.0714],[78.8341,17.0366],[78.7766,17.0317],[78.8249,17.0195],[78.8162,17.0006],[78.7991,16.9996],[78.7892,16.9762],[78.7538,16.9843],[78.7564,16.9696],[78.702,16.9647],[78.6959,16.9355],[78.7454,16.9149],[78.729,16.895],[78.7302,16.8643],[78.75,16.8546],[78.772,16.8825],[78.7758,16.8438],[78.8021,16.8263],[78.7808,16.7462],[78.6526,16.7671],[78.683,16.7887],[78.6666,16.8323],[78.6663,16.8033],[78.6332,16.7765],[78.5376,16.8215],[78.4829,16.8211],[78.465,16.774],[78.4345,16.7782],[78.4132,16.7981],[78.3892,16.7838],[78.355,16.7964],[78.3489,16.7796],[78.323,16.8249],[78.3284,16.8514],[78.2994,16.879],[78.3017,16.9191],[78.2755,16.9233],[78.2694,16.9647],[78.2405,16.9633],[78.2332,16.9403],[78.2195,16.9389],[78.1811,16.9735],[78.1743,17.0083],[78.1495,17.0128],[78.1198,16.9829],[78.0255,17.0101],[78.0099,17.001],[78.0106,16.9783],[77.9996,16.9797],[77.9783,17.0101],[77.9349,17.0282],[77.9227,17.0634],[77.9452,17.078],[77.9342,17.0861],[77.9901,17.1035],[77.9916,17.1282],[78.0163,17.1655],[78.0441,17.1687],[78.0468,17.2084],[78.0639,17.2109],[78.0696,17.2307],[78.051,17.2353],[78.0593,17.2513],[78.0434,17.275],[78.0472,17.2952],[78.0053,17.328],[78.0514,17.412],[78.0715,17.4134],[78.0704,17.4559],[78.0498,17.4758],[78.0711,17.496],[78.0582,17.5089],[78.0822,17.5166],[78.0837,17.4911],[78.1453,17.4842],[78.145,17.4678],[78.1644,17.4629],[78.1914,17.487],[78.2138,17.4859],[78.218,17.4385]]]},{"name":"Sangareddy","rings":[[[77.8984,18.0918],[77.8881,18.0705],[77.8512,18.073],[77.8657,18.0228],[77.8253,17.9869],[77.8219,17.9583],[77.809,17.959],[77.7949,17.9245],[77.8211,17.9273],[77.8223,17.9032],[77.8451,17.9022],[77.8797,17.9478],[77.8813,17.9342],[77.9288,17.9318],[77.9406,17.9189],[77.9368,17.8896],[78.0346,17.8785],[78.0464,17.914],[78.0681,17.9224],[78.0791,17.9053],[78.0734,17.869],[78.0947,17.86],[78.1077,17.8084],[78.1484,17.8363],[78.1491,17.8059],[78.1876,17.8307],[78.1632,17.7976],[78.1735,17.7885],[78.2039,17.8028],[78.2013,17.7359],[78.2351,17.7352],[78.2317,17.6916],[78.32,17.6801],[78.3181,17.7435],[78.3607,17.7397],[78.387,17.7],[78.4163,17.7327],[78.4501,17.7111],[78.4212,17.6717],[78.3953,17.6759],[78.3813,17.6424],[78.3908,17.6215],[78.3714,17.6149],[78.39,17.5989],[78.3771,17.5633],[78.355,17.5619],[78.3615,17.5497],[78.3371,17.5037],[78.3074,17.51],[78.3177,17.4946],[78.2979,17.4908],[78.288,17.4312],[78.218,17.4385],[78.2138,17.4859],[78.1914,17.487],[78.1644,17.4629],[78.145,17.4678],[78.1453,17.4842],[78.1111,17.4796],[78.0837,17.4911],[78.0822,17.5166],[78.0582,17.5089],[78.0711,17.496],[78.0498,17.4758],[78.0704,17.4559],[78.0628,17.4486],[78.0407,17.4577],[78.0403,17.4713],[78.0042,17.4751],[78.008,17.496],[77.9912,17.5068],[77.981,17.4838],[77.9646,17.4845],[77.9741,17.518],[77.9368,17.5389],[77.93,17.5692],[77.8729,17.5825],[77.8676,17.6194],[77.8527,17.6083],[77.823,17.632],[77.7998,17.625],[77.7835,17.6386],[77.7466,17.624],[77.7743,17.601],[77.7614,17.5581],[77.6906,17.5264],[77.6834,17.5082],[77.597,17.5344],[77.594,17.5644],[77.5506,17.5518],[77.5285,17.5755],[77.5068,17.5424],[77.4943,17.5682],[77.4433,17.5839],[77.4524,17.6947],[77.546,17.7268],[77.5685,17.7488],[77.5692,17.7665],[77.5065,17.7861],[77.5281,17.8279],[77.554,17.8202],[77.5765,17.8753],[77.5993,17.8732],[77.586,17.9077],[77.6191,17.9039],[77.6187,17.9395],[77.6324,17.9468],[77.6244,17.9597],[77.6332,17.9673],[77.6495,17.9499],[77.656,17.9684],[77.6488,17.9987],[77.6278,17.9966],[77.6062,18.0203],[77.5886,18.0123],[77.5807,18.0315],[77.554,18.0357],[77.5476,18.0562],[77.597,18.0866],[77.6016,18.1057],[77.597,18.1559],[77.5635,18.1953],[77.5852,18.2197],[77.5719,18.2441],[77.6008,18.2759],[77.6651,18.2835],[77.6876,18.2602],[77.7226,18.2584],[77.742,18.2051],[77.7698,18.188],[77.7964,18.2048],[77.8268,18.1939],[77.8542,18.2075],[77.8687,18.1891],[77.9037,18.1922],[77.9026,18.1444],[77.9357,18.1493],[77.909,18.1242],[77.9296,18.1159],[77.9269,18.104],[77.9056,18.1057],[77.8984,18.0918]]]},{"name":"Siddipet","rings":[[[79.229,17.9914],[79.1533,17.9921],[79.1023,17.9144],[79.1244,17.9022],[79.0921,17.8732],[79.0437,17.861],[79.0201,17.876],[78.9988,17.845],[78.9281,17.875],[78.9223,17.8366],[78.8889,17.8415],[78.8676,17.8251],[78.8596,17.7509],[78.8215,17.7394],[78.8154,17.7021],[78.7819,17.7111],[78.7766,17.6916],[78.7298,17.6679],[78.6693,17.6982],[78.6339,17.6689],[78.5928,17.6968],[78.5616,17.6839],[78.519,17.7021],[78.4992,17.6857],[78.5061,17.7195],[78.5255,17.7285],[78.5266,17.7509],[78.511,17.7554],[78.5201,17.8066],[78.5392,17.8603],[78.5609,17.8704],[78.5243,17.8966],[78.546,17.9151],[78.5297,17.9248],[78.5418,17.9412],[78.5316,17.951],[78.5593,18.0461],[78.5822,18.0325],[78.5898,18.0555],[78.57,18.066],[78.5791,18.1068],[78.5453,18.1172],[78.5666,18.1622],[78.581,18.1633],[78.5612,18.2072],[78.5886,18.2487],[78.6419,18.2563],[78.6902,18.2299],[78.7184,18.2319],[78.7275,18.2152],[78.75,18.2211],[78.769,18.2626],[78.8284,18.2532],[78.8558,18.2347],[78.89,18.2393],[78.9147,18.2556],[78.9889,18.2598],[78.9912,18.301],[79.0373,18.3438],[79.0597,18.3425],[79.0719,18.3163],[79.0609,18.2936],[79.1149,18.2905],[79.1335,18.2713],[79.108,18.2215],[79.1373,18.2061],[79.1457,18.1709],[79.1624,18.1573],[79.1879,18.1702],[79.2123,18.1615],[79.2108,18.1748],[79.2446,18.1842],[79.2507,18.1542],[79.2907,18.1511],[79.3013,18.1301],[79.2606,18.0029],[79.229,17.9914]]]},{"name":"Suryapet","rings":[[[79.3698,17.4824],[79.363,17.5009],[79.3831,17.5117],[79.4124,17.4985],[79.4303,17.5166],[79.5217,17.4946],[79.5414,17.527],[79.5658,17.4974],[79.5947,17.4992],[79.5905,17.5288],[79.6035,17.4988],[79.6392,17.4863],[79.6556,17.4939],[79.6564,17.4709],[79.7248,17.4329],[79.7519,17.4399],[79.7621,17.4078],[79.7968,17.3939],[79.7777,17.3691],[79.796,17.3541],[79.793,17.3259],[79.8306,17.2701],[79.8405,17.2792],[79.9006,17.2537],[79.9018,17.2116],[79.8767,17.1938],[79.8812,17.1736],[79.9185,17.1296],[79.9463,17.1349],[79.9965,17.0759],[80.0399,17.0512],[80.0369,17.0244],[80.062,17.0094],[80.0506,16.9362],[80.0395,16.917],[80.0175,16.9149],[79.9988,16.8654],[80.0468,16.8535],[80.0483,16.8333],[80.0734,16.8173],[80.0551,16.7451],[80.0304,16.7148],[79.9973,16.7022],[79.9497,16.636],[79.909,16.6346],[79.8782,16.6967],[79.8512,16.7057],[79.8173,16.6918],[79.7842,16.7305],[79.7446,16.719],[79.7229,16.6904],[79.6792,16.6935],[79.6997,16.7186],[79.6682,16.7333],[79.6682,16.8413],[79.6168,16.9236],[79.592,17.0836],[79.5255,17.1861],[79.5198,17.2332],[79.4939,17.2335],[79.4749,17.3308],[79.422,17.3761],[79.4197,17.4322],[79.3698,17.4824]]]},{"name":"Vikarabad","rings":[[[77.4943,17.5682],[77.4996,17.5521],[77.4939,17.5682],[77.4779,17.5668],[77.4943,17.5682]],[[77.9996,16.9797],[77.9863,16.9613],[77.9711,16.971],[77.9528,16.9497],[77.93,16.9532],[77.9147,16.9212],[77.8695,16.9274],[77.8843,16.9588],[77.8717,16.9682],[77.8478,16.9515],[77.844,16.9919],[77.7603,17.0024],[77.766,17.0219],[77.7275,17.0383],[77.6872,17.0205],[77.6632,17.0317],[77.6351,17.0101],[77.632,17.0013],[77.6541,17.0055],[77.624,16.9843],[77.6233,16.9529],[77.6035,16.9466],[77.5966,16.9142],[77.5555,16.9023],[77.5377,16.9302],[77.516,16.9334],[77.5232,16.9484],[77.4661,16.9539],[77.4821,16.9721],[77.4794,16.9961],[77.5023,17.0094],[77.4638,17.1101],[77.4068,17.1244],[77.3638,17.1589],[77.3721,17.1955],[77.3938,17.1945],[77.4037,17.2098],[77.3801,17.2224],[77.4205,17.2377],[77.4585,17.2788],[77.438,17.2921],[77.4562,17.3311],[77.4536,17.374],[77.4791,17.3709],[77.484,17.3548],[77.524,17.3642],[77.538,17.4061],[77.5141,17.4141],[77.5129,17.4308],[77.5373,17.4437],[77.5761,17.4308],[77.5761,17.4563],[77.6141,17.4458],[77.6153,17.473],[77.645,17.4775],[77.6571,17.5065],[77.6522,17.4828],[77.6887,17.4755],[77.6906,17.5264],[77.7614,17.5581],[77.7743,17.601],[77.7466,17.624],[77.7835,17.6386],[77.7998,17.625],[77.823,17.632],[77.8527,17.6083],[77.8676,17.6194],[77.8729,17.5825],[77.93,17.5692],[77.9368,17.5389],[77.9654,17.5309],[77.9646,17.4845],[77.981,17.4838],[77.9912,17.5068],[78.008,17.496],[78.0042,17.4751],[78.0403,17.4713],[78.0407,17.4577],[78.0631,17.449],[78.0715,17.4134],[78.0514,17.412],[78.0053,17.328],[78.0472,17.2952],[78.0434,17.275],[78.0593,17.2513],[78.051,17.2353],[78.0696,17.2307],[78.0639,17.2109],[78.0468,17.2084],[78.0441,17.1687],[78.0163,17.1655],[77.9901,17.1035],[77.9543,17.0993],[77.9227,17.0634],[77.9349,17.0282],[77.9783,17.0101],[77.9996,16.9797]]]},{"name":"Wanaparthy","rings":[[[78.2481,15.9715],[78.2214,15.944],[78.1579,15.951],[78.1362,15.9963],[78.0696,16.0144],[77.9471,16.119],[77.9319,16.1933],[77.9125,16.2128],[77.7751,16.3069],[77.6609,16.3627],[77.6724,16.3888],[77.7131,16.4003],[77.7173,16.431],[77.7511,16.4035],[77.7492,16.3878],[77.7618,16.3941],[77.7542,16.4213],[77.8234,16.4073],[77.8679,16.4265],[77.8638,16.4467],[77.9163,16.4425],[77.9414,16.5004],[77.9821,16.5025],[77.9981,16.5311],[78.0194,16.53],[77.9889,16.5924],[78.0061,16.6088],[78.0612,16.6234],[78.1214,16.5928],[78.1225,16.5523],[78.1001,16.4871],[78.148,16.4561],[78.2009,16.4471],[78.2013,16.4094],[78.2469,16.4157],[78.3143,16.3798],[78.293,16.3261],[78.2637,16.3327],[78.2542,16.2881],[78.2135,16.3216],[78.1899,16.3219],[78.1628,16.2961],[78.1644,16.2672],[78.199,16.2598],[78.1967,16.2086],[78.2112,16.2009],[78.2093,16.18],[78.2271,16.1748],[78.2062,16.1072],[78.2157,16.095],[78.1784,16.0845],[78.1762,16.0678],[78.2024,16.0542],[78.1899,16.042],[78.218,16.0298],[78.2131,16.0106],[78.2564,16.0085],[78.2481,15.9715]]]},{"name":"Warangal Rural","rings":[[[79.5726,17.6215],[79.5243,17.633],[79.5224,17.6613],[79.4897,17.663],[79.4809,17.7052],[79.5041,17.7244],[79.4809,17.7453],[79.5053,17.7488],[79.5144,17.7948],[79.5513,17.7871],[79.5647,17.7955],[79.5597,17.808],[79.6217,17.8289],[79.6187,17.876],[79.6339,17.8725],[79.6369,17.8962],[79.6529,17.9049],[79.6567,17.9339],[79.6408,17.9558],[79.6495,17.9694],[79.6221,17.9733],[79.6404,17.9848],[79.6328,18.0113],[79.6716,18.0273],[79.651,18.0423],[79.621,18.0399],[79.6233,18.0681],[79.6035,18.0963],[79.605,18.1169],[79.6259,18.1242],[79.6012,18.1417],[79.6126,18.1884],[79.578,18.2427],[79.586,18.2598],[79.6206,18.2623],[79.6335,18.2846],[79.6525,18.2525],[79.6971,18.2776],[79.6952,18.2511],[79.7359,18.2051],[79.7241,18.1943],[79.7678,18.1521],[79.8394,18.1333],[79.8146,18.0918],[79.8873,18.0981],[79.8847,18.0859],[79.9364,18.0838],[79.9794,18.112],[79.992,18.1075],[79.9794,18.0203],[79.9939,18.0008],[79.9767,17.9524],[79.9943,17.8896],[79.9752,17.8614],[79.9528,17.8607],[79.9155,17.799],[79.9105,17.8136],[79.8755,17.8084],[79.9037,17.7617],[79.8934,17.7303],[79.8691,17.7425],[79.8637,17.7195],[79.8215,17.7136],[79.8245,17.6951],[79.7911,17.7087],[79.7678,17.6867],[79.7214,17.701],[79.7142,17.6839],[79.6914,17.6867],[79.6826,17.6546],[79.6613,17.6494],[79.6537,17.6281],[79.6164,17.6219],[79.6137,17.6362],[79.5726,17.6215]]]},{"name":"Warangal Urban","rings":[[[79.5144,17.7948],[79.5144,17.8188],[79.4908,17.8213],[79.5034,17.8645],[79.4817,17.892],[79.4592,17.875],[79.4433,17.9112],[79.4201,17.8959],[79.3889,17.9008],[79.3242,17.944],[79.2675,17.9527],[79.2709,17.9785],[79.229,17.9914],[79.2606,18.0029],[79.2937,18.1239],[79.3272,18.1483],[79.3968,18.1479],[79.3991,18.1661],[79.4619,18.1643],[79.4737,18.2299],[79.5346,18.2351],[79.5532,18.2672],[79.5822,18.2567],[79.597,18.1981],[79.6126,18.1884],[79.6012,18.1417],[79.6259,18.1242],[79.605,18.1169],[79.6035,18.0963],[79.6233,18.0681],[79.621,18.0399],[79.651,18.0423],[79.6716,18.0273],[79.6328,18.0113],[79.6404,17.9848],[79.6221,17.9733],[79.6495,17.9694],[79.6408,17.9558],[79.6567,17.9339],[79.6339,17.8725],[79.6187,17.876],[79.6217,17.8289],[79.5597,17.808],[79.5647,17.7955],[79.5513,17.7871],[79.5144,17.7948]]]},{"name":"Yadadri Bhuvanagiri","rings":[[[78.8676,17.8251],[78.8664,17.8101],[78.9075,17.8126],[78.9486,17.7882],[78.9908,17.7937],[78.9958,17.7509],[79.0251,17.7129],[79.0376,17.7094],[79.046,17.7261],[79.0688,17.7191],[79.0997,17.6776],[79.1301,17.6721],[79.1347,17.6428],[79.1575,17.6219],[79.1514,17.5874],[79.1841,17.5302],[79.2325,17.5277],[79.2424,17.5016],[79.2298,17.4967],[79.2538,17.4727],[79.2747,17.4978],[79.2937,17.4866],[79.2854,17.4692],[79.328,17.4507],[79.3698,17.4824],[79.4197,17.4322],[79.4124,17.3991],[79.4535,17.3451],[79.2507,17.3587],[79.2481,17.3154],[79.2195,17.3137],[79.2051,17.2621],[79.1841,17.2733],[79.1781,17.2516],[79.1567,17.2597],[79.1556,17.2813],[79.1172,17.2778],[79.1035,17.2426],[78.9817,17.2795],[78.9867,17.2506],[78.9574,17.199],[78.9927,17.1554],[78.9733,17.1289],[78.9513,17.1321],[78.9284,17.0812],[78.9151,17.0906],[78.9022,17.0787],[78.8911,17.0442],[78.8413,17.0714],[78.8154,17.0962],[78.8329,17.1129],[78.7755,17.1516],[78.7892,17.1648],[78.7591,17.214],[78.7979,17.2028],[78.8162,17.2123],[78.8192,17.2321],[78.7534,17.2611],[78.7412,17.2959],[78.7621,17.3036],[78.7534,17.3294],[78.7199,17.3283],[78.707,17.3465],[78.7161,17.359],[78.7325,17.3541],[78.7606,17.4605],[78.7093,17.4762],[78.7123,17.5208],[78.6948,17.5515],[78.7055,17.5577],[78.6765,17.5759],[78.702,17.6114],[78.6853,17.6219],[78.7237,17.6682],[78.7766,17.6916],[78.7819,17.7111],[78.8154,17.7021],[78.8215,17.7394],[78.8596,17.7509],[78.8676,17.8251]]]},{"name":"Bhadradri Kothagudem","rings":[[[80.7557,18.1695],[80.799,18.1716],[80.8241,18.1943],[80.8238,18.2396],[80.866,18.2333],[80.8725,18.2138],[80.8531,18.2054],[80.8668,18.1403],[80.9143,18.1444],[80.979,18.179],[80.9493,18.0862],[80.9984,17.9168],[81.0083,17.7983],[81.0467,17.7822],[81.0856,17.7979],[81.1042,17.7721],[81.0582,17.7331],[81.0407,17.7477],[80.9912,17.7498],[80.9733,17.7801],[80.8854,17.7359],[80.8949,17.7031],[80.8858,17.6811],[80.9048,17.6773],[80.9109,17.6379],[80.8496,17.6222],[80.8554,17.602],[80.9695,17.5982],[81.0197,17.5201],[81.0977,17.5044],[81.1274,17.5264],[81.1423,17.4887],[81.1598,17.4845],[81.1483,17.4636],[81.1754,17.4636],[81.1723,17.449],[81.1932,17.4357],[81.2054,17.4497],[81.3101,17.4099],[81.3211,17.388],[81.3051,17.3461],[81.2739,17.3172],[81.1906,17.3249],[81.1765,17.2876],[81.1875,17.2548],[81.1738,17.2304],[81.0795,17.2154],[81.0547,17.2248],[81.0311,17.1903],[80.8652,17.236],[80.8763,17.2649],[80.8592,17.3646],[80.8318,17.3632],[80.8127,17.3371],[80.7789,17.3374],[80.7754,17.3081],[80.761,17.314],[80.7484,17.2914],[80.7226,17.3053],[80.6925,17.2889],[80.6799,17.3378],[80.6343,17.3629],[80.6286,17.3388],[80.6149,17.343],[80.6194,17.3716],[80.6061,17.3824],[80.5563,17.3412],[80.5559,17.3681],[80.5403,17.3608],[80.535,17.3841],[80.5011,17.3667],[80.4661,17.3705],[80.4771,17.3848],[80.4463,17.4106],[80.3759,17.4169],[80.4315,17.4974],[80.3968,17.5281],[80.3466,17.4852],[80.3398,17.5225],[80.3436,17.5351],[80.3561,17.5312],[80.3687,17.5678],[80.3238,17.5609],[80.2884,17.5724],[80.2808,17.5427],[80.2336,17.5664],[80.2302,17.5525],[80.202,17.5581],[80.2233,17.6062],[80.2096,17.6139],[80.207,17.6529],[80.2366,17.6553],[80.2595,17.7502],[80.2477,17.8244],[80.277,17.8812],[80.2751,17.9663],[80.3097,17.9754],[80.3919,18.0817],[80.4566,18.0604],[80.4653,18.0904],[80.4863,18.0737],[80.5422,18.1162],[80.5711,18.0552],[80.6023,18.0827],[80.6164,18.1183],[80.635,18.1096],[80.643,18.1253],[80.6232,18.1295],[80.6324,18.1423],[80.6613,18.1312],[80.6815,18.1657],[80.6963,18.1584],[80.6822,18.1479],[80.6986,18.127],[80.7146,18.1267],[80.7549,18.0737],[80.7557,18.1695]]]},{"name":"Jayashankar Bhupalapally","rings":[[[80.2678,18.59],[80.2321,18.5562],[80.2168,18.3895],[80.1727,18.3494],[80.1126,18.3927],[80.0738,18.3881],[80.0422,18.4042],[79.9897,18.3864],[79.9223,18.4062],[79.8911,18.3993],[79.8995,18.371],[79.9539,18.3397],[79.9444,18.3184],[79.893,18.317],[79.8892,18.2853],[79.8535,18.2598],[79.8443,18.2145],[79.863,18.203],[79.8363,18.1863],[79.8588,18.1504],[79.842,18.1326],[79.7678,18.1521],[79.7241,18.1943],[79.7359,18.2051],[79.6952,18.2511],[79.6971,18.2776],[79.6525,18.2525],[79.6335,18.2846],[79.6206,18.2623],[79.586,18.2598],[79.578,18.2427],[79.5822,18.2567],[79.5631,18.263],[79.5597,18.2999],[79.5764,18.3093],[79.5795,18.3487],[79.5806,18.4132],[79.5669,18.424],[79.5879,18.462],[79.6027,18.4746],[79.6122,18.4638],[79.6229,18.4864],[79.6701,18.4802],[79.7058,18.5206],[79.7248,18.5736],[79.7914,18.5732],[79.804,18.6213],[79.8306,18.6555],[79.8306,18.6806],[79.807,18.705],[79.8245,18.7242],[79.8177,18.758],[79.847,18.7939],[79.8249,18.8281],[79.8356,18.8675],[79.8519,18.8654],[79.8668,18.8361],[79.914,18.8263],[79.9627,18.7747],[80.0186,18.7705],[80.0528,18.7252],[80.1149,18.6817],[80.1651,18.7008],[80.1967,18.681],[80.2127,18.7057],[80.2793,18.721],[80.3432,18.598],[80.2678,18.59]]]},{"name":"Narayanpet","rings":[[[77.6609,16.3627],[77.5734,16.3407],[77.4897,16.385],[77.4193,16.3662],[77.288,16.4087],[77.2359,16.4725],[77.2941,16.4767],[77.2987,16.4962],[77.3691,16.4885],[77.3778,16.5136],[77.4193,16.5224],[77.4189,16.5488],[77.3931,16.5701],[77.4623,16.5854],[77.4676,16.6099],[77.4536,16.6168],[77.476,16.6503],[77.4345,16.6412],[77.4189,16.6684],[77.4699,16.6876],[77.4741,16.7165],[77.4262,16.7214],[77.4395,16.789],[77.4764,16.7883],[77.457,16.8302],[77.4539,16.9138],[77.4695,16.9191],[77.4661,16.9539],[77.5232,16.9484],[77.516,16.9334],[77.5377,16.9302],[77.5555,16.9023],[77.5966,16.9142],[77.6035,16.9466],[77.6233,16.9529],[77.624,16.9843],[77.6541,17.0055],[77.632,17.0013],[77.6351,17.0101],[77.6632,17.0317],[77.6872,17.0205],[77.7146,17.0404],[77.766,17.0219],[77.7504,16.9529],[77.7302,16.9438],[77.7462,16.9107],[77.7275,16.8504],[77.7439,16.8274],[77.7294,16.811],[77.7416,16.7932],[77.7081,16.7831],[77.6796,16.795],[77.6743,16.7768],[77.6796,16.7566],[77.7454,16.7395],[77.7492,16.6935],[77.7648,16.6883],[77.7991,16.6165],[77.7812,16.6158],[77.7877,16.5743],[77.7496,16.5666],[77.7686,16.4847],[77.7393,16.4662],[77.7511,16.4035],[77.7173,16.431],[77.7131,16.4003],[77.6724,16.3888],[77.6609,16.3627]]]}];
+const RESERVOIRS = [
+  {"id":"nagarjunasagar","name":"Nagarjuna Sagar Dam","river":"Krishna","basin":"Krishna","subbasin":"Krishna main stem","district":"Nalgonda (TS) / Palnadu (AP border)","lat":16.5756,"lon":79.3117,"coordApprox":false,"frl_m":179.83,"gross_tmc":312,"live_tmc":244.41,"type":"Dam","irrigation":"gravity","year":1967,"notes":"Jointly operated with Andhra Pradesh; masonry dam with 26 flood gates; feeds the Jawahar and Lal Bahadur Shastri gravity canals.","source":"Wikipedia"},
+  {"id":"srisailam","name":"Srisailam Dam","river":"Krishna","basin":"Krishna","subbasin":"Krishna main stem","district":"Nagarkurnool (TS) / Nandyal (AP border)","lat":16.0897,"lon":78.8983,"coordApprox":false,"frl_m":270.0,"gross_tmc":216,"live_tmc":178.74,"type":"Dam","irrigation":"both","year":1981,"notes":"Foreshore is the intake for four major lift schemes (KLIS, PRLIS, Dindi, Nettempadu); shared with Andhra Pradesh.","source":"Wikipedia"},
+  {"id":"jurala","name":"Priyadarshini Jurala Project","river":"Krishna","basin":"Krishna","subbasin":"Krishna main stem","district":"Jogulamba Gadwal","lat":16.3375,"lon":77.7044,"coordApprox":false,"frl_m":318.52,"gross_tmc":9.657,"live_tmc":null,"type":"Barrage","irrigation":"gravity","year":1995,"notes":"Uppermost major dam on Telangana's stretch of the Krishna; only Telangana hydro plant with year-round flow; feeds the Bheema and Nettempadu lift schemes.","source":"Wikipedia / Telangana360"},
+  {"id":"srsp","name":"Sriram Sagar Project (Pochampad Dam)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Nizamabad","lat":18.9675,"lon":78.3431,"coordApprox":false,"frl_m":332.5,"gross_tmc":112.02,"live_tmc":81.95,"type":"Dam","irrigation":"gravity","year":1977,"notes":"Oldest major Godavari dam in Telangana; its Flood Flow Canal now links into the Kaleshwaram network via Mid Manair Dam.","source":"Wikipedia"},
+  {"id":"singur","name":"Singur Dam","river":"Manjira","basin":"Godavari","subbasin":"Manjira","district":"Sangareddy","lat":17.7496,"lon":77.9278,"coordApprox":false,"frl_m":null,"gross_tmc":30,"live_tmc":20,"type":"Dam","irrigation":"gravity","year":1998,"notes":"Principal drinking-water source for Hyderabad (~10 TMC supplied annually); earthen dam.","source":"Wikipedia"},
+  {"id":"nizamsagar","name":"Nizam Sagar Dam","river":"Manjira","basin":"Godavari","subbasin":"Manjira","district":"Kamareddy","lat":18.2025,"lon":77.9239,"coordApprox":false,"frl_m":428.24,"gross_tmc":29.72,"live_tmc":25.6,"type":"Dam","irrigation":"gravity","year":1931,"notes":"Oldest large dam in Telangana, built under the 7th Nizam; heavily silted (effective capacity now closer to 17.8 TMC).","source":"Wikipedia"},
+  {"id":"kaddam","name":"Kaddam Project (Kadem Dam)","river":"Kadam","basin":"Godavari","subbasin":"Kadam","district":"Nirmal","lat":19.15,"lon":78.63,"coordApprox":true,"frl_m":213.4,"gross_tmc":7.603,"live_tmc":4.82,"type":"Dam","irrigation":"gravity","year":1958,"notes":"FRL reported as 700 ft (~213 m); reallocated as one of the 'existing reservoirs' feeding into the Kaleshwaram scheme's water balance.","source":"Wikipedia"},
+  {"id":"lmd","name":"Lower Manair Dam","river":"Manair","basin":"Godavari","subbasin":"Manair","district":"Karimnagar","lat":18.3997,"lon":79.1311,"coordApprox":false,"frl_m":280.0,"gross_tmc":24.02,"live_tmc":21.9,"type":"Dam","irrigation":"gravity","year":1985,"notes":"Balancing reservoir for the Kakatiya Canal (SRSP); the downstream-most of the three Manair dams.","source":"Wikipedia"},
+  {"id":"mmd","name":"Mid Manair Dam","river":"Manair","basin":"Godavari","subbasin":"Manair","district":"Rajanna Sircilla","lat":18.3928,"lon":78.9611,"coordApprox":false,"frl_m":318.0,"gross_tmc":25.873,"live_tmc":21.0,"type":"Dam","irrigation":"both","year":2018,"notes":"Central hub of the Kaleshwaram scheme — receives Godavari water lifted from Yellampally and feeds the chain onward to Kondapochamma Sagar.","source":"Wikipedia"},
+  {"id":"umd","name":"Upper Manair Dam","river":"Manair","basin":"Godavari","subbasin":"Manair","district":"Rajanna Sircilla","lat":18.2703,"lon":78.5444,"coordApprox":false,"frl_m":null,"gross_tmc":2.2,"live_tmc":2.17,"type":"Dam","irrigation":"gravity","year":1950,"notes":"Oldest of the three Manair dams; foundation laid in 1943 under the Nizam.","source":"Wikipedia"},
+  {"id":"yellampally","name":"Sripada Yellampally Project","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Peddapalli / Mancherial","lat":18.8458,"lon":79.3681,"coordApprox":false,"frl_m":148.0,"gross_tmc":20.175,"live_tmc":null,"type":"Barrage","irrigation":"both","year":2016,"notes":"First major upstream link feeding the Kaleshwaram lift chain onward to Mid Manair; also supplies NTPC Ramagundam.","source":"Wikipedia"},
+  {"id":"medigadda","name":"Medigadda Barrage (Lakshmi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Jayashankar Bhupalpally","lat":18.7038,"lon":80.0892,"coordApprox":false,"frl_m":100.0,"gross_tmc":16.17,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Godavari intake point of the Kaleshwaram Lift Irrigation Scheme, near the Godavari-Pranahita confluence; a pier subsidence incident occurred in Oct 2023.","source":"Wikipedia"},
+  {"id":"annaram","name":"Annaram Barrage (Saraswathi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Jayashankar Bhupalpally","lat":18.7644,"lon":79.8235,"coordApprox":false,"frl_m":120.0,"gross_tmc":10.87,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Second barrage of the Medigadda-Annaram-Sundilla chain; capacity reported as 10.87-11.9 TMC across sources.","source":"Wikipedia"},
+  {"id":"sundilla","name":"Sundilla Barrage (Parvathi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Peddapalli","lat":18.7357,"lon":79.611,"coordApprox":false,"frl_m":130.0,"gross_tmc":8.83,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Third and uppermost Kaleshwaram intake barrage before Yellampally.","source":"Wikipedia"},
+  {"id":"kondapochamma","name":"Kondapochamma Sagar","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.7611,"lon":78.7063,"coordApprox":false,"frl_m":618.0,"gross_tmc":15,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Terminal reservoir of the main Kaleshwaram trunk; distributes via 13 canals and supplies drinking water to Hyderabad; the '618 m' figure is this reservoir's elevation, not the cumulative lift.","source":"Telangana Today"},
+  {"id":"mallannasagar","name":"Mallannasagar (Komuravelli Mallanna Sagar)","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.96,"lon":78.75,"coordApprox":false,"frl_m":557.0,"gross_tmc":50,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Largest reservoir in the Kaleshwaram scheme, the 'mother reservoir' of KLIS; capacity was enlarged from an original 1.5 TMC design — a politically contested escalation.","source":"Telangana Today / newsmeter.in"},
+  {"id":"ranganayakasagar","name":"Ranganayaka Sagar","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.92,"lon":78.83,"coordApprox":true,"frl_m":490.0,"gross_tmc":3.5,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2019,"notes":"Intermediate reservoir between Ananthagiri and Mallannasagar.","source":"WebSearch aggregation"},
+  {"id":"gouravelli","name":"Gouravelli Reservoir","river":"Offline reservoir (Kaleshwaram branch)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":18.28,"lon":79.02,"coordApprox":true,"frl_m":420.0,"gross_tmc":8.23,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Fed by three 132 MW pumps at Regonda pump house lifting water 126 m; serves the Husnabad area, branching off the Mid Manair chain.","source":"Telangana Today"},
+  {"id":"ananthagiri","name":"Ananthagiri Reservoir (Siddipet)","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":18.15,"lon":78.9,"coordApprox":true,"frl_m":470.0,"gross_tmc":3.5,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":null,"notes":"Intermediate reservoir on Link-4 between Mid Manair Dam and Ranganayaka Sagar; elevation interpolated from neighbouring stages, not independently confirmed.","source":"Wikipedia (interpolated elevation)"},
+  {"id":"dindi","name":"Dindi Reservoir","river":"Offline reservoir (Dindi Lift Scheme)","basin":"Krishna","subbasin":"Krishna offline chain","district":"Nagarkurnool","lat":16.5361,"lon":78.6611,"coordApprox":false,"frl_m":null,"gross_tmc":2.08,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":null,"notes":"Main reservoir of the R. Vidyasagar Rao Dindi Lift Scheme, which lifts up to 30 TMC from Srisailam's foreshore across a 12-reservoir network.","source":"Irrigation Dept. project documents"},
+  {"id":"osmansagar","name":"Osman Sagar (Gandipet)","river":"Musi","basin":"Krishna","subbasin":"Musi","district":"Ranga Reddy","lat":17.3833,"lon":78.3,"coordApprox":false,"frl_m":545.59,"gross_tmc":3.9,"live_tmc":null,"type":"Dam","irrigation":"gravity","year":1921,"notes":"Built after the 1908 Great Musi Flood to protect and supply Hyderabad; original 5.54 TMC design capacity reduced by siltation.","source":"Wikipedia"},
+  {"id":"himayatsagar","name":"Himayat Sagar","river":"Esi (Musi tributary)","basin":"Krishna","subbasin":"Musi","district":"Ranga Reddy","lat":17.3,"lon":78.35,"coordApprox":false,"frl_m":537.5,"gross_tmc":2.97,"live_tmc":2.521,"type":"Dam","irrigation":"gravity","year":1927,"notes":"Companion drinking-water reservoir to Osman Sagar for Hyderabad; command area protected from encroachment under GO 111.","source":"Wikipedia"},
+  {"id":"kinnerasani","name":"Kinnerasani Dam","river":"Kinnerasani","basin":"Godavari","subbasin":"Kinnerasani","district":"Bhadradri Kothagudem","lat":17.775,"lon":80.559,"coordApprox":true,"frl_m":124.05,"gross_tmc":8.4,"live_tmc":null,"type":"Dam","irrigation":"gravity","year":null,"notes":"Storage reservoir inside the Kinnerasani Wildlife Sanctuary; coordinates are the sanctuary centroid, not the dam site precisely.","source":"WebSearch aggregation"},
+  {"id":"wyra","name":"Wyra Reservoir","river":"Wyra","basin":"Krishna","subbasin":"Wyra","district":"Khammam","lat":17.2,"lon":80.375,"coordApprox":true,"frl_m":null,"gross_tmc":2.47,"live_tmc":2.12,"type":"Reservoir","irrigation":"gravity","year":1930,"notes":"Also receives supplementary water from the Nagarjuna Sagar left canal.","source":"Wikipedia"},
+  {"id":"palair","name":"Palair Lake","river":"Fed by Lal Bahadur (NSP left) canal","basin":"Krishna","subbasin":"NSP left canal system","district":"Khammam","lat":17.22,"lon":79.9,"coordApprox":false,"frl_m":null,"gross_tmc":2.5,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":null,"notes":"Balancing reservoir for the Nagarjuna Sagar left-bank canal; a major freshwater source for Khammam district.","source":"Wikipedia"},
+  {"id":"pakhal","name":"Pakhal Lake","river":"Kakatiya-era tank","basin":"Krishna","subbasin":"Kakatiya tanks","district":"Warangal / Mulugu","lat":17.9528,"lon":80.0014,"coordApprox":false,"frl_m":252.92,"gross_tmc":3.23,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":1213,"notes":"Built in 1213 CE by Kakatiya king Ganapati Deva; a 2021 lift scheme from the Godavari augmented storage by ~3 TMC.","source":"Wikipedia"},
+  {"id":"ramappa","name":"Ramappa Lake","river":"Kakatiya-era tank","basin":"Godavari","subbasin":"Kakatiya tanks","district":"Mulugu","lat":18.2386,"lon":79.9397,"coordApprox":false,"frl_m":null,"gross_tmc":2.912,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":1213,"notes":"Built by Kakatiya general Recherla Rudra beside the UNESCO World Heritage Ramappa Temple; nominated as a World Heritage Irrigation Structure.","source":"Wikipedia"},
+  {"id":"laknavaram","name":"Laknavaram Lake","river":"Kakatiya-era tank","basin":"Godavari","subbasin":"Kakatiya tanks","district":"Mulugu","lat":18.1667,"lon":80.05,"coordApprox":true,"frl_m":null,"gross_tmc":2.135,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":1213,"notes":"Kakatiya-era tank with roughly 13 islands linked by a 160 m hanging bridge; irrigates about 3,500 acres.","source":"Wikipedia"},
+  {"id":"musiproject","name":"Musi Project Reservoir","river":"Musi","basin":"Krishna","subbasin":"Musi","district":"Nalgonda","lat":17.03,"lon":78.95,"coordApprox":true,"frl_m":196.6,"gross_tmc":4.84,"live_tmc":4.6,"type":"Dam","irrigation":"gravity","year":1963,"notes":"Downstream of Osman Sagar and Himayat Sagar on the Musi River; irrigates roughly 30,000-42,000 acres.","source":"WebSearch aggregation"},
+  {"id":"anjanagiri","name":"Anjanagiri Reservoir (Narlapur)","river":"Offline reservoir (PRLIS Phase I)","basin":"Krishna","subbasin":"Krishna offline chain","district":"Nagarkurnool","lat":16.2,"lon":78.85,"coordApprox":true,"frl_m":345.0,"gross_tmc":6.4,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2023,"notes":"First-stage intake reservoir of the Palamuru-Rangareddy Lift Scheme near Srisailam's foreshore; capacity reported inconsistently (6.4-8.5 TMC) across sources.","source":"Telangana Today"},
+  {"id":"udandapur","name":"Udandapur Reservoir","river":"Offline reservoir (Nettempadu/PRLIS chain)","basin":"Krishna","subbasin":"Krishna offline chain","district":"Nagarkurnool / Mahbubnagar","lat":16.35,"lon":78.2,"coordApprox":true,"frl_m":null,"gross_tmc":16.03,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":null,"notes":"Large balancing reservoir of the Nettempadu / Palamuru-Rangareddy lift network.","source":"WebSearch aggregation"}
+]
+;
+const RIVERS = [
+  {
+    "id": "godavari",
+    "name": "Godavari",
+    "family": "godavari",
+    "weight": 5,
+    "path": [
+      [78.09, 18.87],
+      [78.3431, 18.9675],
+      [78.62, 18.83],
+      [79.3681, 18.8458],
+      [79.611, 18.7357],
+      [79.8235, 18.7644],
+      [80.0892, 18.7038],
+      [80.6, 18.15],
+      [80.89, 17.67],
+      [81.05, 17.45]
+    ]
+  },
+  {
+    "id": "manjira",
+    "name": "Manjira",
+    "family": "godavari",
+    "weight": 2.4,
+    "path": [
+      [77.6, 17.6],
+      [77.9278, 17.7496],
+      [77.9239, 18.2025],
+      [78.30, 18.75]
+    ]
+  },
+  {
+    "id": "manair",
+    "name": "Manair",
+    "family": "godavari",
+    "weight": 2.2,
+    "path": [
+      [78.5444, 18.2703],
+      [78.9611, 18.3928],
+      [79.1311, 18.3997],
+      [79.75, 18.75]
+    ]
+  },
+  {
+    "id": "krishna",
+    "name": "Krishna",
+    "family": "krishna",
+    "weight": 5,
+    "path": [
+      [77.45, 16.28],
+      [77.7044, 16.3375],
+      [78.8983, 16.0897],
+      [79.05, 16.20],
+      [79.3117, 16.5756],
+      [79.7, 16.62]
+    ]
+  },
+  {
+    "id": "musi",
+    "name": "Musi",
+    "family": "krishna",
+    "weight": 1.8,
+    "path": [
+      [77.95, 17.30],
+      [78.30, 17.3833],
+      [78.47, 17.38],
+      [78.95, 17.03],
+      [79.3117, 16.68]
+    ]
+  }
+]
+;
+const CHAINS = {
+  "godavari": {
+    "label": "Kaleshwaram Lift Irrigation Scheme — Godavari system",
+    "summary": "The world's largest multi-stage lift scheme: Godavari water is pumped roughly 500 m uphill in a chain of barrages, tunnels and pump houses to reach the Deccan plateau.",
+    "trunk": [
+      {"id":"river","structure":"Godavari River (Pranahita confluence)","elevation_m":92,"tmc":null,"kind":"source"},
+      {"id":"medigadda","structure":"Medigadda Barrage","elevation_m":100.0,"tmc":16.17,"kind":"barrage","pumpFromPrev":"Medigadda pump house","liftFromPrev_m":8},
+      {"id":"annaram","structure":"Annaram Barrage","elevation_m":120.0,"tmc":10.87,"kind":"barrage","pumpFromPrev":"Annaram (Medaram) pump house","liftFromPrev_m":20},
+      {"id":"sundilla","structure":"Sundilla Barrage","elevation_m":130.0,"tmc":8.83,"kind":"barrage","pumpFromPrev":"Sundilla pump house","liftFromPrev_m":10},
+      {"id":"yellampally","structure":"Yellampally Reservoir","elevation_m":148.0,"tmc":20.175,"kind":"reservoir","pumpFromPrev":"Yellampally pump house","liftFromPrev_m":18},
+      {"id":"mmd","structure":"Mid Manair Dam","elevation_m":318.0,"tmc":25.873,"kind":"reservoir","pumpFromPrev":"Ramadugu · Kannepalli · Gandhari pump houses","liftFromPrev_m":170},
+      {"id":"ananthagiri","structure":"Ananthagiri Reservoir","elevation_m":470.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":"Link-4 pump houses","liftFromPrev_m":152,"estimated":true},
+      {"id":"ranganayakasagar","structure":"Ranganayaka Sagar","elevation_m":490.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":20},
+      {"id":"mallannasagar","structure":"Mallannasagar","elevation_m":557.0,"tmc":50,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":67},
+      {"id":"kondapochamma","structure":"Kondapochamma Sagar","elevation_m":618.0,"tmc":15,"kind":"reservoir","pumpFromPrev":"Akkaram pump house (6×27 MW)","liftFromPrev_m":61}
+    ],
+    "branches": [
+      {"id":"gouravelli","structure":"Gouravelli Reservoir","offId":"mmd","elevation_m":420.0,"tmc":8.23,"pumpLabel":"Regonda pump house (3×132 MW)","liftFromPrev_m":126}
+    ],
+    "totals": {"sourceElevation_m":92,"topElevation_m":618,"simpleLift_m":526,"note":"Government/press materials widely cite '618 m' as the total lift figure, but 618 m is Kondapochamma Sagar's absolute elevation above sea level — the cumulative lift from the Godavari at Medigadda works out closer to ~520-526 m."}
+  },
+  "krishna": {
+    "label": "Krishna system — predominantly gravity-fed",
+    "summary": "From Jurala through Srisailam to Nagarjuna Sagar, Krishna water descends by gravity alone — no pumping on the main stem. Four large lift schemes branch off the Srisailam/Jurala foreshore to reach higher plateau land nearby.",
+    "trunk": [
+      {"id":"jurala","structure":"Jurala Project","elevation_m":318.52,"tmc":9.657,"kind":"dam"},
+      {"id":"srisailam","structure":"Srisailam Dam","elevation_m":270.0,"tmc":216,"kind":"dam"},
+      {"id":"nagarjunasagar","structure":"Nagarjuna Sagar Dam","elevation_m":179.83,"tmc":312,"kind":"dam"}
+    ],
+    "liftSchemes": [
+      {"id":"klis","name":"Kalwakurthy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Regumangadda","sourceElevation_m":244.4,"destElevation_m":502.0,"liftReported_m":298,"tmc":25,"notes":"3 pumping stages, 4 balancing reservoirs; reported lift (298 m) doesn't exactly reconcile with the elevation gap (257.6 m) between the cited source and destination points."},
+      {"id":"prlis","name":"Palamuru-Rangareddy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Yellur (Nagarkurnool)","sourceElevation_m":270.0,"destElevation_m":670.0,"liftReported_m":400,"tmc":90,"notes":"5-stage pumping system designed to lift 90 TMC of monsoon floodwater over ~60 days; Phase I (Narlapur/Anjanagiri intake) inaugurated 2023."},
+      {"id":"dindilis","name":"Dindi Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore (Ulpara Barrage intake)","sourceElevation_m":270.0,"destElevation_m":null,"liftReported_m":null,"tmc":30,"notes":"Lifts up to 30 TMC across a 12-reservoir network; destination elevation not confirmed in available sources."},
+      {"id":"bheema","name":"Rajiv Bheema Lift Irrigation Scheme","sourceLabel":"Jurala backwaters, Panchdev Pahad","sourceElevation_m":318.52,"destElevation_m":385.5,"liftReported_m":67,"tmc":20,"notes":"Irrigates roughly 203,000 acres across Makthal, Atmakur, Wanaparthy and Kollapur."}
+    ]
+  },
+  "dataNotes": [
+    "Kaleshwaram's total lift is reported inconsistently: 618 m (Kondapochamma Sagar's elevation) vs ~520-526 m (computed cumulative lift from Medigadda). Both figures are shown; treat 618 m as elevation, not lift.",
+    "Kaleshwaram's official target capacity is 240 TMC (195 from Medigadda + 20 from SRSP diversion + 25 groundwater recharge) — a figure disputed by CAG audit and opposition sources.",
+    "Ananthagiri Reservoir's elevation (470 m) is interpolated between Mid Manair Dam and Ranganayaka Sagar — not independently confirmed.",
+    "Individual barrage capacities (e.g. Annaram: 10.87 vs 11.9 TMC) show minor inconsistencies across Wikipedia and news sources.",
+    "The Kalwakurthy scheme's reported total lift (298 m) does not arithmetically match its cited source/destination elevations (a 257.6 m gap) — likely reflects staging not captured by simple subtraction.",
+    "Map connector lines between reservoirs come in two kinds: solid lines follow a documented intake, canal or lift scheme (e.g. Kaleshwaram's offline chain, NSP left canal to Wyra/Palair, Srisailam/Jurala lift-scheme foreshores). Dashed lines (Kinnerasani, Laknavaram, Ramappa) connect a standalone tank to its nearest mapped hub purely for visual continuity and are not a claim about the actual engineered route."
+  ]
+}
+;
+
+/* ============ projection ============ */
+let B = { minLon: 1e9, maxLon: -1e9, minLat: 1e9, maxLat: -1e9 };
+DISTRICTS.forEach(d => d.rings.forEach(r => r.forEach(([lon,lat]) => {
+  if (lon < B.minLon) B.minLon = lon; if (lon > B.maxLon) B.maxLon = lon;
+  if (lat < B.minLat) B.minLat = lat; if (lat > B.maxLat) B.maxLat = lat;
+})));
+const PAD = 0.28;
+B.minLon -= PAD; B.maxLon += PAD; B.minLat -= PAD; B.maxLat += PAD;
+const avgLatRad = (B.minLat + B.maxLat) / 2 * Math.PI / 180;
+const cosLat = Math.cos(avgLatRad);
+const VBW = 1000;
+const lonSpan = (B.maxLon - B.minLon) * cosLat;
+const pxPerDeg = VBW / lonSpan;
+const VBH = (B.maxLat - B.minLat) * pxPerDeg;
+function project([lon, lat]) {
+  return [ (lon - B.minLon) * cosLat * pxPerDeg, (B.maxLat - lat) * pxPerDeg ];
+}
+document.getElementById('mapsvg').setAttribute('viewBox', `0 0 ${VBW} ${VBH}`);
+document.getElementById('stateclipRect').setAttribute('x', -9999);
+
+/* ============ helpers ============ */
+const NS = 'http://www.w3.org/2000/svg';
+let suppressClick = false;
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function htmlEl(tag, attrs, parent) {
+  const e = document.createElement(tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function fmtTmc(n) { if (n == null) return '&mdash;'; return (Math.round(n*100)/100).toString(); }
+function ringToPath(ring) {
+  return ring.map((p,i) => (i===0?'M':'L') + project(p).map(v=>v.toFixed(1)).join(',')).join(' ') + ' Z';
+}
+function irrColorVar(irr) { return irr === 'gravity' ? 'var(--gravity-c)' : irr === 'lift' ? 'var(--lift-c)' : 'var(--both-c)'; }
+function irrClass(irr) { return irr === 'gravity' ? 'fill-gravity' : irr === 'lift' ? 'fill-lift' : 'fill-both'; }
+
+/* ============ districts ============ */
+const districtsLayer = document.getElementById('districtsLayer');
+const districtLabelsLayer = document.getElementById('districtLabelsLayer');
+DISTRICTS.forEach(d => {
+  d.rings.forEach(ring => {
+    el('path', { class: 'district', d: ringToPath(ring) }, districtsLayer);
+  });
+  let sx=0, sy=0, n=0;
+  d.rings[0].forEach(p => { const [x,y]=project(p); sx+=x; sy+=y; n++; });
+  el('text', { class: 'district-label', x: sx/n, y: sy/n }, districtLabelsLayer).textContent = d.name;
+});
+
+/* ============ rivers ============ */
+const riversLayer = document.getElementById('riversLayer');
+RIVERS.forEach(r => {
+  const d = r.path.map((p,i)=> (i===0?'M':'L') + project(p).map(v=>v.toFixed(1)).join(',')).join(' ');
+  const pathId = 'riverpath-' + r.id;
+  el('path', { class: `river-glow ${r.family}`, d, 'stroke-width': r.weight + 5 }, riversLayer);
+  el('path', { id: pathId, class: `river ${r.family}`, d, 'stroke-width': r.weight, filter: 'url(#waterRipple)' }, riversLayer);
+  el('path', { class: `river ${r.family} river-flow`, d, 'stroke-width': Math.max(1, r.weight-1.6) }, riversLayer);
+
+  const dropCount = Math.max(2, Math.round(r.weight * 0.8));
+  for (let i = 0; i < dropCount; i++) {
+    const drop = el('circle', { class: `water-drop ${r.family}`, r: Math.max(1.5, r.weight * 0.34) }, riversLayer);
+    const dur = 7 + Math.random() * 3;
+    const anim = document.createElementNS(NS, 'animateMotion');
+    anim.setAttribute('dur', dur.toFixed(1) + 's');
+    anim.setAttribute('repeatCount', 'indefinite');
+    anim.setAttribute('begin', (-(i / dropCount) * dur).toFixed(2) + 's');
+    const mpath = document.createElementNS(NS, 'mpath');
+    mpath.setAttribute('href', '#' + pathId);
+    anim.appendChild(mpath);
+    drop.appendChild(anim);
+  }
+
+  const mid = r.path[Math.floor(r.path.length*0.62)];
+  const [lx,ly] = project(mid);
+  el('text', { class: 'river-label', x: lx+6, y: ly-4 }, riversLayer).textContent = r.name;
+});
+
+/* ============ inter-reservoir connections ============
+   Links every reservoir not already sitting on one of the five main rivers into the
+   network. `sourced:true` links follow documented intakes/canals (Kaleshwaram offline
+   chain, Srisailam/Jurala lift-scheme foreshores, NSP left-canal lakes). `sourced:false`
+   links connect a standalone tank to its nearest mapped hub purely for visual
+   connectivity and are not a claim about the actual engineered route. */
+const CONNECTIONS = [
+  { from:'mmd', to:'ananthagiri', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
+  { from:'ananthagiri', to:'ranganayakasagar', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
+  { from:'ranganayakasagar', to:'mallannasagar', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
+  { from:'mallannasagar', to:'kondapochamma', flow:'lift', sourced:true, note:'Akkaram pump house' },
+  { from:'mmd', to:'gouravelli', flow:'lift', sourced:true, note:'Regonda pump house' },
+  { from:'srisailam', to:'dindi', flow:'lift', sourced:true, note:'Dindi Lift Scheme' },
+  { from:'srisailam', to:'anjanagiri', flow:'lift', sourced:true, note:'Palamuru-Rangareddy LIS' },
+  { from:'jurala', to:'udandapur', flow:'lift', sourced:true, note:'Nettempadu LIS' },
+  { from:'nagarjunasagar', to:'wyra', flow:'gravity', sourced:true, note:'NSP left canal' },
+  { from:'nagarjunasagar', to:'palair', flow:'gravity', sourced:true, note:'Lal Bahadur (NSP left) canal' },
+  { from:'kaddam', to:'srsp', flow:'gravity', sourced:true, note:'Kadam river → Godavari' },
+  { from:'medigadda', to:'pakhal', flow:'lift', sourced:true, note:'2021 Godavari lift augmentation' },
+  { from:'himayatsagar', to:'osmansagar', flow:'gravity', sourced:true, note:'Hyderabad supply system' },
+  { from:'kinnerasani', to:'medigadda', flow:'gravity', sourced:false },
+  { from:'laknavaram', to:'medigadda', flow:'gravity', sourced:false },
+  { from:'ramappa', to:'laknavaram', flow:'gravity', sourced:false },
+];
+function resPt(id) {
+  const r = RESERVOIRS.find(x => x.id === id);
+  if (!r || r.lon == null) return null;
+  return { r, xy: project([r.lon, r.lat]) };
+}
+const linksLayer = document.getElementById('linksLayer');
+CONNECTIONS.forEach((c, i) => {
+  const a = resPt(c.from), b = resPt(c.to);
+  if (!a || !b) return;
+  const d = `M${a.xy[0].toFixed(1)},${a.xy[1].toFixed(1)} L${b.xy[0].toFixed(1)},${b.xy[1].toFixed(1)}`;
+  const pathId = 'linkpath-' + i;
+  const cls = `link-line ${c.flow}` + (c.sourced ? '' : ' schematic');
+  el('path', { class: cls + '-glow', d, 'stroke-width': 5 }, linksLayer);
+  el('path', { id: pathId, class: cls, d, 'stroke-width': 2 }, linksLayer);
+  const drop = el('circle', { class: `water-drop link-drop ${c.flow}`, r: 1.8 }, linksLayer);
+  const dur = 4.5 + Math.random();
+  const anim = document.createElementNS(NS, 'animateMotion');
+  anim.setAttribute('dur', dur.toFixed(1) + 's');
+  anim.setAttribute('repeatCount', 'indefinite');
+  const mpath = document.createElementNS(NS, 'mpath');
+  mpath.setAttribute('href', '#' + pathId);
+  anim.appendChild(mpath);
+  drop.appendChild(anim);
+});
+
+/* ============ capacity scale ============ */
+const maxTmc = Math.max(...RESERVOIRS.map(r => r.gross_tmc || 0));
+const minTmc = Math.min(...RESERVOIRS.filter(r=>r.gross_tmc).map(r => r.gross_tmc));
+function rScale(tmc) {
+  if (!tmc) return 4;
+  const RMIN=3.6, RMAX=30;
+  return RMIN + (RMAX-RMIN) * Math.sqrt(tmc / maxTmc);
+}
+const elevs = RESERVOIRS.filter(r=>r.frl_m!=null).map(r=>r.frl_m);
+const minElev = Math.min(...elevs), maxElev = Math.max(...elevs);
+function elevFrac(m) { return m==null ? null : (m - minElev) / (maxElev - minElev); }
+
+/* ============ markers ============ */
+const markersLayer = document.getElementById('markersLayer');
+const markerEls = {};
+RESERVOIRS.forEach(r => {
+  if (r.lat == null || r.lon == null) return;
+  const [x,y] = project([r.lon, r.lat]);
+  const g = el('g', { class: 'marker', 'data-id': r.id, tabindex: '0', role: 'button', 'aria-label': `${r.name}, ${fmtTmc(r.gross_tmc)} TMC, ${r.irrigation}` }, markersLayer);
+  const rad = rScale(r.gross_tmc);
+  if (rad >= 9) g.classList.add('show-label');
+
+  const gh = 20, gw = 3;
+  const gx = x - rad - 8, gy = y - gh/2;
+  el('rect', { class: 'gauge-bg', x: gx, y: gy, width: gw, height: gh, rx: 1.5 }, g);
+  const frac = elevFrac(r.frl_m);
+  if (frac != null) {
+    const fh = Math.max(1.5, gh * Math.max(0.05, frac));
+    el('rect', { class: 'gauge-fill', x: gx, y: gy + (gh-fh), width: gw, height: fh, rx: 1.5, style: `fill:${irrColorVar('lift')}` }, g);
+  }
+
+  const strokeClass = r.basin === 'Godavari' ? 'stroke-godavari' : 'stroke-krishna';
+  el('circle', { class: `dot-glow ${irrClass(r.irrigation)}`, cx: x, cy: y, r: rad + 3 }, g);
+  el('circle', { class: `dot ${strokeClass}`, cx: x, cy: y, r: rad, style: `fill:url(#pool-${r.irrigation})`, filter: 'url(#waterRipple)' }, g);
+  el('ellipse', { class: 'dot-shine', cx: x - rad*0.3, cy: y - rad*0.38, rx: Math.max(1, rad*0.4), ry: Math.max(0.6, rad*0.2) }, g);
+  const lbl = el('text', { class: 'lbl', x: x + rad + 5, y: y + 3 }, g);
+  lbl.textContent = r.name.replace(/ (Dam|Barrage|Project|Reservoir|Lake).*$/,'');
+  markerEls[r.id] = { g, x, y, rad };
+});
+
+/* ============ tooltip ============ */
+const tooltip = document.getElementById('tooltip');
+const stageEl = document.querySelector('.stage');
+function showTooltip(r, evt) {
+  tooltip.innerHTML = `
+    <div class="t-name">${r.name}</div>
+    <div class="t-row"><span>River</span><b>${r.river}</b></div>
+    <div class="t-row"><span>FRL elevation</span><b>${r.frl_m!=null ? r.frl_m+' m' : 'n/a'}</b></div>
+    <div class="t-row"><span>Gross capacity</span><b>${fmtTmc(r.gross_tmc)} TMC</b></div>
+    <div class="t-row"><span>Flow type</span><b>${r.irrigation}</b></div>
+  `;
+  const rect = stageEl.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left) + 'px';
+  tooltip.style.top = (evt.clientY - rect.top) + 'px';
+  tooltip.classList.add('show');
+}
+function hideTooltip() { tooltip.classList.remove('show'); }
+
+/* ============ drawer ============ */
+const drawer = document.getElementById('drawer');
+const drawerContent = document.getElementById('drawerContent');
+document.getElementById('drawerClose').addEventListener('click', () => closeDrawer());
+function closeDrawer() {
+  drawer.classList.remove('open');
+  document.querySelectorAll('.marker.selected').forEach(m => m.classList.remove('selected'));
+}
+function openDrawer(r) {
+  document.querySelectorAll('.marker.selected').forEach(m => m.classList.remove('selected'));
+  const mEl = markerEls[r.id]; if (mEl) mEl.g.classList.add('selected');
+
+  const capFrac = r.gross_tmc ? Math.min(1, r.gross_tmc / maxTmc) : 0;
+  const frac = elevFrac(r.frl_m);
+  const badges = [];
+  if (r.coordApprox) badges.push('approximate location');
+  if (r.source && r.source.toLowerCase().includes('interp')) badges.push('interpolated elevation');
+  drawerContent.innerHTML = `
+    <p class="d-eyebrow">${r.type} &middot; ${r.district}</p>
+    <h2>${r.name}</h2>
+    <p class="d-sub">${r.river} &middot; ${r.basin} basin${r.year ? ' &middot; built ' + r.year : ''}</p>
+    ${badges.map(b=>`<span class="badge">${b}</span>`).join('')}
+    <div class="kv-grid">
+      <div class="kv"><div class="k">Gross capacity</div><div class="v tabular">${fmtTmc(r.gross_tmc)} <small>TMC</small>
+        <div class="capbar"><div class="f" style="width:${capFrac*100}%; background:${irrColorVar(r.irrigation)}"></div></div></div></div>
+      <div class="kv"><div class="k">Live capacity</div><div class="v tabular">${fmtTmc(r.live_tmc)} <small>TMC</small></div></div>
+      <div class="kv"><div class="k">FRL elevation</div><div class="v tabular">${r.frl_m!=null ? r.frl_m : '&mdash;'} <small>${r.frl_m!=null?'m MSL':''}</small></div></div>
+      <div class="kv"><div class="k">Flow type</div><div class="v" style="color:${irrColorVar(r.irrigation)}">${r.irrigation}</div></div>
+    </div>
+    ${frac!=null ? `<div class="elev-context"><div class="k" style="font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)">Elevation among all reservoirs</div>
+      <div class="rail-bg"><div class="marker-pt" style="left:${frac*100}%">${r.frl_m} m</div></div></div>` : ''}
+    <p class="d-notes">${r.notes}</p>
+    <p class="d-src">Source: ${r.source}</p>
+  `;
+  drawer.classList.add('open');
+}
+
+/* ============ interactions: hover / click ============ */
+markersLayer.addEventListener('mousemove', (e) => {
+  const g = e.target.closest('.marker'); if (!g) return;
+  const r = RESERVOIRS.find(x => x.id === g.dataset.id);
+  showTooltip(r, e);
+});
+markersLayer.addEventListener('mouseleave', hideTooltip);
+markersLayer.addEventListener('click', (e) => {
+  if (suppressClick) { suppressClick = false; return; }
+  const g = e.target.closest('.marker'); if (!g) return;
+  const r = RESERVOIRS.find(x => x.id === g.dataset.id);
+  openDrawer(r);
+});
+markersLayer.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const g = e.target.closest('.marker'); if (!g) return;
+  e.preventDefault();
+  const r = RESERVOIRS.find(x => x.id === g.dataset.id);
+  openDrawer(r);
+});
+
+/* ============ legend ============ */
+document.getElementById('mapLegend').innerHTML = `
+  <div class="grp"><span class="grp-title">Flow</span>
+    <span class="swatch"><span class="dot" style="background:var(--gravity-c)"></span>Gravity</span>
+    <span class="swatch"><span class="dot" style="background:var(--lift-c)"></span>Lift-irrigated</span>
+    <span class="swatch"><span class="dot" style="background:var(--both-c)"></span>Both</span>
+  </div>
+  <div class="grp"><span class="grp-title">River basin</span>
+    <span class="swatch"><span class="ln" style="background:var(--godavari-river)"></span>Godavari</span>
+    <span class="swatch"><span class="ln" style="background:var(--krishna-river)"></span>Krishna</span>
+  </div>
+  <div class="grp"><span class="grp-title">Reservoir links</span>
+    <span class="swatch"><span class="ln" style="background:var(--lift-c)"></span>Documented</span>
+    <span class="swatch"><span class="ln" style="background:var(--lift-c);background-image:repeating-linear-gradient(90deg,var(--lift-c) 0 3px,transparent 3px 6px)"></span>Schematic</span>
+  </div>
+  <div class="grp"><span class="grp-title">Capacity</span>
+    <span class="circ-scale">
+      <span class="c" style="width:${rScale(1)*2}px;height:${rScale(1)*2}px"></span>
+      <span class="c" style="width:${rScale(20)*2}px;height:${rScale(20)*2}px"></span>
+      <span class="c" style="width:${rScale(300)*2}px;height:${rScale(300)*2}px"></span>
+    </span>
+    <span style="font-family:var(--font-mono);font-size:10.5px">1&nbsp;&middot;&nbsp;20&nbsp;&middot;&nbsp;300&nbsp;TMC</span>
+  </div>
+  <div class="grp"><span class="grp-title">Elevation gauge</span>
+    <span style="display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10.5px">
+      <span style="width:3px;height:14px;background:var(--border);display:inline-block;border-radius:1px"></span>
+      ${minElev.toFixed(0)}&ndash;${maxElev.toFixed(0)} m MSL
+    </span>
+  </div>
+`;
+
+/* ============ pan / zoom ============ */
+const svg = document.getElementById('mapsvg');
+let vb = { x: 0, y: 0, w: VBW, h: VBH };
+function applyVB() { svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`); }
+function zoomAt(factor, cx, cy) {
+  const nw = Math.max(210, Math.min(VBW*1.4, vb.w * factor));
+  const nh = nw * (vb.h/vb.w);
+  vb.x = cx - (cx - vb.x) * (nw/vb.w);
+  vb.y = cy - (cy - vb.y) * (nh/vb.h);
+  vb.w = nw; vb.h = nh;
+  applyVB();
+}
+svg.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+  const loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+  zoomAt(e.deltaY > 0 ? 1.12 : 0.89, loc.x, loc.y);
+}, { passive: false });
+const PAN_THRESHOLD = 5;
+let armed = false, dragging = false, dragStart = null, vbStart = null;
+function panStart(x, y) { armed = true; dragging = false; dragStart = { x, y }; vbStart = { ...vb }; }
+function panMove(x, y) {
+  if (!armed) return;
+  const dx = x - dragStart.x, dy = y - dragStart.y;
+  if (!dragging) {
+    if (Math.hypot(dx, dy) < PAN_THRESHOLD) return;
+    dragging = true; svg.classList.add('dragging');
+  }
+  const scale = vbStart.w / svg.getBoundingClientRect().width;
+  vb.x = vbStart.x - dx * scale;
+  vb.y = vbStart.y - dy * scale;
+  applyVB();
+}
+function panEnd() {
+  armed = false;
+  if (dragging) { dragging = false; svg.classList.remove('dragging'); suppressClick = true; }
+}
+svg.addEventListener('mousedown', (e) => { if (e.button === 0) panStart(e.clientX, e.clientY); });
+window.addEventListener('mousemove', (e) => panMove(e.clientX, e.clientY));
+window.addEventListener('mouseup', panEnd);
+
+function touchDist(t0, t1) { return Math.hypot(t1.clientX-t0.clientX, t1.clientY-t0.clientY); }
+function touchMid(t0, t1) { return { x: (t0.clientX+t1.clientX)/2, y: (t0.clientY+t1.clientY)/2 }; }
+let pinchStartDist = null, pinchStartVB = null;
+svg.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    panStart(e.touches[0].clientX, e.touches[0].clientY);
+  } else if (e.touches.length === 2) {
+    armed = false; dragging = false; svg.classList.remove('dragging');
+    pinchStartDist = touchDist(e.touches[0], e.touches[1]);
+    pinchStartVB = { ...vb };
+  }
+}, { passive: true });
+svg.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 1 && armed) {
+    panMove(e.touches[0].clientX, e.touches[0].clientY);
+    if (dragging) e.preventDefault();
+  } else if (e.touches.length === 2 && pinchStartDist) {
+    e.preventDefault();
+    const d = touchDist(e.touches[0], e.touches[1]);
+    const factor = pinchStartDist / d;
+    const nw = Math.max(210, Math.min(VBW*1.4, pinchStartVB.w * factor));
+    const nh = nw * (pinchStartVB.h/pinchStartVB.w);
+    const mid = touchMid(e.touches[0], e.touches[1]);
+    const rect = svg.getBoundingClientRect();
+    const fx = (mid.x-rect.left)/rect.width, fy = (mid.y-rect.top)/rect.height;
+    vb = { x: pinchStartVB.x + pinchStartVB.w*fx - nw*fx, y: pinchStartVB.y + pinchStartVB.h*fy - nh*fy, w: nw, h: nh };
+    applyVB();
+  }
+}, { passive: false });
+svg.addEventListener('touchend', () => { panEnd(); pinchStartDist = null; }, { passive: true });
+document.getElementById('zoomIn').addEventListener('click', () => {
+  if (dim === '3d') { cam.zoom = Math.min(5.5, cam.zoom * 1.18); applyCam(); return; }
+  zoomAt(0.8, vb.x+vb.w/2, vb.y+vb.h/2);
+});
+document.getElementById('zoomOut').addEventListener('click', () => {
+  if (dim === '3d') { cam.zoom = Math.max(0.7, cam.zoom * 0.85); applyCam(); return; }
+  zoomAt(1.25, vb.x+vb.w/2, vb.y+vb.h/2);
+});
+document.getElementById('zoomReset').addEventListener('click', () => {
+  if (dim === '3d') { resetCam(); return; }
+  vb = { x:0, y:0, w:VBW, h:VBH }; applyVB();
+});
+
+/* ============ 3D relief scene ============ */
+const ZSCALE = 0.42; // px per metre of elevation
+const CX = VBW / 2, CY = VBH / 2;
+let scene3dBuilt = false;
+let dim = '2d';
+const pillar3dEls = {};
+
+function elevationsAlongPath(path) {
+  const known = path.map(([lon, lat]) => {
+    const m = RESERVOIRS.find(r => r.lat != null && r.frl_m != null && Math.abs(r.lon - lon) < 0.012 && Math.abs(r.lat - lat) < 0.012);
+    return m ? m.frl_m : null;
+  });
+  const idx = known.map((v, i) => v != null ? i : null).filter(v => v != null);
+  if (idx.length < 2) return null; // not enough data to elevate honestly
+  const dist = [0];
+  for (let i = 1; i < path.length; i++) {
+    const [lo1, la1] = path[i-1], [lo2, la2] = path[i];
+    dist.push(dist[i-1] + Math.hypot((lo2-lo1)*cosLat, la2-la1));
+  }
+  return known.map((v, i) => {
+    if (v != null) return v;
+    let prev = null, next = null;
+    idx.forEach(k => { if (k < i) prev = k; if (k > i && next == null) next = k; });
+    if (prev == null) return known[idx[0]];
+    if (next == null) return known[idx[idx.length-1]];
+    const t = (dist[i]-dist[prev]) / (dist[next]-dist[prev] || 1);
+    return known[prev] + t * (known[next]-known[prev]);
+  });
+}
+
+function make3dAnchor(parent, wx, wy, zMeters) {
+  const d = document.createElement('div');
+  d.style.position = 'absolute'; d.style.left = '0'; d.style.top = '0';
+  d.style.transform = `translate3d(${(wx-CX).toFixed(1)}px, ${(wy-CY).toFixed(1)}px, ${(zMeters*ZSCALE).toFixed(1)}px)`;
+  parent.appendChild(d);
+  return d;
+}
+
+function build3DScene() {
+  if (scene3dBuilt) return;
+  scene3dBuilt = true;
+
+  const groundsvg = document.getElementById('groundsvg');
+  groundsvg.setAttribute('viewBox', `0 0 ${VBW} ${VBH}`);
+  DISTRICTS.forEach(d => d.rings.forEach(ring => {
+    el('path', { class: 'ground-district', d: ringToPath(ring) }, groundsvg);
+  }));
+  const ground3d = document.querySelector('.ground3d');
+  ground3d.style.width = VBW + 'px'; ground3d.style.height = VBH + 'px';
+  ground3d.style.left = (-CX) + 'px'; ground3d.style.top = (-CY) + 'px';
+
+  const pillars3d = document.getElementById('pillars3d');
+
+  // river anchors (elevated where we have >=2 known points, else flat on ground)
+  window.__river3dBeads = RIVERS.map(r => {
+    const elevs = elevationsAlongPath(r.path);
+    const beads = r.path.map(([lon, lat], i) => {
+      const [wx, wy] = project([lon, lat]);
+      const z = elevs ? elevs[i] : 0;
+      return make3dAnchor(pillars3d, wx, wy, z);
+    });
+    return { river: r, beads, elevated: !!elevs };
+  });
+
+  // reservoir ground anchors + elevated caps
+  window.__pillar3d = RESERVOIRS.filter(r => r.lat != null).map(r => {
+    const [wx, wy] = project([r.lon, r.lat]);
+    const groundAnchor = make3dAnchor(pillars3d, wx, wy, 0);
+    const hasElev = r.frl_m != null;
+    const capAnchor = make3dAnchor(pillars3d, wx, wy, hasElev ? r.frl_m : 0);
+    const cap = document.createElement('div');
+    const dia = rScale(r.gross_tmc) * 2;
+    cap.className = 'pillar-cap ' + (hasElev ? r.irrigation : 'flat');
+    cap.style.width = dia + 'px'; cap.style.height = dia + 'px';
+    cap.dataset.id = r.id;
+    cap.tabIndex = 0;
+    cap.setAttribute('role', 'button');
+    cap.setAttribute('aria-label', `${r.name}, ${fmtTmc(r.gross_tmc)} TMC, ${r.irrigation}`);
+    capAnchor.appendChild(cap);
+    pillar3dEls[r.id] = { groundAnchor, capAnchor, cap, hasElev };
+    return { r, groundAnchor, capAnchor, cap, hasElev };
+  });
+
+  pillars3d.addEventListener('mousemove', (e) => {
+    const cap = e.target.closest('.pillar-cap'); if (!cap) return;
+    const r = RESERVOIRS.find(x => x.id === cap.dataset.id);
+    showTooltip(r, e);
+  });
+  pillars3d.addEventListener('mouseleave', hideTooltip);
+  pillars3d.addEventListener('click', (e) => {
+    if (suppressClick) { suppressClick = false; return; }
+    const cap = e.target.closest('.pillar-cap'); if (!cap) return;
+    const r = RESERVOIRS.find(x => x.id === cap.dataset.id);
+    openDrawer(r);
+  });
+  pillars3d.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const cap = e.target.closest('.pillar-cap'); if (!cap) return;
+    e.preventDefault();
+    const r = RESERVOIRS.find(x => x.id === cap.dataset.id);
+    openDrawer(r);
+  });
+
+  updateOverlay();
+}
+
+function screenPt(el, wrapRect) {
+  const r = el.getBoundingClientRect();
+  return [r.left + r.width/2 - wrapRect.left, r.top + r.height/2 - wrapRect.top];
+}
+function updateOverlay() {
+  if (!scene3dBuilt || dim !== '3d') return;
+  const wrap = document.getElementById('scene3dWrap');
+  const overlay = document.getElementById('overlay2d');
+  const wr = wrap.getBoundingClientRect();
+  overlay.setAttribute('viewBox', `0 0 ${wr.width} ${wr.height}`);
+  overlay.innerHTML = '';
+
+  // rivers
+  window.__river3dBeads.forEach(({ river, beads, elevated }) => {
+    const pts = beads.map(b => screenPt(b, wr));
+    const d = pts.map((p,i) => (i===0?'M':'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+    const cls = `river3d ${river.family}${elevated ? '' : ' flat'}`;
+    el('path', { class: `river3d-glow ${river.family}`, d, 'stroke-width': river.weight + 4 }, overlay);
+    el('path', { class: cls, d, 'stroke-width': river.weight }, overlay);
+    el('path', { class: cls + ' river-flow', d, 'stroke-width': Math.max(1, river.weight-1.6) }, overlay);
+  });
+
+  // inter-reservoir connections
+  CONNECTIONS.forEach(c => {
+    const pa = pillar3dEls[c.from], pb = pillar3dEls[c.to];
+    if (!pa || !pb) return;
+    const [ax, ay] = screenPt(pa.hasElev ? pa.capAnchor : pa.groundAnchor, wr);
+    const [bx, by] = screenPt(pb.hasElev ? pb.capAnchor : pb.groundAnchor, wr);
+    const cls = `link3d ${c.flow}` + (c.sourced ? '' : ' schematic');
+    el('line', { class: cls + '-glow', x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 5 }, overlay);
+    el('line', { class: cls, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2 }, overlay);
+    el('line', { class: `link3d-flow ${c.flow}`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2.4 }, overlay);
+  });
+
+  // pillar stems + shadows
+  const labelCandidates = [];
+  window.__pillar3d.forEach(({ r, groundAnchor, capAnchor, cap, hasElev }) => {
+    const dim2 = cap.classList.contains('dim');
+    const [gx, gy] = screenPt(groundAnchor, wr);
+    const [tx, ty] = screenPt(capAnchor, wr);
+    const rad = rScale(r.gross_tmc) * 0.55;
+    el('ellipse', { class: 'ground-shadow' + (dim2?' dim':''), cx: gx, cy: gy, rx: rad, ry: rad*0.42 }, overlay);
+    if (hasElev) {
+      const flowCls = r.irrigation === 'gravity' ? 'gravity' : r.irrigation === 'lift' ? 'lift' : 'both';
+      el('line', { class: 'stem-line ' + flowCls + (dim2?' dim':''), x1: gx, y1: gy, x2: tx, y2: ty, 'stroke-width': 2 }, overlay);
+      if (!dim2) {
+        const upward = r.irrigation !== 'gravity';
+        const p1 = upward ? [gx, gy] : [tx, ty];
+        const p2 = upward ? [tx, ty] : [gx, gy];
+        el('line', { class: 'stem-flow ' + flowCls, x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], 'stroke-width': 2.6 }, overlay);
+      }
+    }
+    if (rScale(r.gross_tmc) >= 13 && !dim2) {
+      const text = r.name.replace(/ (Dam|Barrage|Project|Reservoir|Lake).*$/,'');
+      labelCandidates.push({ x: tx + rad + 6, y: ty + 4, w: text.length * 6.4, h: 13, text, priority: r.gross_tmc || 0 });
+    }
+  });
+  declutterLabels(labelCandidates).forEach(lc => {
+    el('text', { class: 'cap-label3d', x: lc.x, y: lc.y }, overlay).textContent = lc.text;
+  });
+}
+
+function declutterLabels(items, minGap = 15) {
+  const sorted = items.slice().sort((a, b) => b.priority - a.priority);
+  const placed = [];
+  sorted.forEach(it => {
+    let guard = 0;
+    while (guard++ < 24) {
+      const collision = placed.find(p => Math.abs(it.x - p.x) < (it.w + p.w) / 2 - 4 && Math.abs(it.y - p.y) < minGap);
+      if (!collision) break;
+      it.y = collision.y + minGap;
+    }
+    placed.push(it);
+  });
+  return placed;
+}
+
+const DEFAULT_CAM = { yaw: -18, pitch: 58, zoom: 2.1, panX: 127, panY: 24, tz: 0 };
+let cam = { ...DEFAULT_CAM };
+function resetCam() { cam = { ...DEFAULT_CAM }; applyCam(); }
+function applyCam() {
+  const scene3d = document.getElementById('scene3d');
+  scene3d.style.transform = `translate3d(${cam.panX}%, ${cam.panY}%, ${cam.tz}px) rotateX(${cam.pitch}deg) rotateZ(${cam.yaw}deg) scale(${cam.zoom})`;
+  requestAnimationFrame(updateOverlay);
+}
+const sceneWrap = document.getElementById('scene3dWrap');
+const DRAG_THRESHOLD = 5;
+let sceneArmed = false, sceneDragging = false, sceneDragStart = null, camStart = null;
+function rotStart(x, y) { sceneArmed = true; sceneDragging = false; sceneDragStart = { x, y }; camStart = { ...cam }; }
+function rotMove(x, y) {
+  if (!sceneArmed) return;
+  const dx = x - sceneDragStart.x, dy = y - sceneDragStart.y;
+  if (!sceneDragging) {
+    if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+    sceneDragging = true; sceneWrap.classList.add('dragging');
+  }
+  cam.yaw = camStart.yaw + dx * 0.28;
+  cam.pitch = Math.max(24, Math.min(85, camStart.pitch - dy * 0.22));
+  applyCam();
+}
+function rotEnd() {
+  sceneArmed = false;
+  if (sceneDragging) { sceneDragging = false; sceneWrap.classList.remove('dragging'); suppressClick = true; scheduleURLSync(); }
+}
+sceneWrap.addEventListener('mousedown', (e) => { if (e.button === 0) rotStart(e.clientX, e.clientY); });
+window.addEventListener('mousemove', (e) => rotMove(e.clientX, e.clientY));
+window.addEventListener('mouseup', rotEnd);
+sceneWrap.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  cam.zoom = Math.max(0.7, Math.min(5.5, cam.zoom * (e.deltaY > 0 ? 0.9 : 1.11)));
+  applyCam(); scheduleURLSync();
+}, { passive: false });
+
+let scenePinchDist = null, scenePinchZoom = null;
+sceneWrap.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    rotStart(e.touches[0].clientX, e.touches[0].clientY);
+  } else if (e.touches.length === 2) {
+    sceneArmed = false; sceneDragging = false; sceneWrap.classList.remove('dragging');
+    scenePinchDist = touchDist(e.touches[0], e.touches[1]);
+    scenePinchZoom = cam.zoom;
+  }
+}, { passive: true });
+sceneWrap.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 1 && sceneArmed) {
+    rotMove(e.touches[0].clientX, e.touches[0].clientY);
+    if (sceneDragging) e.preventDefault();
+  } else if (e.touches.length === 2 && scenePinchDist) {
+    e.preventDefault();
+    const d = touchDist(e.touches[0], e.touches[1]);
+    cam.zoom = Math.max(0.7, Math.min(5.5, scenePinchZoom * (d / scenePinchDist)));
+    applyCam();
+  }
+}, { passive: false });
+sceneWrap.addEventListener('touchend', () => { rotEnd(); scenePinchDist = null; }, { passive: true });
+
+window.addEventListener('resize', () => { if (dim === '3d') requestAnimationFrame(updateOverlay); });
+
+function switchDim(newDim) {
+  if (newDim === dim) return;
+  document.getElementById('dimToggle').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dim===newDim ? 'true':'false'));
+  const outEl = dim === '2d' ? document.getElementById('mapsvg') : sceneWrap;
+  outEl.classList.add('dim-fade');
+  setTimeout(() => {
+    dim = newDim;
+    document.getElementById('mapsvg').style.display = dim === '2d' ? 'block' : 'none';
+    sceneWrap.hidden = dim !== '3d';
+    if (dim === '3d') { build3DScene(); applyCam(); requestAnimationFrame(updateOverlay); }
+    const inEl = dim === '2d' ? document.getElementById('mapsvg') : sceneWrap;
+    inEl.classList.add('dim-fade');
+    requestAnimationFrame(() => requestAnimationFrame(() => { inEl.classList.remove('dim-fade'); outEl.classList.remove('dim-fade'); }));
+    scheduleURLSync();
+  }, 180);
+}
+document.getElementById('dimToggle').querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => switchDim(btn.dataset.dim));
+});
+
+/* ============ camera animation helpers (shared by search-jump and guided tour) ============ */
+function animateCam(target, duration = 900) {
+  return new Promise(resolve => {
+    const scene3d = document.getElementById('scene3d');
+    scene3d.style.transition = `transform ${duration}ms cubic-bezier(0.65,0,0.35,1)`;
+    Object.assign(cam, target);
+    applyCam();
+    const start = performance.now();
+    function tick(t) {
+      updateOverlay();
+      if (t - start < duration) { requestAnimationFrame(tick); }
+      else { scene3d.style.transition = ''; updateOverlay(); scheduleURLSync(); resolve(); }
+    }
+    requestAnimationFrame(tick);
+  });
+}
+function animateVB(target, duration = 700) {
+  return new Promise(resolve => {
+    const startVB = { ...vb }; const t0 = performance.now();
+    function tick(t) {
+      const p = Math.min(1, (t - t0) / duration);
+      const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p+2, 2)/2;
+      vb = {
+        x: startVB.x + (target.x-startVB.x)*e, y: startVB.y + (target.y-startVB.y)*e,
+        w: startVB.w + (target.w-startVB.w)*e, h: startVB.h + (target.h-startVB.h)*e,
+      };
+      applyVB();
+      if (p < 1) requestAnimationFrame(tick); else resolve();
+    }
+    requestAnimationFrame(tick);
+  });
+}
+function computeCamPanFor3D(ids) {
+  const wr = sceneWrap.getBoundingClientRect();
+  let sx = 0, sy = 0, n = 0;
+  ids.forEach(id => {
+    const p = pillar3dEls[id]; if (!p) return;
+    const r = p.capAnchor.getBoundingClientRect();
+    sx += r.left + r.width/2 - wr.left; sy += r.top + r.height/2 - wr.top; n++;
+  });
+  if (!n) return null;
+  const dx = wr.width/2 - sx/n, dy = wr.height/2 - sy/n;
+  return { panX: cam.panX + dx/wr.width*100, panY: cam.panY + dy/wr.height*100 };
+}
+function computeVBFor2D(ids) {
+  let minX=1e9, maxX=-1e9, minY=1e9, maxY=-1e9;
+  ids.forEach(id => { const m = markerEls[id]; if (!m) return; minX=Math.min(minX,m.x); maxX=Math.max(maxX,m.x); minY=Math.min(minY,m.y); maxY=Math.max(maxY,m.y); });
+  if (minX > maxX) return null;
+  const cx = (minX+maxX)/2, cy = (minY+maxY)/2;
+  const spanX = Math.max(maxX-minX, 50), spanY = Math.max(maxY-minY, 50);
+  const w = Math.min(VBW, Math.max(280, spanX*1.9, spanY*1.9*(VBW/VBH)) + 90);
+  const h = w * (VBH/VBW);
+  return { x: cx - w/2, y: cy - h/2, w, h };
+}
+
+/* ============ guided tour ============ */
+let tourState = null;
+function buildTourStages(chainKey) {
+  const trunk = CHAINS[chainKey].trunk;
+  return trunk
+    .map((n, i) => ({ id: n.id, label: n.structure, elevation: n.elevation_m, tmc: n.tmc, lift: n.liftFromPrev_m, pump: n.pumpFromPrev, reservoir: RESERVOIRS.find(x => x.id === n.id), index: i }))
+    .filter(s => s.reservoir);
+}
+async function startTour(chainKey) {
+  document.querySelectorAll('.tabs button[data-view]').forEach(b=>b.setAttribute('aria-selected', b.dataset.view==='map'?'true':'false'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-map').classList.add('active');
+  document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (dim !== '3d') switchDim('3d'); else { build3DScene(); }
+  await new Promise(r => setTimeout(r, dim === '3d' ? 60 : 260));
+  const stages = buildTourStages(chainKey);
+  stages.forEach(s => { s.total = stages.length; });
+  tourState = { stages, idx: -1, playing: true, chainKey, timer: null };
+  document.getElementById('flyHud').hidden = false;
+  document.getElementById('flyPlayPause').textContent = 'Pause';
+  await goToStage(0);
+}
+async function goToStage(i) {
+  if (!tourState) return;
+  clearTimeout(tourState.timer);
+  tourState.idx = i;
+  const s = tourState.stages[i];
+  updateFlyHud(s);
+  document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+  const p = pillar3dEls[s.id];
+  if (p) p.cap.classList.add('touring');
+  const pan = computeCamPanFor3D([s.id]);
+  if (pan) await animateCam({ panX: pan.panX, panY: pan.panY, zoom: Math.max(cam.zoom, 3.0) }, 900);
+  if (tourState && tourState.playing) {
+    tourState.timer = setTimeout(() => advanceTour(1), 3400);
+  }
+}
+function advanceTour(dir) {
+  if (!tourState) return;
+  const ni = tourState.idx + dir;
+  if (ni >= tourState.stages.length) { endTour(); return; }
+  if (ni < 0) return;
+  goToStage(ni);
+}
+function endTour() {
+  if (!tourState) return;
+  clearTimeout(tourState.timer);
+  document.getElementById('flyHud').hidden = true;
+  document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+  tourState = null;
+}
+function updateFlyHud(s) {
+  const chainLabel = tourState.chainKey === 'godavari' ? 'Kaleshwaram Lift Chain' : 'Krishna Gravity Chain';
+  document.getElementById('flyEyebrow').textContent = `Stage ${s.index+1} of ${s.total} · ${chainLabel}`;
+  document.getElementById('flyTitle').textContent = s.label;
+  const bits = [`${s.elevation} m MSL`];
+  if (s.tmc) bits.push(`${s.tmc} TMC`);
+  if (s.lift) bits.push(`+${s.lift} m lift`);
+  if (s.pump) bits.push(s.pump);
+  document.getElementById('flyStats').textContent = bits.join('  ·  ');
+  document.getElementById('flyProgress').style.width = ((s.index+1)/s.total*100) + '%';
+}
+document.getElementById('tourGodavari').addEventListener('click', () => startTour('godavari'));
+document.getElementById('tourKrishna').addEventListener('click', () => startTour('krishna'));
+document.getElementById('flyPrev').addEventListener('click', () => advanceTour(-1));
+document.getElementById('flyNext').addEventListener('click', () => advanceTour(1));
+document.getElementById('flyExit').addEventListener('click', endTour);
+document.getElementById('flyPlayPause').addEventListener('click', () => {
+  if (!tourState) return;
+  tourState.playing = !tourState.playing;
+  document.getElementById('flyPlayPause').textContent = tourState.playing ? 'Pause' : 'Play';
+  if (tourState.playing) { tourState.timer = setTimeout(() => advanceTour(1), 3400); }
+  else { clearTimeout(tourState.timer); }
+});
+
+/* ============ filters ============ */
+const state = { basin: 'all', irr: 'all', minTmc: 0, q: '' };
+function wireChips(containerId, key, attr) {
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      container.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed','false'));
+      chip.setAttribute('aria-pressed','true');
+      state[key] = chip.dataset[attr];
+      applyFilters();
+      scheduleURLSync();
+    });
+  });
+}
+wireChips('basinChips','basin','basin');
+wireChips('irrChips','irr','irr');
+
+const capSlider = document.getElementById('capSlider');
+const capVal = document.getElementById('capVal');
+capSlider.addEventListener('input', () => {
+  const t = capSlider.value / 100;
+  state.minTmc = t <= 0 ? 0 : Math.round(1 * Math.pow(maxTmc, t) * 100)/100;
+  capVal.textContent = state.minTmc <= 1 ? '≥ 1 TMC' : '≥ ' + state.minTmc + ' TMC';
+  applyFilters();
+  scheduleURLSync();
+});
+let searchNavTimer = null;
+function navigateToSearchMatches() {
+  if (!state.q) return;
+  const ids = RESERVOIRS.filter(matches).map(r => r.id);
+  if (!ids.length || ids.length > 10) return;
+  if (dim === '3d' && scene3dBuilt) {
+    const p = computeCamPanFor3D(ids); if (p) animateCam(p, 800);
+  } else {
+    const v = computeVBFor2D(ids); if (v) animateVB(v, 650);
+  }
+}
+document.getElementById('searchBox').addEventListener('input', (e) => {
+  state.q = e.target.value.trim().toLowerCase();
+  applyFilters();
+  clearTimeout(searchNavTimer);
+  searchNavTimer = setTimeout(navigateToSearchMatches, 400);
+});
+document.getElementById('searchBox').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { clearTimeout(searchNavTimer); navigateToSearchMatches(); }
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.basin='all'; state.irr='all'; state.minTmc=0; state.q='';
+  document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c.dataset.basin==='all'||c.dataset.irr==='all' ? 'true':'false'));
+  capSlider.value = 0; capVal.textContent = '≥ 1 TMC';
+  document.getElementById('searchBox').value = '';
+  applyFilters();
+  scheduleURLSync();
+});
+function matches(r) {
+  if (state.basin !== 'all' && r.basin !== state.basin) return false;
+  if (state.irr !== 'all' && r.irrigation !== state.irr) return false;
+  if (state.minTmc && (!r.gross_tmc || r.gross_tmc < state.minTmc)) return false;
+  if (state.q && !r.name.toLowerCase().includes(state.q) && !r.river.toLowerCase().includes(state.q)) return false;
+  return true;
+}
+function applyFilters() {
+  RESERVOIRS.forEach(r => {
+    const mEl = markerEls[r.id]; if (!mEl) return;
+    mEl.g.classList.toggle('dim', !matches(r));
+    const pEl = pillar3dEls[r.id];
+    if (pEl) pEl.cap.classList.toggle('dim', !matches(r));
+  });
+  if (dim === '3d') requestAnimationFrame(updateOverlay);
+  renderTable();
+}
+
+/* ============ stats ============ */
+document.getElementById('statCount').textContent = RESERVOIRS.length;
+document.getElementById('statTmc').textContent = Math.round(RESERVOIRS.reduce((s,r)=>s+(r.gross_tmc||0),0));
+document.getElementById('statLift').textContent = Math.round(CHAINS.godavari.totals.simpleLift_m);
+
+/* ============ view tabs ============ */
+document.querySelectorAll('.tabs button[data-view]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tabs button[data-view]').forEach(b=>b.setAttribute('aria-selected', b===btn ? 'true':'false'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    if (btn.dataset.view === 'map' && dim === '3d') requestAnimationFrame(updateOverlay);
+    scheduleURLSync();
+  });
+});
+
+/* ============ table view ============ */
+const columns = [
+  { k: 'name', l: 'Name' },
+  { k: 'type', l: 'Type' },
+  { k: 'river', l: 'River' },
+  { k: 'basin', l: 'Basin' },
+  { k: 'district', l: 'District' },
+  { k: 'frl_m', l: 'FRL (m)', num: true },
+  { k: 'gross_tmc', l: 'Gross (TMC)', num: true },
+  { k: 'live_tmc', l: 'Live (TMC)', num: true },
+  { k: 'irrigation', l: 'Flow' },
+  { k: 'year', l: 'Built', num: true },
+];
+let sortKey = 'gross_tmc', sortDir = -1;
+const tableHead = document.getElementById('tableHead');
+columns.forEach(c => {
+  const th = htmlEl('th', {}, null);
+  th.textContent = c.l;
+  th.addEventListener('click', () => {
+    if (sortKey === c.k) sortDir *= -1; else { sortKey = c.k; sortDir = c.num ? -1 : 1; }
+    renderTable();
+  });
+  tableHead.appendChild(th);
+});
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  document.querySelectorAll('#tableHead th').forEach((th,i) => th.classList.toggle('sorted', columns[i].k===sortKey));
+  const rows = RESERVOIRS.filter(matches).slice().sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (av == null) av = sortDir===-1 ? -Infinity : Infinity;
+    if (bv == null) bv = sortDir===-1 ? -Infinity : Infinity;
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+  rows.forEach(r => {
+    const tr = htmlEl('tr', { class: 'rowlink', tabindex: '0', role: 'button', 'aria-label': `Open details for ${r.name}` }, null);
+    tr.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.type}</td>
+      <td>${r.river}</td>
+      <td>${r.basin}</td>
+      <td>${r.district}</td>
+      <td class="num tabular">${r.frl_m!=null? r.frl_m : '&mdash;'}</td>
+      <td class="num tabular">${fmtTmc(r.gross_tmc)}</td>
+      <td class="num tabular">${fmtTmc(r.live_tmc)}</td>
+      <td><span class="type-pill"><span class="dot" style="background:${irrColorVar(r.irrigation)}"></span>${r.irrigation}</span></td>
+      <td class="num tabular">${r.year || '&mdash;'}</td>
+    `;
+    tr.addEventListener('click', () => {
+      document.querySelectorAll('.tabs button[data-view]').forEach(b=>b.setAttribute('aria-selected', b.dataset.view==='map' ? 'true':'false'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-map').classList.add('active');
+      if (dim === '3d') requestAnimationFrame(updateOverlay);
+      openDrawer(r);
+    });
+    tr.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      tr.click();
+    });
+    tbody.appendChild(tr);
+  });
+}
+renderTable();
+
+/* ============ elevation profile view ============ */
+const profilesvg = document.getElementById('profilesvg');
+const PW = 1300, PH = 520;
+const PAD_L = 60, PAD_R = 95, PAD_T = 34, PAD_B = 64;
+function renderGodavariProfile() {
+  profilesvg.innerHTML = '';
+  document.getElementById('profileSummary').textContent = CHAINS.godavari.summary;
+  const trunk = CHAINS.godavari.trunk;
+  const yMax = 650;
+  const xStep = (PW - PAD_L - PAD_R) / (trunk.length - 1);
+  const yOf = (m) => PH - PAD_B - (m / yMax) * (PH - PAD_T - PAD_B);
+  const xOf = (i) => PAD_L + i * xStep;
+
+  // gridlines + axis
+  for (let m = 0; m <= yMax; m += 100) {
+    el('line', { x1: PAD_L, x2: PW-PAD_R, y1: yOf(m), y2: yOf(m), stroke: 'var(--border)', 'stroke-width': 1 }, profilesvg);
+    el('text', { class: 'elev-axis-lbl', x: PAD_L-8, y: yOf(m)+3, 'text-anchor':'end' }, profilesvg).textContent = m;
+  }
+  el('text', { class: 'elev-axis-lbl', x: 14, y: 16 }, profilesvg).textContent = 'Elevation, m MSL';
+
+  // terrain silhouette (illustrative)
+  let terrain = `M ${xOf(0)} ${PH-PAD_B}`;
+  trunk.forEach((n,i) => { terrain += ` L ${xOf(i)} ${yOf(n.elevation_m) + 26}`; });
+  terrain += ` L ${xOf(trunk.length-1)} ${PH-PAD_B} Z`;
+  el('path', { d: terrain, fill: 'var(--terrain-fill)' }, profilesvg);
+
+  // connecting segments
+  for (let i=1;i<trunk.length;i++) {
+    const a = trunk[i-1], b = trunk[i];
+    const x1=xOf(i-1), y1=yOf(a.elevation_m), x2=xOf(i), y2=yOf(b.elevation_m);
+    const lifted = b.elevation_m > a.elevation_m;
+    el('line', { x1, y1, x2, y2, stroke: lifted ? 'var(--lift-c)' : 'var(--gravity-c)', 'stroke-width': lifted?3:2.4, 'stroke-linecap':'round' }, profilesvg);
+    el('line', { class: 'profile-flow', x1, y1, x2, y2, stroke: lifted ? 'var(--lift-c)' : 'var(--gravity-c)', 'stroke-width': lifted?1.8:1.4 }, profilesvg);
+    if (lifted) {
+      const mx=(x1+x2)/2, my=Math.min(y1,y2) - 6;
+      el('text', { class:'lift-lbl', x:mx, y:my, 'text-anchor':'middle' }, profilesvg).textContent = `\u2B06 +${b.liftFromPrev_m} m`;
+      if (b.pumpFromPrev) el('text', { class:'node-pump', x:mx, y:my-11, 'text-anchor':'middle' }, profilesvg).textContent = b.pumpFromPrev;
+    }
+  }
+  // branch: Gouravelli off Mid Manair
+  CHAINS.godavari.branches.forEach(br => {
+    const offIdx = trunk.findIndex(t=>t.id===br.offId);
+    const x1=xOf(offIdx), y1=yOf(trunk[offIdx].elevation_m);
+    const x2=x1+34, y2=yOf(br.elevation_m);
+    el('line', { x1,y1,x2,y2, stroke:'var(--lift-c)', 'stroke-width':2, 'stroke-dasharray':'3 4' }, profilesvg);
+    const c = el('circle', { cx:x2, cy:y2, r: 6, class:'fill-lift' }, profilesvg);
+    el('text', { class:'node-lbl', x:x2+10, y:y2+3 }, profilesvg).textContent = br.structure;
+    el('text', { class:'node-sub', x:x2+10, y:y2+15 }, profilesvg).textContent = `+${br.liftFromPrev_m} m \u00B7 ${br.tmc} TMC \u00B7 ${br.pumpLabel}`;
+  });
+
+  // nodes + labels
+  trunk.forEach((n,i) => {
+    const x=xOf(i), y=yOf(n.elevation_m);
+    const r = n.tmc ? Math.max(5, Math.min(16, 5+Math.sqrt(n.tmc)*1.4)) : 4;
+    el('circle', { cx:x, cy:y, r, class: n.kind==='source' ? 'fill-muted' : (i>0 && trunk[i].elevation_m>trunk[i-1].elevation_m ? 'fill-lift':'fill-gravity') }, profilesvg);
+    const ty = y + r + 17;
+    el('text', { class:'node-lbl', x, y: ty, 'text-anchor':'middle' }, profilesvg).textContent = n.structure;
+    el('text', { class:'node-sub', x, y: ty+12, 'text-anchor':'middle' }, profilesvg).textContent = `${n.elevation_m} m${n.tmc?' \u00B7 '+n.tmc+' TMC':''}${n.estimated?' (est.)':''}`;
+  });
+
+  document.getElementById('profileTotals').innerHTML =
+    `Godavari river (~<b>${CHAINS.godavari.totals.sourceElevation_m} m</b>) \u2192 Kondapochamma Sagar (<b>${CHAINS.godavari.totals.topElevation_m} m</b>) &nbsp;&middot;&nbsp; computed cumulative lift \u2248 <b>${CHAINS.godavari.totals.simpleLift_m} m</b>. ${CHAINS.godavari.totals.note}`;
+  document.getElementById('liftSchemesPanel').innerHTML = '';
+}
+
+function renderKrishnaProfile() {
+  profilesvg.innerHTML = '';
+  document.getElementById('profileSummary').textContent = CHAINS.krishna.summary;
+  const trunk = CHAINS.krishna.trunk;
+  const yMax = 350;
+  const xStep = (PW - PAD_L - PAD_R) / (trunk.length - 1);
+  const yOf = (m) => PH - PAD_B - (m / yMax) * (PH - PAD_T - PAD_B);
+  const xOf = (i) => PAD_L + i * xStep;
+
+  for (let m = 0; m <= yMax; m += 50) {
+    el('line', { x1: PAD_L, x2: PW-PAD_R, y1: yOf(m), y2: yOf(m), stroke: 'var(--border)', 'stroke-width': 1 }, profilesvg);
+    el('text', { class: 'elev-axis-lbl', x: PAD_L-8, y: yOf(m)+3, 'text-anchor':'end' }, profilesvg).textContent = m;
+  }
+  el('text', { class: 'elev-axis-lbl', x: 14, y: 16 }, profilesvg).textContent = 'Elevation, m MSL';
+
+  let terrain = `M ${xOf(0)} ${PH-PAD_B}`;
+  trunk.forEach((n,i) => { terrain += ` L ${xOf(i)} ${yOf(n.elevation_m) + 26}`; });
+  terrain += ` L ${xOf(trunk.length-1)} ${PH-PAD_B} Z`;
+  el('path', { d: terrain, fill: 'var(--terrain-fill)' }, profilesvg);
+
+  for (let i=1;i<trunk.length;i++) {
+    const a = trunk[i-1], b = trunk[i];
+    const x1=xOf(i-1), y1=yOf(a.elevation_m), x2=xOf(i), y2=yOf(b.elevation_m);
+    el('line', { x1, y1, x2, y2, stroke: 'var(--gravity-c)', 'stroke-width': 2.6, 'stroke-linecap':'round' }, profilesvg);
+    el('line', { class: 'profile-flow', x1, y1, x2, y2, stroke: 'var(--gravity-c)', 'stroke-width': 1.6 }, profilesvg);
+    const mx=(x1+x2)/2, my=(y1+y2)/2 - 10;
+    el('text', { class:'gravity-lbl', x:mx, y:my, 'text-anchor':'middle' }, profilesvg).textContent = `\u2B07 ${(a.elevation_m-b.elevation_m).toFixed(0)} m by gravity`;
+  }
+  trunk.forEach((n,i) => {
+    const x=xOf(i), y=yOf(n.elevation_m);
+    const r = Math.max(6, Math.min(20, 6+Math.sqrt(n.tmc)*1.1));
+    el('circle', { cx:x, cy:y, r, class:'fill-gravity' }, profilesvg);
+    el('text', { class:'node-lbl', x, y: y-r-16, 'text-anchor':'middle' }, profilesvg).textContent = n.structure;
+    el('text', { class:'node-sub', x, y: y-r-4, 'text-anchor':'middle' }, profilesvg).textContent = `${n.elevation_m} m \u00B7 ${n.tmc} TMC`;
+  });
+
+  document.getElementById('profileTotals').innerHTML =
+    `Jurala (<b>${trunk[0].elevation_m} m</b>) \u2192 Srisailam (<b>${trunk[1].elevation_m} m</b>) \u2192 Nagarjuna Sagar (<b>${trunk[2].elevation_m} m</b>) &mdash; the entire main stem descends by gravity; no pumping on this trunk.`;
+
+  const maxLift = Math.max(...CHAINS.krishna.liftSchemes.map(s=>s.liftReported_m||0));
+  let html = `<div class="lift-schemes-hd">Lift schemes branching off Srisailam &amp; Jurala</div><div class="lift-schemes-wrap">`;
+  CHAINS.krishna.liftSchemes.forEach(s => {
+    const w = s.liftReported_m ? (s.liftReported_m/maxLift*100) : 0;
+    html += `<div class="lift-scheme-row">
+      <div class="name">${s.name}<div class="node-sub" style="margin-top:2px">${s.sourceLabel} \u2192 ${s.destElevation_m!=null? s.destElevation_m+' m' : 'destination elevation unconfirmed'}</div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${w}%"></div></div>
+      <div class="lift-val">${s.liftReported_m? '+'+s.liftReported_m+' m':'\u2014'} \u00B7 ${s.tmc} TMC</div>
+    </div>`;
+  });
+  html += `</div>`;
+  document.getElementById('liftSchemesPanel').innerHTML = html;
+}
+document.querySelectorAll('.subtabs button[data-chain]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.subtabs button[data-chain]').forEach(b=>b.setAttribute('aria-selected', b===btn?'true':'false'));
+    btn.dataset.chain === 'godavari' ? renderGodavariProfile() : renderKrishnaProfile();
+  });
+});
+renderGodavariProfile();
+
+/* ============ data notes ============ */
+document.getElementById('dataNotesList').innerHTML = CHAINS.dataNotes.map(n => `<li>${n}</li>`).join('');
+
+/* ============ shareable URL state ============ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function serializeState() {
+  const p = new URLSearchParams();
+  const activeView = document.querySelector('.tabs button[data-view][aria-selected="true"]');
+  p.set('view', activeView ? activeView.dataset.view : 'map');
+  p.set('dim', dim);
+  if (state.basin !== 'all') p.set('basin', state.basin);
+  if (state.irr !== 'all') p.set('irr', state.irr);
+  if (state.minTmc) p.set('min', state.minTmc);
+  if (state.q) p.set('q', state.q);
+  if (dim === '3d') {
+    p.set('yaw', cam.yaw.toFixed(1)); p.set('pitch', cam.pitch.toFixed(1)); p.set('zoom', cam.zoom.toFixed(2));
+    p.set('panX', cam.panX.toFixed(1)); p.set('panY', cam.panY.toFixed(1));
+  }
+  return p.toString();
+}
+let urlSyncTimer = null;
+function scheduleURLSync() {
+  clearTimeout(urlSyncTimer);
+  urlSyncTimer = setTimeout(() => { history.replaceState(null, '', '#' + serializeState()); }, 500);
+}
+function restoreFromURL() {
+  if (!location.hash) return;
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (p.has('basin')) {
+    state.basin = p.get('basin');
+    document.querySelectorAll('#basinChips .chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.basin===state.basin ? 'true':'false'));
+  }
+  if (p.has('irr')) {
+    state.irr = p.get('irr');
+    document.querySelectorAll('#irrChips .chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.irr===state.irr ? 'true':'false'));
+  }
+  if (p.has('min')) {
+    state.minTmc = parseFloat(p.get('min'));
+    const t = Math.log(state.minTmc) / Math.log(maxTmc);
+    capSlider.value = Math.max(0, Math.min(100, t*100));
+    capVal.textContent = state.minTmc <= 1 ? '≥ 1 TMC' : '≥ ' + state.minTmc + ' TMC';
+  }
+  if (p.has('q')) { state.q = p.get('q'); document.getElementById('searchBox').value = state.q; }
+  applyFilters();
+  const view = p.get('view');
+  if (view && view !== 'map') { document.querySelector(`.tabs button[data-view="${view}"]`)?.click(); }
+  if (p.get('dim') === '3d') { switchDim('3d'); }
+  if (p.has('yaw')) {
+    cam.yaw = parseFloat(p.get('yaw')); cam.pitch = parseFloat(p.get('pitch')); cam.zoom = parseFloat(p.get('zoom'));
+    cam.panX = parseFloat(p.get('panX')); cam.panY = parseFloat(p.get('panY'));
+    setTimeout(() => applyCam(), 260);
+  }
+}
+function fallbackCopy(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) { return false; }
+}
+document.getElementById('copyLinkBtn').addEventListener('click', async () => {
+  history.replaceState(null, '', '#' + serializeState());
+  const url = location.href;
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1200));
+  try {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('unsupported');
+    await Promise.race([navigator.clipboard.writeText(url), timeout]);
+    showToast('Link copied — view, filters and camera included');
+  } catch (err) {
+    showToast(fallbackCopy(url) ? 'Link copied — view, filters and camera included' : 'Could not copy automatically — copy the address bar instead');
+  }
+});
+restoreFromURL();
+</script>

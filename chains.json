@@ -1,0 +1,45 @@
+{
+  "godavari": {
+    "label": "Kaleshwaram Lift Irrigation Scheme — Godavari system",
+    "summary": "The world's largest multi-stage lift scheme: Godavari water is pumped roughly 500 m uphill in a chain of barrages, tunnels and pump houses to reach the Deccan plateau.",
+    "trunk": [
+      {"id":"river","structure":"Godavari River (Pranahita confluence)","elevation_m":92,"tmc":null,"kind":"source"},
+      {"id":"medigadda","structure":"Medigadda Barrage","elevation_m":100.0,"tmc":16.17,"kind":"barrage","pumpFromPrev":"Medigadda pump house","liftFromPrev_m":8},
+      {"id":"annaram","structure":"Annaram Barrage","elevation_m":120.0,"tmc":10.87,"kind":"barrage","pumpFromPrev":"Annaram (Medaram) pump house","liftFromPrev_m":20},
+      {"id":"sundilla","structure":"Sundilla Barrage","elevation_m":130.0,"tmc":8.83,"kind":"barrage","pumpFromPrev":"Sundilla pump house","liftFromPrev_m":10},
+      {"id":"yellampally","structure":"Yellampally Reservoir","elevation_m":148.0,"tmc":20.175,"kind":"reservoir","pumpFromPrev":"Yellampally pump house","liftFromPrev_m":18},
+      {"id":"mmd","structure":"Mid Manair Dam","elevation_m":318.0,"tmc":25.873,"kind":"reservoir","pumpFromPrev":"Ramadugu · Kannepalli · Gandhari pump houses","liftFromPrev_m":170},
+      {"id":"ananthagiri","structure":"Ananthagiri Reservoir","elevation_m":470.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":"Link-4 pump houses","liftFromPrev_m":152,"estimated":true},
+      {"id":"ranganayakasagar","structure":"Ranganayaka Sagar","elevation_m":490.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":20},
+      {"id":"mallannasagar","structure":"Mallannasagar","elevation_m":557.0,"tmc":50,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":67},
+      {"id":"kondapochamma","structure":"Kondapochamma Sagar","elevation_m":618.0,"tmc":15,"kind":"reservoir","pumpFromPrev":"Akkaram pump house (6×27 MW)","liftFromPrev_m":61}
+    ],
+    "branches": [
+      {"id":"gouravelli","structure":"Gouravelli Reservoir","offId":"mmd","elevation_m":420.0,"tmc":8.23,"pumpLabel":"Regonda pump house (3×132 MW)","liftFromPrev_m":126}
+    ],
+    "totals": {"sourceElevation_m":92,"topElevation_m":618,"simpleLift_m":526,"note":"Government/press materials widely cite '618 m' as the total lift figure, but 618 m is Kondapochamma Sagar's absolute elevation above sea level — the cumulative lift from the Godavari at Medigadda works out closer to ~520-526 m."}
+  },
+  "krishna": {
+    "label": "Krishna system — predominantly gravity-fed",
+    "summary": "From Jurala through Srisailam to Nagarjuna Sagar, Krishna water descends by gravity alone — no pumping on the main stem. Four large lift schemes branch off the Srisailam/Jurala foreshore to reach higher plateau land nearby.",
+    "trunk": [
+      {"id":"jurala","structure":"Jurala Project","elevation_m":318.52,"tmc":9.657,"kind":"dam"},
+      {"id":"srisailam","structure":"Srisailam Dam","elevation_m":270.0,"tmc":216,"kind":"dam"},
+      {"id":"nagarjunasagar","structure":"Nagarjuna Sagar Dam","elevation_m":179.83,"tmc":312,"kind":"dam"}
+    ],
+    "liftSchemes": [
+      {"id":"klis","name":"Kalwakurthy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Regumangadda","sourceElevation_m":244.4,"destElevation_m":502.0,"liftReported_m":298,"tmc":25,"notes":"3 pumping stages, 4 balancing reservoirs; reported lift (298 m) doesn't exactly reconcile with the elevation gap (257.6 m) between the cited source and destination points."},
+      {"id":"prlis","name":"Palamuru-Rangareddy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Yellur (Nagarkurnool)","sourceElevation_m":270.0,"destElevation_m":670.0,"liftReported_m":400,"tmc":90,"notes":"5-stage pumping system designed to lift 90 TMC of monsoon floodwater over ~60 days; Phase I (Narlapur/Anjanagiri intake) inaugurated 2023."},
+      {"id":"dindilis","name":"Dindi Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore (Ulpara Barrage intake)","sourceElevation_m":270.0,"destElevation_m":null,"liftReported_m":null,"tmc":30,"notes":"Lifts up to 30 TMC across a 12-reservoir network; destination elevation not confirmed in available sources."},
+      {"id":"bheema","name":"Rajiv Bheema Lift Irrigation Scheme","sourceLabel":"Jurala backwaters, Panchdev Pahad","sourceElevation_m":318.52,"destElevation_m":385.5,"liftReported_m":67,"tmc":20,"notes":"Irrigates roughly 203,000 acres across Makthal, Atmakur, Wanaparthy and Kollapur."}
+    ]
+  },
+  "dataNotes": [
+    "Kaleshwaram's total lift is reported inconsistently: 618 m (Kondapochamma Sagar's elevation) vs ~520-526 m (computed cumulative lift from Medigadda). Both figures are shown; treat 618 m as elevation, not lift.",
+    "Kaleshwaram's official target capacity is 240 TMC (195 from Medigadda + 20 from SRSP diversion + 25 groundwater recharge) — a figure disputed by CAG audit and opposition sources.",
+    "Ananthagiri Reservoir's elevation (470 m) is interpolated between Mid Manair Dam and Ranganayaka Sagar — not independently confirmed.",
+    "Individual barrage capacities (e.g. Annaram: 10.87 vs 11.9 TMC) show minor inconsistencies across Wikipedia and news sources.",
+    "The Kalwakurthy scheme's reported total lift (298 m) does not arithmetically match its cited source/destination elevations (a 257.6 m gap) — likely reflects staging not captured by simple subtraction.",
+    "Map connector lines between reservoirs come in two kinds: solid lines follow a documented intake, canal or lift scheme (e.g. Kaleshwaram's offline chain, NSP left canal to Wyra/Palair, Srisailam/Jurala lift-scheme foreshores). Dashed lines (Kinnerasani, Laknavaram, Ramappa) connect a standalone tank to its nearest mapped hub purely for visual continuity and are not a claim about the actual engineered route."
+  ]
+}
