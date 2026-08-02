@@ -432,6 +432,25 @@
   .link3d-flow.gravity { stroke: color-mix(in srgb, var(--gravity-c) 45%, white); }
   .link3d-flow.lift { stroke: color-mix(in srgb, var(--lift-c) 45%, white); }
 
+  .tour-ripple {
+    fill: none; stroke: #eaf6ff; stroke-width: 2.2px;
+    transform-box: fill-box; transform-origin: center;
+    animation: tourripple 1.8s ease-out infinite; opacity: 0;
+  }
+  @keyframes tourripple {
+    0% { transform: scale(0.2); opacity: 0.9; }
+    65% { opacity: 0.32; }
+    100% { transform: scale(6.5); opacity: 0; }
+  }
+  .tour-active-label-bg { fill: var(--surface-3); stroke: var(--border-strong); stroke-width: 1px; opacity: 0.94; }
+  .tour-active-label {
+    font-family: var(--font-display); font-weight: 800; font-size: 14px; fill: var(--text-primary);
+    text-anchor: middle;
+  }
+  .tour-active-sub {
+    font-family: var(--font-mono); font-size: 9.5px; fill: var(--text-secondary); text-anchor: middle;
+  }
+
   .scene-hint {
     position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 6;
     background: var(--surface-3); border: 1px solid var(--border-strong); border-radius: 999px;
@@ -561,6 +580,13 @@
   .lift-scheme-row .bar-track { position: relative; height: 10px; background: var(--surface-2); border-radius: 5px; }
   .lift-scheme-row .bar-fill { position: absolute; top: 0; bottom: 0; background: var(--lift-c); border-radius: 5px; opacity: 0.85; }
   .lift-scheme-row .lift-val { font-family: var(--font-mono); text-align: right; color: var(--lift-c); font-weight: 600; white-space: nowrap; }
+  .lift-scheme-pumps { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .pump-chip {
+    font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; border-radius: 999px;
+    background: color-mix(in srgb, var(--lift-c) 14%, transparent); color: var(--lift-c);
+    border: 1px solid color-mix(in srgb, var(--lift-c) 30%, transparent); cursor: help; white-space: nowrap;
+  }
+  .lift-scheme-pumps.no-pump { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); font-style: italic; }
   .lift-schemes-wrap { padding-bottom: 10px; }
   .lift-schemes-hd { padding: 16px 16px 0; font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); }
 
@@ -900,14 +926,15 @@ RIVERS.forEach(r => {
    links connect a standalone tank to its nearest mapped hub purely for visual
    connectivity and are not a claim about the actual engineered route. */
 const CONNECTIONS = [
-  { from:'mmd', to:'ananthagiri', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
-  { from:'ananthagiri', to:'ranganayakasagar', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
-  { from:'ranganayakasagar', to:'mallannasagar', flow:'lift', sourced:true, note:'Kaleshwaram Link-4' },
-  { from:'mallannasagar', to:'kondapochamma', flow:'lift', sourced:true, note:'Akkaram pump house' },
-  { from:'mmd', to:'gouravelli', flow:'lift', sourced:true, note:'Regonda pump house' },
-  { from:'srisailam', to:'dindi', flow:'lift', sourced:true, note:'Dindi Lift Scheme' },
-  { from:'srisailam', to:'anjanagiri', flow:'lift', sourced:true, note:'Palamuru-Rangareddy LIS' },
-  { from:'jurala', to:'udandapur', flow:'lift', sourced:true, note:'Nettempadu LIS' },
+  { from:'yellampally', to:'mmd', flow:'lift', sourced:true, note:'Nandi → Gayatri pump houses', pumpMw:1844, liftM:170 },
+  { from:'mmd', to:'ananthagiri', flow:'lift', sourced:true, note:'Annapurna Pump House', pumpMw:424, liftM:152 },
+  { from:'ananthagiri', to:'ranganayakasagar', flow:'lift', sourced:true, note:'Ranganayakasagar Pump House', pumpMw:538, liftM:20 },
+  { from:'ranganayakasagar', to:'mallannasagar', flow:'lift', sourced:true, note:'Mallannasagar Pump House', pumpMw:344, liftM:67 },
+  { from:'mallannasagar', to:'kondapochamma', flow:'lift', sourced:true, note:'Akkaram → Markook pump houses', pumpMw:366, liftM:61 },
+  { from:'mmd', to:'gouravelli', flow:'lift', sourced:true, note:'Regonda Pump House', pumpMw:396, liftM:126 },
+  { from:'srisailam', to:'dindi', flow:'gravity', sourced:true, note:'Dindi LIS — gravity-fed via PRLIS’s Yedula Reservoir, no dedicated pump house' },
+  { from:'srisailam', to:'anjanagiri', flow:'lift', sourced:true, note:'Palamuru-Rangareddy LIS · Narlapur Pump House (Stage I)', pumpMw:1250, liftM:75 },
+  { from:'anjanagiri', to:'udandapur', flow:'lift', sourced:true, note:'PRLIS Stages II–IV · Yedula → Vattem → Udandapur pump houses', pumpMw:3625, liftM:284 },
   { from:'nagarjunasagar', to:'wyra', flow:'gravity', sourced:true, note:'NSP left canal' },
   { from:'nagarjunasagar', to:'palair', flow:'gravity', sourced:true, note:'Lal Bahadur (NSP left) canal' },
   { from:'kaddam', to:'srsp', flow:'gravity', sourced:true, note:'Kadam river → Godavari' },
@@ -929,8 +956,8 @@ CONNECTIONS.forEach((c, i) => {
   const d = `M${a.xy[0].toFixed(1)},${a.xy[1].toFixed(1)} L${b.xy[0].toFixed(1)},${b.xy[1].toFixed(1)}`;
   const pathId = 'linkpath-' + i;
   const cls = `link-line ${c.flow}` + (c.sourced ? '' : ' schematic');
-  el('path', { class: cls + '-glow', d, 'stroke-width': 5 }, linksLayer);
-  el('path', { id: pathId, class: cls, d, 'stroke-width': 2 }, linksLayer);
+  el('path', { class: cls + '-glow', d, 'stroke-width': 5, 'data-idx': i }, linksLayer);
+  el('path', { id: pathId, class: cls, d, 'stroke-width': 2, 'data-idx': i }, linksLayer);
   const drop = el('circle', { class: `water-drop link-drop ${c.flow}`, r: 1.8 }, linksLayer);
   const dur = 4.5 + Math.random();
   const anim = document.createElementNS(NS, 'animateMotion');
@@ -1031,6 +1058,8 @@ function openDrawer(r) {
     </div>
     ${frac!=null ? `<div class="elev-context"><div class="k" style="font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)">Elevation among all reservoirs</div>
       <div class="rail-bg"><div class="marker-pt" style="left:${frac*100}%">${r.frl_m} m</div></div></div>` : ''}
+    ${(() => { const p = CONNECTIONS.find(c => c.to === r.id && c.note); if (!p) return ''; return `<div class="elev-context"><div class="k" style="font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)">Fed by</div>
+      <div style="margin-top:3px;font-size:13px">${p.note}${p.pumpMw?` · <b>${p.pumpMw} MW</b>`:''}${p.liftM?` · +${p.liftM} m`:(p.flow==='gravity'?' · gravity':'')}</div></div>`; })()}
     <p class="d-notes">${r.notes}</p>
     <p class="d-src">Source: ${r.source}</p>
   `;
@@ -1057,6 +1086,35 @@ markersLayer.addEventListener('keydown', (e) => {
   const r = RESERVOIRS.find(x => x.id === g.dataset.id);
   openDrawer(r);
 });
+
+/* ============ connector tooltips: pump house name / capacity / lift on hover ============ */
+function showLinkTooltip(c, evt) {
+  const from = RESERVOIRS.find(x => x.id === c.from), to = RESERVOIRS.find(x => x.id === c.to);
+  tooltip.innerHTML = `
+    <div class="t-name">${c.note || (c.flow === 'lift' ? 'Lift connection' : 'Gravity connection')}</div>
+    <div class="t-row"><span>Route</span><b>${from ? from.name.replace(/ (Dam|Barrage|Project|Reservoir|Lake).*$/,'') : c.from} → ${to ? to.name.replace(/ (Dam|Barrage|Project|Reservoir|Lake).*$/,'') : c.to}</b></div>
+    <div class="t-row"><span>Flow</span><b>${c.flow}</b></div>
+    ${c.pumpMw ? `<div class="t-row"><span>Pump capacity</span><b>${c.pumpMw} MW</b></div>` : ''}
+    ${c.liftM ? `<div class="t-row"><span>Lift</span><b>+${c.liftM} m</b></div>` : ''}
+  `;
+  const rect = stageEl.getBoundingClientRect();
+  tooltip.style.left = (evt.clientX - rect.left) + 'px';
+  tooltip.style.top = (evt.clientY - rect.top) + 'px';
+  tooltip.classList.add('show');
+}
+linksLayer.addEventListener('mousemove', (e) => {
+  const t = e.target.closest('[data-idx]'); if (!t) { hideTooltip(); return; }
+  const c = CONNECTIONS[+t.dataset.idx]; if (!c) return;
+  showLinkTooltip(c, e);
+});
+linksLayer.addEventListener('mouseleave', hideTooltip);
+const overlay2dEl = document.getElementById('overlay2d');
+overlay2dEl.addEventListener('mousemove', (e) => {
+  const t = e.target.closest('[data-idx]'); if (!t) { hideTooltip(); return; }
+  const c = CONNECTIONS[+t.dataset.idx]; if (!c) return;
+  showLinkTooltip(c, e);
+});
+overlay2dEl.addEventListener('mouseleave', hideTooltip);
 
 /* ============ legend ============ */
 document.getElementById('mapLegend').innerHTML = `
@@ -1302,15 +1360,15 @@ function updateOverlay() {
   });
 
   // inter-reservoir connections
-  CONNECTIONS.forEach(c => {
+  CONNECTIONS.forEach((c, i) => {
     const pa = pillar3dEls[c.from], pb = pillar3dEls[c.to];
     if (!pa || !pb) return;
     const [ax, ay] = screenPt(pa.hasElev ? pa.capAnchor : pa.groundAnchor, wr);
     const [bx, by] = screenPt(pb.hasElev ? pb.capAnchor : pb.groundAnchor, wr);
     const cls = `link3d ${c.flow}` + (c.sourced ? '' : ' schematic');
-    el('line', { class: cls + '-glow', x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 5 }, overlay);
-    el('line', { class: cls, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2 }, overlay);
-    el('line', { class: `link3d-flow ${c.flow}`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2.4 }, overlay);
+    el('line', { class: cls + '-glow', x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 5, 'data-idx': i }, overlay);
+    el('line', { class: cls, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2, 'data-idx': i }, overlay);
+    el('line', { class: `link3d-flow ${c.flow}`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2.4, 'data-idx': i }, overlay);
   });
 
   // pillar stems + shadows
@@ -1339,6 +1397,26 @@ function updateOverlay() {
   declutterLabels(labelCandidates).forEach(lc => {
     el('text', { class: 'cap-label3d', x: lc.x, y: lc.y }, overlay).textContent = lc.text;
   });
+
+  // active tour point: rippling water highlight + name callout
+  if (tourActiveId) {
+    const p = pillar3dEls[tourActiveId];
+    const rInfo = RESERVOIRS.find(x => x.id === tourActiveId);
+    if (p && rInfo) {
+      const [gx, gy] = screenPt(p.groundAnchor, wr);
+      const [tx, ty] = screenPt(p.hasElev ? p.capAnchor : p.groundAnchor, wr);
+      const rippleWrap = el('g', { transform: `translate(${gx.toFixed(1)},${gy.toFixed(1)})` }, overlay);
+      [0, 0.6, 1.2].forEach(delay => {
+        el('circle', { class: 'tour-ripple', r: 16, style: `animation-delay:${delay}s` }, rippleWrap);
+      });
+      const name = rInfo.name.replace(/ \(.*$/, '');
+      const halfW = Math.max(38, name.length * 4.1 + 12);
+      const labelY = ty - rScale(rInfo.gross_tmc) * 0.55 - 46;
+      el('rect', { class: 'tour-active-label-bg', x: tx - halfW, y: labelY - 16, width: halfW * 2, height: 38, rx: 7 }, overlay);
+      el('text', { class: 'tour-active-label', x: tx, y: labelY }, overlay).textContent = name;
+      el('text', { class: 'tour-active-sub', x: tx, y: labelY + 15 }, overlay).textContent = `${rInfo.frl_m ?? '—'} m MSL`;
+    }
+  }
 }
 
 function declutterLabels(items, minGap = 15) {
@@ -1497,6 +1575,7 @@ function computeVBFor2D(ids) {
 
 /* ============ guided tour ============ */
 let tourState = null;
+let tourActiveId = null;
 function buildTourStages(chainKey) {
   const trunk = CHAINS[chainKey].trunk;
   return trunk
@@ -1529,6 +1608,26 @@ function anchorCenterPx(id, wr) {
   const r = p.capAnchor.getBoundingClientRect();
   return { x: r.left + r.width/2 - wr.left, y: r.top + r.height/2 - wr.top };
 }
+// probes the given pitch/yaw and finds a zoom that fits every id's anchor within the viewport
+function measureFitZoom(ids, pitch, yaw, targetWFrac = 0.6, targetHFrac = 0.5) {
+  const wr = sceneWrap.getBoundingClientRect();
+  const prev = { ...cam };
+  Object.assign(cam, { pitch, yaw, zoom: 1, panX: 0, panY: 0 });
+  applyCam();
+  let minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+  ids.forEach(id => {
+    const p = pillar3dEls[id]; if (!p) return;
+    const r = (p.hasElev ? p.capAnchor : p.groundAnchor).getBoundingClientRect();
+    const x = r.left + r.width / 2 - wr.left, y = r.top + r.height / 2 - wr.top;
+    minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+  });
+  Object.assign(cam, prev);
+  applyCam();
+  if (minX > maxX) return 1.4;
+  const w = Math.max(60, maxX - minX), h = Math.max(60, maxY - minY);
+  const fit = Math.min(wr.width * targetWFrac / w, wr.height * targetHFrac / h);
+  return Math.max(0.6, Math.min(3, fit));
+}
 async function startDroneFlight() {
   const all = buildTourStages('godavari');
   const endIdx = all.findIndex(s => s.id === 'mallannasagar');
@@ -1554,10 +1653,25 @@ async function startDroneFlight() {
   legDurations.forEach(d => legStart.push(legStart[legStart.length - 1] + d));
 
   const startYaw = cam.yaw, endYaw = cam.yaw + 150;
-  const startPitch = 74, endPitch = 50;
-  const startZoom = 4.3, endZoom = 2.5;
+  // ground-level drone at Medigadda, climbing to a wide bird's-eye view of the whole chain
+  const startPitch = 16, endPitch = 72;
+  const startTargetYFrac = 0.3, endTargetYFrac = 0.5;
 
-  const state = { playing: true, elapsed: 0, drone: true, stages, chainKey: 'godavari', cancelled: false, idx: 0 };
+  // a virtual anchor at the chain's geographic + elevation midpoint: the camera's pan
+  // target blends toward this (instead of just the last stage) as the flight climbs,
+  // so the finale settles on a wide view with the whole project in frame
+  const midLon = stages.reduce((s, st) => s + st.reservoir.lon, 0) / stages.length;
+  const midLat = stages.reduce((s, st) => s + st.reservoir.lat, 0) / stages.length;
+  const [mwx, mwy] = project([midLon, midLat]);
+  pillar3dEls['__kaleshwaramOverview'] = {
+    groundAnchor: make3dAnchor(document.getElementById('pillars3d'), mwx, mwy, (elev0 + elevN) / 2),
+    capAnchor: make3dAnchor(document.getElementById('pillars3d'), mwx, mwy, (elev0 + elevN) / 2),
+    cap: null, hasElev: true,
+  };
+  const startZoom = 2.6;
+  const endZoom = measureFitZoom(stages.map(s => s.id), endPitch, endYaw);
+
+  const state = { playing: true, elapsed: 0, drone: true, stages, chainKey: 'godavari', cancelled: false, idx: -1 };
   tourState = state;
   updateFlyHud(stages[0]);
 
@@ -1586,6 +1700,7 @@ async function startDroneFlight() {
         updateFlyHud(stages[activeIdx]);
         document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
         const p = pillar3dEls[stages[activeIdx].id]; if (p) p.cap.classList.add('touring');
+        tourActiveId = stages[activeIdx].id;
       }
 
       const t = elapsed / totalDuration;
@@ -1599,9 +1714,17 @@ async function startDroneFlight() {
 
       const wr = sceneWrap.getBoundingClientRect();
       const ca = anchorCenterPx(a.id, wr), cb = anchorCenterPx(b.id, wr);
+      const ov = anchorCenterPx('__kaleshwaramOverview', wr);
       if (ca && cb) {
-        const cx = ca.x + (cb.x - ca.x) * eased, cy = ca.y + (cb.y - ca.y) * eased;
-        const dx = wr.width / 2 - cx, dy = wr.height / 2 - cy;
+        const followX = ca.x + (cb.x - ca.x) * eased, followY = ca.y + (cb.y - ca.y) * eased;
+        // early on, hug the active reservoir (cinematic follow, low & close to the ground);
+        // as elevation climbs, blend the aim point toward the whole chain's center so the
+        // finale is a wide shot with every stage in view, not just glued to the last point
+        const overviewW = ov ? Math.min(1, elevT * 1.2) : 0;
+        const cx = followX * (1 - overviewW) + (ov ? ov.x : followX) * overviewW;
+        const cy = followY * (1 - overviewW) + (ov ? ov.y : followY) * overviewW;
+        const targetYFrac = startTargetYFrac + (endTargetYFrac - startTargetYFrac) * elevT;
+        const dx = wr.width / 2 - cx, dy = wr.height * targetYFrac - cy;
         cam.panX += dx / wr.width * 100; cam.panY += dy / wr.height * 100;
         applyCam();
       }
@@ -1627,6 +1750,7 @@ async function goToStage(i) {
   document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
   const p = pillar3dEls[s.id];
   if (p) p.cap.classList.add('touring');
+  tourActiveId = s.id;
   const pan = computeCamPanFor3D([s.id]);
   if (pan) await animateCam({ panX: pan.panX, panY: pan.panY, zoom: Math.max(cam.zoom, 3.0) }, 900);
   if (tourState && tourState.playing) {
@@ -1649,7 +1773,11 @@ function endTour() {
   document.getElementById('flyNext').hidden = false;
   document.getElementById('flyPlayPause').hidden = false;
   document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+  const ov = pillar3dEls['__kaleshwaramOverview'];
+  if (ov) { ov.groundAnchor.remove(); ov.capAnchor.remove(); delete pillar3dEls['__kaleshwaramOverview']; }
   tourState = null;
+  tourActiveId = null;
+  requestAnimationFrame(updateOverlay);
 }
 function updateFlyHud(s) {
   const chainLabel = tourState.chainKey === 'godavari' ? 'Kaleshwaram Lift Chain' : 'Krishna Gravity Chain';
@@ -1866,7 +1994,12 @@ function renderGodavariProfile() {
     if (lifted) {
       const mx=(x1+x2)/2, my=Math.min(y1,y2) - 6;
       el('text', { class:'lift-lbl', x:mx, y:my, 'text-anchor':'middle' }, profilesvg).textContent = `\u2B06 +${b.liftFromPrev_m} m`;
-      if (b.pumpFromPrev) el('text', { class:'node-pump', x:mx, y:my-11, 'text-anchor':'middle' }, profilesvg).textContent = b.pumpFromPrev;
+      if (b.pumpFromPrev) {
+        const pumpLbl = b.pumpCapacityMw ? `${b.pumpFromPrev} \u00B7 ${b.pumpCapacityMw} MW` : b.pumpFromPrev;
+        const pt = el('text', { class:'node-pump', x:mx, y:my-11, 'text-anchor':'middle' }, profilesvg);
+        pt.textContent = pumpLbl;
+        if (b.pumpNote) el('title', {}, pt).textContent = b.pumpNote;
+      }
     }
   }
   // branch: Gouravelli off Mid Manair
@@ -1877,7 +2010,9 @@ function renderGodavariProfile() {
     el('line', { x1,y1,x2,y2, stroke:'var(--lift-c)', 'stroke-width':2, 'stroke-dasharray':'3 4' }, profilesvg);
     const c = el('circle', { cx:x2, cy:y2, r: 6, class:'fill-lift' }, profilesvg);
     el('text', { class:'node-lbl', x:x2+10, y:y2+3 }, profilesvg).textContent = br.structure;
-    el('text', { class:'node-sub', x:x2+10, y:y2+15 }, profilesvg).textContent = `+${br.liftFromPrev_m} m \u00B7 ${br.tmc} TMC \u00B7 ${br.pumpLabel}`;
+    const bs = el('text', { class:'node-sub', x:x2+10, y:y2+15 }, profilesvg);
+    bs.textContent = `+${br.liftFromPrev_m} m \u00B7 ${br.tmc} TMC \u00B7 ${br.pumpLabel}`;
+    if (br.pumpNote) el('title', {}, bs).textContent = br.pumpNote;
   });
 
   // nodes + labels
@@ -1935,11 +2070,20 @@ function renderKrishnaProfile() {
     `Jurala (<b>${trunk[0].elevation_m} m</b>) \u2192 Srisailam (<b>${trunk[1].elevation_m} m</b>) \u2192 Nagarjuna Sagar (<b>${trunk[2].elevation_m} m</b>) &mdash; the entire main stem descends by gravity; no pumping on this trunk.`;
 
   const maxLift = Math.max(...CHAINS.krishna.liftSchemes.map(s=>s.liftReported_m||0));
+  const esc = (s) => (s||'').replace(/"/g, '&quot;');
   let html = `<div class="lift-schemes-hd">Lift schemes branching off Srisailam &amp; Jurala</div><div class="lift-schemes-wrap">`;
   CHAINS.krishna.liftSchemes.forEach(s => {
     const w = s.liftReported_m ? (s.liftReported_m/maxLift*100) : 0;
+    const pumpsHtml = (s.pumpHouses && s.pumpHouses.length)
+      ? `<div class="lift-scheme-pumps">${s.pumpHouses.map(p => {
+          const cap = p.totalMw ? `${p.totalMw} MW` : (p.unitMw && p.units ? `${p.units}\u00D7${p.unitMw} MW` : 'capacity n/a');
+          const title = [p.location, p.liftM ? `lift ${p.liftM} m` : null, p.dischargeCusecs ? `${p.dischargeCusecs} cusecs` : null, p.note].filter(Boolean).join(' \u00B7 ');
+          return `<span class="pump-chip" title="${esc(title)}">${p.name} \u00B7 ${cap}</span>`;
+        }).join('')}</div>`
+      : `<div class="lift-scheme-pumps no-pump">Gravity-fed \u2014 no dedicated pump house</div>`;
     html += `<div class="lift-scheme-row">
-      <div class="name">${s.name}<div class="node-sub" style="margin-top:2px">${s.sourceLabel} \u2192 ${s.destElevation_m!=null? s.destElevation_m+' m' : 'destination elevation unconfirmed'}</div></div>
+      <div class="name" title="${esc(s.notes)}">${s.name}<div class="node-sub" style="margin-top:2px">${s.sourceLabel} \u2192 ${s.destElevation_m!=null? s.destElevation_m+' m' : 'destination elevation unconfirmed'}</div>
+      ${pumpsHtml}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${w}%"></div></div>
       <div class="lift-val">${s.liftReported_m? '+'+s.liftReported_m+' m':'\u2014'} \u00B7 ${s.tmc} TMC</div>
     </div>`;

@@ -4,34 +4,71 @@
     "summary": "The world's largest multi-stage lift scheme: Godavari water is pumped roughly 500 m uphill in a chain of barrages, tunnels and pump houses to reach the Deccan plateau.",
     "trunk": [
       {"id":"river","structure":"Godavari River (Pranahita confluence)","elevation_m":92,"tmc":null,"kind":"source"},
-      {"id":"medigadda","structure":"Medigadda Barrage","elevation_m":100.0,"tmc":16.17,"kind":"barrage","pumpFromPrev":"Medigadda pump house","liftFromPrev_m":8},
-      {"id":"annaram","structure":"Annaram Barrage","elevation_m":120.0,"tmc":10.87,"kind":"barrage","pumpFromPrev":"Annaram (Medaram) pump house","liftFromPrev_m":20},
-      {"id":"sundilla","structure":"Sundilla Barrage","elevation_m":130.0,"tmc":8.83,"kind":"barrage","pumpFromPrev":"Sundilla pump house","liftFromPrev_m":10},
-      {"id":"yellampally","structure":"Yellampally Reservoir","elevation_m":148.0,"tmc":20.175,"kind":"reservoir","pumpFromPrev":"Yellampally pump house","liftFromPrev_m":18},
-      {"id":"mmd","structure":"Mid Manair Dam","elevation_m":318.0,"tmc":25.873,"kind":"reservoir","pumpFromPrev":"Ramadugu · Kannepalli · Gandhari pump houses","liftFromPrev_m":170},
-      {"id":"ananthagiri","structure":"Ananthagiri Reservoir","elevation_m":470.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":"Link-4 pump houses","liftFromPrev_m":152,"estimated":true},
-      {"id":"ranganayakasagar","structure":"Ranganayaka Sagar","elevation_m":490.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":20},
-      {"id":"mallannasagar","structure":"Mallannasagar","elevation_m":557.0,"tmc":50,"kind":"reservoir","pumpFromPrev":null,"liftFromPrev_m":67},
-      {"id":"kondapochamma","structure":"Kondapochamma Sagar","elevation_m":618.0,"tmc":15,"kind":"reservoir","pumpFromPrev":"Akkaram pump house (6×27 MW)","liftFromPrev_m":61}
+      {"id":"medigadda","structure":"Medigadda Barrage","elevation_m":100.0,"tmc":16.17,"kind":"barrage","pumpFromPrev":null,"liftFromPrev_m":8},
+      {"id":"annaram","structure":"Annaram Barrage","elevation_m":120.0,"tmc":10.87,"kind":"barrage","pumpFromPrev":"Lakshmi Pump House (Kannepalli)","pumpUnits":17,"pumpUnitMw":40,"pumpCapacityMw":680,"liftFromPrev_m":20,"pumpNote":"17 × 40 MW = 680 MW · Kannepalli village near Medigadda · inaugurated Jun 2019 as the “world's biggest pumphouse” · barred from full operation since the Oct 2023 Medigadda pier subsidence, pending NDSA-directed repairs (targeted ~2027)."},
+      {"id":"sundilla","structure":"Sundilla Barrage","elevation_m":130.0,"tmc":8.83,"kind":"barrage","pumpFromPrev":"Saraswathi Pump House (Annaram)","pumpUnits":12,"pumpUnitMw":40,"pumpCapacityMw":480,"liftFromPrev_m":10,"pumpNote":"12 × 40 MW = 480 MW (some sources cite 8 units / 320 MW from an earlier commissioning snapshot) · under NDSA no-storage restriction since 2024."},
+      {"id":"yellampally","structure":"Yellampally Reservoir","elevation_m":148.0,"tmc":20.175,"kind":"reservoir","pumpFromPrev":"Parvathi Pump House (Sundilla)","pumpUnits":14,"pumpUnitMw":40,"pumpCapacityMw":560,"liftFromPrev_m":18,"pumpNote":"14 × 40 MW = 560 MW · discharges ≈656 cusecs into Yellampally, the terminus of Kaleshwaram Link-1 · no separate ‘Yellampally pump house’ exists — this is the facility that fills it. Link-1 total: 43 units / 1,720 MW across Lakshmi+Saraswathi+Parvathi."},
+      {"id":"mmd","structure":"Mid Manair Dam","elevation_m":318.0,"tmc":25.873,"kind":"reservoir","pumpFromPrev":"Nandi Pump House → Gayatri Pump House (Ramadugu)","pumpUnits":"7+7","pumpCapacityMw":1844,"liftFromPrev_m":170,"pumpNote":"Nandi / Nandimedaram: 7×~124.5 MW = 871 MW, lift ≈105–110 m. Gayatri / Ramadugu (Lakshmipur village): 7×139 MW = 973 MW, lift 111 m — marketed as the world's largest underground pump house (4 floors, ~178 m below surface). Combined they lift Yellampally (148 m) water into Mid Manair Dam (318 m). Corrects this dataset's earlier ‘Ramadugu · Kannepalli · Gandhari’ label — Kannepalli is a real KLIS pump house but belongs to the separate Medigadda→Annaram leg, and no ‘Gandhari’ pump house could be confirmed in any source."},
+      {"id":"ananthagiri","structure":"Ananthagiri Reservoir","elevation_m":470.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":"Annapurna Pump House","pumpUnits":4,"pumpUnitMw":106,"pumpCapacityMw":424,"liftFromPrev_m":152,"estimated":true,"pumpNote":"4 × 106 MW = 424 MW · near Ananthagiri, Illanthakunta mandal, Siddipet district."},
+      {"id":"ranganayakasagar","structure":"Ranganayaka Sagar","elevation_m":490.0,"tmc":3.5,"kind":"reservoir","pumpFromPrev":"Ranganayakasagar Pump House","pumpUnits":4,"pumpUnitMw":134.4,"pumpCapacityMw":538,"liftFromPrev_m":20,"pumpNote":"4 × ~134–135 MW = ~538 MW. One source separately cites a 117 m lift for this station, which doesn't match the ~20 m single-hop figure used here — treat the lift height as unconfirmed pending a primary source."},
+      {"id":"mallannasagar","structure":"Mallannasagar","elevation_m":557.0,"tmc":50,"kind":"reservoir","pumpFromPrev":"Mallannasagar Pump House","pumpUnits":8,"pumpUnitMw":43,"pumpCapacityMw":344,"liftFromPrev_m":67,"pumpNote":"8 × 43 MW = 344 MW · discharge ≈248.5 cumecs. A separately reported ‘18-machine’ Station-8 figure does not reconcile with this 8-unit total."},
+      {"id":"kondapochamma","structure":"Kondapochamma Sagar","elevation_m":618.0,"tmc":15,"kind":"reservoir","pumpFromPrev":"Akkaram Pump House → Markook Pump House","pumpUnits":"6+6","pumpCapacityMw":366,"liftFromPrev_m":61,"pumpNote":"Akkaram (Gajwel mandal): 6×27 MW = 162 MW — verified against this dataset's earlier figure. Markook (near Kondapochamma Sagar): 6×34 MW = 204 MW — previously missing from this dataset entirely. The ≈61 m lift is actually split across these two stations via an intermediate Markook surge pool; the exact per-station split is not confirmed."}
     ],
     "branches": [
-      {"id":"gouravelli","structure":"Gouravelli Reservoir","offId":"mmd","elevation_m":420.0,"tmc":8.23,"pumpLabel":"Regonda pump house (3×132 MW)","liftFromPrev_m":126}
+      {"id":"gouravelli","structure":"Gouravelli Reservoir","offId":"mmd","elevation_m":420.0,"tmc":8.23,"pumpLabel":"Regonda Pump House (3×132 MW)","pumpUnits":3,"pumpUnitMw":132,"pumpCapacityMw":396,"liftFromPrev_m":126,"pumpNote":"3 × 132 MW = 396 MW · reached via a ~12 km tunnel from Narlapur to Regonda · verified correct against multiple sources. Feeds Gouravelli Reservoir (8.23 TMC, Gudatipally village, Akkannapet mandal), serving the Husnabad area."}
     ],
     "totals": {"sourceElevation_m":92,"topElevation_m":618,"simpleLift_m":526,"note":"Government/press materials widely cite '618 m' as the total lift figure, but 618 m is Kondapochamma Sagar's absolute elevation above sea level — the cumulative lift from the Godavari at Medigadda works out closer to ~520-526 m."}
   },
   "krishna": {
     "label": "Krishna system — predominantly gravity-fed",
-    "summary": "From Jurala through Srisailam to Nagarjuna Sagar, Krishna water descends by gravity alone — no pumping on the main stem. Four large lift schemes branch off the Srisailam/Jurala foreshore to reach higher plateau land nearby.",
+    "summary": "From Jurala through Srisailam to Nagarjuna Sagar, Krishna water descends by gravity alone — no pumping on the main stem. Several large lift schemes branch off the Srisailam/Jurala foreshore to reach higher plateau land nearby.",
     "trunk": [
       {"id":"jurala","structure":"Jurala Project","elevation_m":318.52,"tmc":9.657,"kind":"dam"},
       {"id":"srisailam","structure":"Srisailam Dam","elevation_m":270.0,"tmc":216,"kind":"dam"},
       {"id":"nagarjunasagar","structure":"Nagarjuna Sagar Dam","elevation_m":179.83,"tmc":312,"kind":"dam"}
     ],
     "liftSchemes": [
-      {"id":"klis","name":"Kalwakurthy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Regumangadda","sourceElevation_m":244.4,"destElevation_m":502.0,"liftReported_m":298,"tmc":25,"notes":"3 pumping stages, 4 balancing reservoirs; reported lift (298 m) doesn't exactly reconcile with the elevation gap (257.6 m) between the cited source and destination points."},
-      {"id":"prlis","name":"Palamuru-Rangareddy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Yellur (Nagarkurnool)","sourceElevation_m":270.0,"destElevation_m":670.0,"liftReported_m":400,"tmc":90,"notes":"5-stage pumping system designed to lift 90 TMC of monsoon floodwater over ~60 days; Phase I (Narlapur/Anjanagiri intake) inaugurated 2023."},
-      {"id":"dindilis","name":"Dindi Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore (Ulpara Barrage intake)","sourceElevation_m":270.0,"destElevation_m":null,"liftReported_m":null,"tmc":30,"notes":"Lifts up to 30 TMC across a 12-reservoir network; destination elevation not confirmed in available sources."},
-      {"id":"bheema","name":"Rajiv Bheema Lift Irrigation Scheme","sourceLabel":"Jurala backwaters, Panchdev Pahad","sourceElevation_m":318.52,"destElevation_m":385.5,"liftReported_m":67,"tmc":20,"notes":"Irrigates roughly 203,000 acres across Makthal, Atmakur, Wanaparthy and Kollapur."}
+      {
+        "id":"klis","name":"Kalwakurthy Lift Irrigation Scheme (Mahatma Gandhi KLIS)","sourceLabel":"Srisailam foreshore, Regumangadda (Yellur, Kollapur mandal)","sourceElevation_m":244.4,"destElevation_m":502.0,"liftReported_m":298,"tmc":25,
+        "notes":"3 pumping stages (5×30 MW = 150 MW each, 450 MW total), 4 balancing reservoirs (Yellur, Singotam, Jonnalaboguda, Gudipally Gattu); command area ~3.4–3.65 lakh acres across Nagarkurnool, Wanaparthy, Mahbubnagar, Shamshabad. Reported total lift (298 m) doesn't exactly reconcile with the elevation gap (257.6 m) between the cited source/destination points — an unverified stage breakdown of 95+86+117=298 m is self-consistent but not confirmed against a primary document. Chronically under-utilised: typically only 3 of 5 pumps run per stage because the downstream canal's carrying capacity is well below the pumps' design discharge; integration with PRLIS has been proposed to fix this.",
+        "pumpHouses":[
+          {"name":"Lift-I — Regumangadda (Yellur)","location":"Kollapur mandal, Nagarkurnool district","units":5,"unitMw":30,"totalMw":150,"dischargeCusecs":800},
+          {"name":"Lift-II — Jonnalaboguda","location":"Nagarkurnool district","units":5,"unitMw":30,"totalMw":150,"dischargeCusecs":800},
+          {"name":"Lift-III — Gudipally","location":"Nagarkurnool district","units":5,"unitMw":30,"totalMw":150,"dischargeCusecs":650,"note":"suffered a 2-day outage in Aug 2019 from a switching-system fault"}
+        ]
+      },
+      {
+        "id":"prlis","name":"Palamuru-Rangareddy Lift Irrigation Scheme","sourceLabel":"Srisailam foreshore, Yellur (Nagarkurnool)","sourceElevation_m":270.0,"destElevation_m":670.0,"liftReported_m":400,"tmc":90,
+        "notes":"5-stage pumping system designed to lift 90 TMC of monsoon floodwater over ~60 days into 6 reservoirs (Anjanagiri, Sri Veeranjaneya, Venkatadri + Kurumurthyraya, Udandapur, K.P. Lakshmidevipally); combined storage 67.52 TMC; command area 12.3 lakh acres. Design total ~4,720 MW (31×145 MW + 3×75 MW pumps, supplied by BHEL — larger than Kaleshwaram's 139 MW units). Phase I (Narlapur/Anjanagiri) inaugurated 16 Sep 2023; by Rabi 2025 Anjanagiri was fully operational with Veeranjaneya/Venkatadri partially irrigating. Cost escalated from ₹35,200 Cr to a projected ₹65,506 Cr; completion deadline pushed to Dec 2027. Stage V (K.P. Lakshmidevipally) is the least documented and least advanced stage.",
+        "pumpHouses":[
+          {"name":"Stage I — Narlapur","location":"Nagarkurnool district (Srisailam foreshore intake)","units":"8–9","unitMw":145,"totalMw":"1,160–1,305","liftM":75,"dischargeCusecs":23166,"note":"operational (partial) since 2023"},
+          {"name":"Stage II — Yedula (Edula)","location":"Nagarkurnool district","units":10,"unitMw":145,"totalMw":1450,"liftM":100,"note":"houses one of India's largest underground pump caverns (415 m × 30 m × 90 m); under construction, partially operational Rabi 2025"},
+          {"name":"Stage III — Vattem","location":"Nagarkurnool/Mahbubnagar border","units":10,"unitMw":145,"totalMw":1450,"liftM":97,"note":"repeatedly flooded during construction (2020, 2022); delayed"},
+          {"name":"Stage IV — Udandapur","location":"Jadcherla mandal, Mahbubnagar district","units":5,"unitMw":145,"totalMw":725,"liftM":98,"dischargeCusecs":13240,"note":"under construction"},
+          {"name":"Stage V — K.P. Lakshmidevipally","location":"near Shadnagar, Rangareddy district","units":null,"unitMw":null,"totalMw":null,"liftM":41,"note":"least documented / least advanced stage"}
+        ]
+      },
+      {
+        "id":"dindilis","name":"Dindi Lift Irrigation Scheme (R. Vidyasagar Rao)","sourceLabel":"PRLIS's Sri Veeranjaneya (Yedula) Reservoir → Ulpara Barrage, gravity link","sourceElevation_m":445.0,"destElevation_m":385.6,"liftReported_m":null,"tmc":25.64,
+        "notes":"CORRECTED (Aug 2026 research): despite being called a ‘lift’ scheme, DLIS's own works have no pump house — they are a gravity cascade. The genuine ~175 m lift from Srisailam (270 m) up to Yedula Reservoir (445 m) is performed entirely by PRLIS's own Narlapur/Yedula pump houses, outside DLIS's scope; a 13.03.2024 government memo formally fixed DLIS's water-drawal point at PRLIS's Yedula Reservoir. From there, water reaches Ulpara Barrage (412 m) and flows by gravity through a 66.3 km main canal and 9 reservoirs (not 12, per the Irrigation Dept.'s own 2024 figures) down to Shivannagudem Balancing Reservoir (385.6 m, 155,000-acre command). Command area 3.61 lakh acres across 4 districts. Sanctioned 2015 (₹6,190 Cr); as of mid-2026 still under construction (only ~12,000 of 361,000 acres irrigated), stalled by land acquisition/R&R and an NGT/Supreme Court environmental-clearance dispute. Three small, unrelated lift schemes bundled under the same Irrigation Circle (Ambabhavani 2×4.5 MW, Kambalapally 2×3.5+2×2.5 MW, Pogilla 3×0.35 MW) draw separately from the Nagarjuna Sagar foreshore for local fluoride-affected villages — not part of the main 25.6 TMC DLIS network.",
+        "pumpHouses":[]
+      },
+      {
+        "id":"bheema","name":"Rajiv Bheema Lift Irrigation Scheme","sourceLabel":"Jurala (PJP) backwaters — two intakes: Panchadevpad (Lift-I) and Ookachettivagu pondage near Ramanpad (Lift-II)","sourceElevation_m":318.52,"destElevation_m":385.5,"liftReported_m":67,"tmc":20,
+        "notes":"Irrigates roughly 203,000 acres (111,000 under Lift-I + 92,000 under Lift-II) across Wanaparthy, Narayanpet and Nagarkurnool districts. Total installed capacity 119 MW across both lifts combined; per-stage unit counts and MW split are not documented in available sources. Administrative sanction ₹2,158.40 Cr; commissioning date not confirmed, implying a long-running, phased build typical of Krishna-basin lift schemes.",
+        "pumpHouses":[
+          {"name":"Lift-I — Panchadevpad","location":"Atmakur mandal, Narayanpet district","units":null,"unitMw":null,"totalMw":null,"note":"Jurala/PJP foreshore intake; unit count and per-stage MW not found in available sources"},
+          {"name":"Lift-II — Ramanpad / Kothakota (Ookachettivagu)","location":"Thirumalayapalli & Kothakota mandal","units":null,"unitMw":null,"totalMw":null,"note":"draws from Ookachettivagu project pondage, not directly from Jurala; feeds Shankarasamudram balancing tank near Kanayapally village"}
+        ]
+      },
+      {
+        "id":"nettempadu","name":"Jawahar Nettempadu Lift Irrigation Scheme (JNLIS)","sourceLabel":"Jurala (PJP) foreshore, near Upperu village, Dharur mandal","sourceElevation_m":318.52,"destElevation_m":null,"liftReported_m":null,"tmc":21.425,
+        "notes":"CORRECTED (Aug 2026 research): sourced from the Jurala backwaters, not Srisailam — this dataset previously and incorrectly grouped it among Srisailam-fed schemes. Two-stage lift (Upperu, then Relampadu/Marlabeedu near Dharur) feeding the Gudemdoddi (2.0 TMC) and Relampadu (2.3 TMC) balancing reservoirs — NOT Udandapur Reservoir, which this research confirms is actually PRLIS Stage IV (fed from Kurumurthyraya, ultimately from Srisailam). Command area ~2 lakh acres across 148 villages in 8 mandals of Jogulamba Gadwal district; foundation laid 2015; partially operational since at least 2021 (only 2 of 4 Stage-I pumps running as of the last confirmed report, achieving ~1,789 of a 2,250-cusec target).",
+        "pumpHouses":[
+          {"name":"Stage I — Upperu","location":"Dharur mandal, Jogulamba Gadwal district","units":4,"unitMw":17,"totalMw":null,"dischargeCusecs":2250,"note":"unit MW figure (17 MW) is a single, unconfirmed aggregator source; only 2 of 4 pumps operational as of the last confirmed (2021) report"},
+          {"name":"Stage II — Relampadu / Marlabeedu","location":"near Dharur, Jogulamba Gadwal district","units":null,"unitMw":null,"totalMw":null,"note":"at least 3 units per tender documents; feeds Relampadu Balancing Reservoir"}
+        ]
+      }
     ]
   },
   "dataNotes": [
@@ -40,6 +77,11 @@
     "Ananthagiri Reservoir's elevation (470 m) is interpolated between Mid Manair Dam and Ranganayaka Sagar — not independently confirmed.",
     "Individual barrage capacities (e.g. Annaram: 10.87 vs 11.9 TMC) show minor inconsistencies across Wikipedia and news sources.",
     "The Kalwakurthy scheme's reported total lift (298 m) does not arithmetically match its cited source/destination elevations (a 257.6 m gap) — likely reflects staging not captured by simple subtraction.",
-    "Map connector lines between reservoirs come in two kinds: solid lines follow a documented intake, canal or lift scheme (e.g. Kaleshwaram's offline chain, NSP left canal to Wyra/Palair, Srisailam/Jurala lift-scheme foreshores). Dashed lines (Kinnerasani, Laknavaram, Ramappa) connect a standalone tank to its nearest mapped hub purely for visual continuity and are not a claim about the actual engineered route."
+    "Map connector lines between reservoirs come in two kinds: solid lines follow a documented intake, canal or lift scheme (e.g. Kaleshwaram's offline chain, NSP left canal to Wyra/Palair, Srisailam/Jurala lift-scheme foreshores). Dashed lines (Kinnerasani, Laknavaram, Ramappa) connect a standalone tank to its nearest mapped hub purely for visual continuity and are not a claim about the actual engineered route.",
+    "Pump house research (Aug 2026, see research/ folder): Kaleshwaram Stage-1 (Lakshmi/Medigadda, Saraswathi/Annaram, Parvathi/Sundilla) totals 43 units / 1,720 MW, independently corroborated across two outlets — there is no separate fourth 'Yellampally pump house'; Parvathi's discharge is what fills Yellampally.",
+    "The Yellampally→Mid Manair leg is really the Nandi and Gayatri pump houses, not 'Ramadugu/Kannepalli/Gandhari' as this dataset previously modeled — 'Kannepalli' is a real KLIS pump house but belongs to the separate Medigadda→Annaram leg, and no 'Gandhari' pump house could be confirmed in any source.",
+    "Udandapur Reservoir is fed by the Palamuru-Rangareddy Lift Irrigation Scheme (via Kurumurthyraya), not by a Jurala→Udandapur 'Nettempadu' link as this dataset previously modeled in its map connections.",
+    "The Dindi Lift Irrigation Scheme has no pump house of its own — it is a gravity cascade fed from PRLIS's Yedula Reservoir; all lift from Srisailam is performed by PRLIS pump houses, not Dindi's.",
+    "All pump house names, unit counts and capacities are drawn from the research/ folder's per-scheme reports (Aug 2026). Several figures (unit counts, lift heights, discharge) vary across press sources and are flagged as uncertain within those reports — treat pump-level numbers as approximate, cross-checked estimates rather than official figures."
   ]
 }
