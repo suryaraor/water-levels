@@ -302,7 +302,9 @@
   #mapsvg.dim-fade, .scene-wrap.dim-fade { opacity: 0; }
   #mapsvg { width: 100%; height: auto; display: block; cursor: grab; touch-action: none; }
   #mapsvg.dragging { cursor: grabbing; }
-  .district { fill: var(--surface-2); stroke: var(--border-strong); stroke-width: 0.6; }
+  .district { fill: var(--surface-2); fill-opacity: 0.22; stroke: var(--border-strong); stroke-width: 0.6; }
+  .satellite-tint { fill: var(--bg); opacity: 0.32; mix-blend-mode: multiply; pointer-events: none; }
+  #satelliteLayer image { filter: saturate(1.05) brightness(0.92); }
   .district-label { fill: var(--text-muted); font-family: var(--font-mono); font-size: 6.5px; text-anchor: middle; pointer-events: none; opacity: 0.55; }
 
   .river { fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -721,6 +723,7 @@
           </linearGradient>
         </defs>
         <g id="zoomLayer">
+          <g id="satelliteLayer"></g>
           <g id="districtsLayer"></g>
           <g id="riversLayer"></g>
           <g id="linksLayer"></g>
@@ -978,6 +981,16 @@ function ringToPath(ring) {
 }
 function irrColorVar(irr) { return irr === 'gravity' ? 'var(--gravity-c)' : irr === 'lift' ? 'var(--lift-c)' : 'var(--both-c)'; }
 function irrClass(irr) { return irr === 'gravity' ? 'fill-gravity' : irr === 'lift' ? 'fill-lift' : 'fill-both'; }
+
+/* ============ satellite backdrop ============ */
+{
+  const satLayer = document.getElementById('satelliteLayer');
+  const satImg = el('image', {
+    x: 0, y: 0, width: VBW, height: VBH, preserveAspectRatio: 'none'
+  }, satLayer);
+  satImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'satellite.jpg');
+  el('rect', { class: 'satellite-tint', x: 0, y: 0, width: VBW, height: VBH }, satLayer);
+}
 
 /* ============ districts ============ */
 const districtsLayer = document.getElementById('districtsLayer');
