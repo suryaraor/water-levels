@@ -425,6 +425,7 @@
   .link3d.gravity { stroke: var(--gravity-c); }
   .link3d.lift { stroke: var(--lift-c); }
   .link3d.schematic { stroke-dasharray: 3 4; opacity: 0.6; }
+  .link3d.dim { opacity: 0.08; }
   .link3d-glow { stroke-linecap: round; opacity: 0.24; filter: blur(3px); }
   .link3d-glow.gravity { stroke: var(--gravity-c); }
   .link3d-glow.lift { stroke: var(--lift-c); }
@@ -1554,12 +1555,13 @@ function updateOverlay() {
   CONNECTIONS.forEach((c, i) => {
     const pa = pillar3dEls[c.from], pb = pillar3dEls[c.to];
     if (!pa || !pb) return;
+    const linkDim = pa.cap?.classList.contains('dim') || pb.cap?.classList.contains('dim');
     const [ax, ay] = screenPt(pa.hasElev ? pa.capAnchor : pa.groundAnchor, wr);
     const [bx, by] = screenPt(pb.hasElev ? pb.capAnchor : pb.groundAnchor, wr);
-    const cls = `link3d ${c.flow}` + (c.sourced ? '' : ' schematic');
-    el('line', { class: cls + '-glow', x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 5, 'data-idx': i }, overlay);
+    const cls = `link3d ${c.flow}` + (c.sourced ? '' : ' schematic') + (linkDim ? ' dim' : '');
+    if (!linkDim) el('line', { class: `link3d ${c.flow}-glow`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 5, 'data-idx': i }, overlay);
     el('line', { class: cls, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2, 'data-idx': i }, overlay);
-    el('line', { class: `link3d-flow ${c.flow}`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2.4, 'data-idx': i }, overlay);
+    if (!linkDim) el('line', { class: `link3d-flow ${c.flow}`, x1: ax, y1: ay, x2: bx, y2: by, 'stroke-width': 2.4, 'data-idx': i }, overlay);
   });
 
   // pillar stems + shadows
@@ -1827,6 +1829,14 @@ async function startDroneFlight() {
   if (stages.length < 2) return;
 
   document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+  // decluttered view: keep the chain itself plus a few landmark reservoirs for
+  // geographic orientation (Nagarjuna Sagar, Srisailam, Sriram Sagar), dim the rest
+  const chainIdSet = new Set(stages.map(s => s.id));
+  const LANDMARK_TMC = 90;
+  window.__pillar3d.forEach(({ r, cap }) => {
+    if (!chainIdSet.has(r.id) && !(r.gross_tmc >= LANDMARK_TMC)) cap.classList.add('dim');
+  });
+  requestAnimationFrame(updateOverlay);
   document.getElementById('flyPrev').hidden = true;
   document.getElementById('flyNext').hidden = true;
   document.getElementById('flyPlayPause').hidden = false;
@@ -1844,9 +1854,13 @@ async function startDroneFlight() {
   legDurations.forEach(d => legStart.push(legStart[legStart.length - 1] + d));
 
   const startYaw = cam.yaw, endYaw = cam.yaw + 150;
-  // ground-level drone at Medigadda, climbing to a wide bird's-eye view of the whole chain
-  const startPitch = 16, endPitch = 72;
-  const startTargetYFrac = 0.3, endTargetYFrac = 0.5;
+  // low, wide establishing angle over the whole system, climbing to a higher,
+  // still-wide bird's-eye view — both ends keep the chain and its landmark
+  // reservoirs (Nagarjuna Sagar, Srisailam, Sriram Sagar) in frame for context
+  const startPitch = 20, endPitch = 66;
+  const startTargetYFrac = 0.4, endTargetYFrac = 0.42;
+  const landmarkIds = ['nagarjunasagar', 'srisailam', 'srsp'].filter(id => pillar3dEls[id]);
+  const focusIds = [...stages.map(s => s.id), ...landmarkIds];
 
   // a virtual anchor at the chain's geographic + elevation midpoint: the camera's pan
   // target blends toward this (instead of just the last stage) as the flight climbs,
@@ -1859,8 +1873,8 @@ async function startDroneFlight() {
     capAnchor: make3dAnchor(document.getElementById('pillars3d'), mwx, mwy, (elev0 + elevN) / 2),
     cap: null, hasElev: true,
   };
-  const startZoom = 2.6;
-  const endZoom = measureFitZoom(stages.map(s => s.id), endPitch, endYaw);
+  const startZoom = measureFitZoom(focusIds, startPitch, startYaw, 0.72, 0.58);
+  const endZoom = measureFitZoom(focusIds, endPitch, endYaw, 0.72, 0.58);
 
   const state = { playing: true, elapsed: 0, drone: true, stages, chainKey: 'godavari', cancelled: false, idx: -1 };
   tourState = state;
@@ -1968,7 +1982,7 @@ function endTour() {
   if (ov) { ov.groundAnchor.remove(); ov.capAnchor.remove(); delete pillar3dEls['__kaleshwaramOverview']; }
   tourState = null;
   tourActiveId = null;
-  requestAnimationFrame(updateOverlay);
+  applyFilters(); // restores each reservoir's dim state to match the active filters, undoing tour decluttering
 }
 function updateFlyHud(s) {
   const chainLabel = tourState.chainKey === 'godavari' ? 'Kaleshwaram Lift Chain' : 'Krishna Gravity Chain';
