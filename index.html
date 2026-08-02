@@ -1854,11 +1854,14 @@ async function startDroneFlight() {
   legDurations.forEach(d => legStart.push(legStart[legStart.length - 1] + d));
 
   const startYaw = cam.yaw, endYaw = cam.yaw + 150;
-  // low, wide establishing angle over the whole system, climbing to a higher,
-  // still-wide bird's-eye view — both ends keep the chain and its landmark
-  // reservoirs (Nagarjuna Sagar, Srisailam, Sriram Sagar) in frame for context
-  const startPitch = 20, endPitch = 66;
-  const startTargetYFrac = 0.4, endTargetYFrac = 0.42;
+  // CSS rotateX: LOW pitch = near top-down (ground fills the frame, pillars
+  // foreshorten to dots); HIGH pitch = near side-on (ground goes edge-on, pillar
+  // height reads clearly). So a ground-level "side view" opener needs HIGH pitch,
+  // climbing down to a LOW-pitch bird's-eye finish over the whole system — both
+  // ends keep the chain and its landmark reservoirs (Nagarjuna Sagar, Srisailam,
+  // Sriram Sagar) in frame for context
+  const startPitch = 70, endPitch = 22;
+  const startTargetYFrac = 0.42, endTargetYFrac = 0.4;
   const landmarkIds = ['nagarjunasagar', 'srisailam', 'srsp'].filter(id => pillar3dEls[id]);
   const focusIds = [...stages.map(s => s.id), ...landmarkIds];
 
