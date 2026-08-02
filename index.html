@@ -1659,12 +1659,113 @@ async function startTour(chainKey) {
   document.querySelector('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
   if (dim !== '3d') switchDim('3d'); else { build3DScene(); }
   await new Promise(r => setTimeout(r, dim === '3d' ? 60 : 260));
+  if (chainKey === 'godavari') { await startDroneFlight(); return; }
   const stages = buildTourStages(chainKey);
   stages.forEach(s => { s.total = stages.length; });
   tourState = { stages, idx: -1, playing: true, chainKey, timer: null };
+  document.getElementById('flyPrev').hidden = false;
+  document.getElementById('flyNext').hidden = false;
+  document.getElementById('flyPlayPause').hidden = false;
   document.getElementById('flyHud').hidden = false;
   document.getElementById('flyPlayPause').textContent = 'Pause';
   await goToStage(0);
+}
+
+/* ---- Kaleshwaram drone flight: one continuous climb from Medigadda to Mallannasagar ---- */
+function smoothstep(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
+function anchorCenterPx(id, wr) {
+  const p = pillar3dEls[id]; if (!p) return null;
+  const r = p.capAnchor.getBoundingClientRect();
+  return { x: r.left + r.width/2 - wr.left, y: r.top + r.height/2 - wr.top };
+}
+async function startDroneFlight() {
+  const all = buildTourStages('godavari');
+  const endIdx = all.findIndex(s => s.id === 'mallannasagar');
+  const stages = endIdx >= 0 ? all.slice(0, endIdx + 1) : all;
+  stages.forEach((s, i) => { s.index = i; s.total = stages.length; });
+  if (stages.length < 2) return;
+
+  document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+  document.getElementById('flyPrev').hidden = true;
+  document.getElementById('flyNext').hidden = true;
+  document.getElementById('flyPlayPause').hidden = false;
+  document.getElementById('flyPlayPause').textContent = 'Pause';
+  document.getElementById('flyHud').hidden = false;
+
+  const elev0 = stages[0].elevation, elevN = stages[stages.length - 1].elevation;
+  const elevSpan = Math.max(1, elevN - elev0);
+  const MIN_LEG_MS = 1500, TOTAL_MS = 20000;
+  const legWeights = stages.slice(1).map((s, i) => Math.max(10, s.elevation - stages[i].elevation));
+  const weightSum = legWeights.reduce((a, b) => a + b, 0);
+  const legDurations = legWeights.map(w => Math.max(MIN_LEG_MS, TOTAL_MS * w / weightSum));
+  const totalDuration = legDurations.reduce((a, b) => a + b, 0);
+  const legStart = [0];
+  legDurations.forEach(d => legStart.push(legStart[legStart.length - 1] + d));
+
+  const startYaw = cam.yaw, endYaw = cam.yaw + 150;
+  const startPitch = 74, endPitch = 50;
+  const startZoom = 4.3, endZoom = 2.5;
+
+  const state = { playing: true, elapsed: 0, drone: true, stages, chainKey: 'godavari', cancelled: false, idx: 0 };
+  tourState = state;
+  updateFlyHud(stages[0]);
+
+  return new Promise(resolve => {
+    let last = performance.now();
+    function frame(now) {
+      if (state.cancelled || tourState !== state) { resolve(); return; }
+      if (!state.playing) { last = now; requestAnimationFrame(frame); return; }
+      state.elapsed = Math.min(totalDuration, state.elapsed + (now - last));
+      last = now;
+      const elapsed = state.elapsed;
+
+      let li = 0, eased = 1, a = stages[stages.length - 2], b = stages[stages.length - 1];
+      for (let i = 0; i < legDurations.length; i++) {
+        if (elapsed <= legStart[i + 1] || i === legDurations.length - 1) {
+          a = stages[i]; b = stages[i + 1];
+          li = Math.min(1, (elapsed - legStart[i]) / legDurations[i]);
+          eased = smoothstep(li);
+          break;
+        }
+      }
+
+      const activeIdx = li < 0.5 ? a.index : b.index;
+      if (state.idx !== activeIdx) {
+        state.idx = activeIdx;
+        updateFlyHud(stages[activeIdx]);
+        document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
+        const p = pillar3dEls[stages[activeIdx].id]; if (p) p.cap.classList.add('touring');
+      }
+
+      const t = elapsed / totalDuration;
+      document.getElementById('flyProgress').style.width = (t * 100) + '%';
+      const curElev = a.elevation + (b.elevation - a.elevation) * eased;
+      const elevT = (curElev - elev0) / elevSpan;
+      cam.yaw = startYaw + (endYaw - startYaw) * t;
+      cam.pitch = startPitch + (endPitch - startPitch) * elevT;
+      cam.zoom = startZoom + (endZoom - startZoom) * elevT;
+      applyCam();
+
+      const wr = sceneWrap.getBoundingClientRect();
+      const ca = anchorCenterPx(a.id, wr), cb = anchorCenterPx(b.id, wr);
+      if (ca && cb) {
+        const cx = ca.x + (cb.x - ca.x) * eased, cy = ca.y + (cb.y - ca.y) * eased;
+        const dx = wr.width / 2 - cx, dy = wr.height / 2 - cy;
+        cam.panX += dx / wr.width * 100; cam.panY += dy / wr.height * 100;
+        applyCam();
+      }
+      updateOverlay();
+
+      if (elapsed < totalDuration) {
+        requestAnimationFrame(frame);
+      } else {
+        document.getElementById('flyPlayPause').hidden = true;
+        scheduleURLSync();
+        resolve();
+      }
+    }
+    requestAnimationFrame(frame);
+  });
 }
 async function goToStage(i) {
   if (!tourState) return;
@@ -1691,7 +1792,11 @@ function advanceTour(dir) {
 function endTour() {
   if (!tourState) return;
   clearTimeout(tourState.timer);
+  tourState.cancelled = true;
   document.getElementById('flyHud').hidden = true;
+  document.getElementById('flyPrev').hidden = false;
+  document.getElementById('flyNext').hidden = false;
+  document.getElementById('flyPlayPause').hidden = false;
   document.querySelectorAll('.pillar-cap.touring').forEach(c => c.classList.remove('touring'));
   tourState = null;
 }
@@ -1715,6 +1820,7 @@ document.getElementById('flyPlayPause').addEventListener('click', () => {
   if (!tourState) return;
   tourState.playing = !tourState.playing;
   document.getElementById('flyPlayPause').textContent = tourState.playing ? 'Pause' : 'Play';
+  if (tourState.drone) return;
   if (tourState.playing) { tourState.timer = setTimeout(() => advanceTour(1), 3400); }
   else { clearTimeout(tourState.timer); }
 });
