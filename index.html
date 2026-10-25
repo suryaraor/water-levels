@@ -297,6 +297,16 @@
     padding: 8px 12px; border-radius: 8px; cursor: pointer;
   }
   .tour-btn:hover { border-color: var(--lift-c); }
+  .tour-btn[aria-pressed="false"] { color: var(--text-muted); }
+
+  .city circle { fill: var(--text-secondary); stroke: var(--surface-3); stroke-width: 1; opacity: 0.85; }
+  .city.tier-1 circle { fill: var(--text-primary); stroke-width: 1.4; }
+  .city-label {
+    font-family: var(--font-mono); font-size: 9px; fill: var(--text-secondary); opacity: 0.85;
+    paint-order: stroke; stroke: var(--surface-3); stroke-width: 2.5px; stroke-linejoin: round;
+  }
+  .city.tier-1 .city-label { font-size: 11px; font-weight: 700; fill: var(--text-primary); }
+  .city.tier-3 .city-label { font-size: 8px; opacity: 0.7; }
 
   #mapsvg, .scene-wrap { transition: opacity 180ms ease; }
   #mapsvg.dim-fade, .scene-wrap.dim-fade { opacity: 0; }
@@ -533,6 +543,15 @@
     position: absolute; top: 12px; right: 12px; background: transparent; border: none;
     color: var(--text-muted); font-size: 18px; cursor: pointer; line-height: 1;
   }
+  .d-image { position: relative; width: 100%; aspect-ratio: 16/10; border-radius: 10px; overflow: hidden; margin-bottom: 14px; background: var(--surface-2); }
+  .d-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .d-image.loading { animation: d-img-shimmer 1.4s ease infinite; background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%); background-size: 400% 100%; }
+  @keyframes d-img-shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+  .d-image-credit {
+    position: absolute; right: 6px; bottom: 6px; background: rgba(2,10,16,0.6); color: #EAF3F6;
+    font-size: 10px; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; text-decoration: none;
+  }
+  .d-image-credit:hover { background: rgba(2,10,16,0.8); }
   #drawer .d-eyebrow { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
   #drawer h2 { font-family: var(--font-display); font-size: 20px; margin: 4px 0 2px; text-wrap: balance; }
   #drawer .d-sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 14px; }
@@ -685,6 +704,7 @@
         <div class="tour-launchers" id="tourLaunchers">
           <button class="tour-btn" id="tourGodavari" data-chain="godavari">&#9654; Kaleshwaram tour</button>
           <button class="tour-btn" id="tourKrishna" data-chain="krishna">&#9654; Krishna tour</button>
+          <button class="tour-btn" id="citiesToggle" aria-pressed="true">&#9679; Cities</button>
         </div>
       </div>
 
@@ -759,6 +779,7 @@
           <g id="satelliteLayer"></g>
           <g id="districtsLayer"></g>
           <g id="riversLayer"></g>
+          <g id="citiesLayer"></g>
           <g id="linksLayer"></g>
           <g id="districtLabelsLayer"></g>
           <g id="markersLayer"></g>
@@ -839,7 +860,7 @@ const RESERVOIRS = [
   {"id":"medigadda","name":"Medigadda Barrage (Lakshmi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Jayashankar Bhupalpally","lat":18.7038,"lon":80.0892,"coordApprox":false,"frl_m":100.0,"gross_tmc":16.17,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Godavari intake point of the Kaleshwaram Lift Irrigation Scheme, near the Godavari-Pranahita confluence; a pier subsidence incident occurred in Oct 2023.","source":"Wikipedia"},
   {"id":"annaram","name":"Annaram Barrage (Saraswathi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Jayashankar Bhupalpally","lat":18.7644,"lon":79.8235,"coordApprox":false,"frl_m":120.0,"gross_tmc":10.87,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Second barrage of the Medigadda-Annaram-Sundilla chain; capacity reported as 10.87-11.9 TMC across sources.","source":"Wikipedia"},
   {"id":"sundilla","name":"Sundilla Barrage (Parvathi Barrage)","river":"Godavari","basin":"Godavari","subbasin":"Godavari main stem","district":"Peddapalli","lat":18.7357,"lon":79.611,"coordApprox":false,"frl_m":130.0,"gross_tmc":8.83,"live_tmc":null,"type":"Barrage","irrigation":"lift","year":2019,"notes":"Third and uppermost Kaleshwaram intake barrage before Yellampally.","source":"Wikipedia"},
-  {"id":"kondapochamma","name":"Kondapochamma Sagar","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.7611,"lon":78.7063,"coordApprox":false,"frl_m":618.0,"gross_tmc":15,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Terminal reservoir of the main Kaleshwaram trunk; distributes via 13 canals and supplies drinking water to Hyderabad; the '618 m' figure is this reservoir's elevation, not the cumulative lift.","source":"Telangana Today"},
+  {"id":"kondapochamma","name":"Kondapochamma Sagar","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.7611,"lon":78.7063,"coordApprox":false,"frl_m":618.0,"gross_tmc":15,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Terminal reservoir of the main Kaleshwaram trunk; distributes via 13 canals and supplies drinking water to Hyderabad; the '618 m' figure is this reservoir's elevation, not the cumulative lift.","source":"Telangana Today","image":"https://upload.wikimedia.org/wikipedia/commons/8/81/Kondapochamma_Reservoir.jpg","imageCredit":"Kullatan Kin, CC0, via Wikimedia Commons","imageCreditUrl":"https://commons.wikimedia.org/wiki/File:Kondapochamma_Reservoir.jpg"},
   {"id":"mallannasagar","name":"Mallannasagar (Komuravelli Mallanna Sagar)","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.96,"lon":78.75,"coordApprox":false,"frl_m":557.0,"gross_tmc":50,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Largest reservoir in the Kaleshwaram scheme, the 'mother reservoir' of KLIS; capacity was enlarged from an original 1.5 TMC design — a politically contested escalation.","source":"Telangana Today / newsmeter.in"},
   {"id":"ranganayakasagar","name":"Ranganayaka Sagar","river":"Offline reservoir (Kaleshwaram Link-4)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":17.92,"lon":78.83,"coordApprox":true,"frl_m":490.0,"gross_tmc":3.5,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2019,"notes":"Intermediate reservoir between Ananthagiri and Mallannasagar.","source":"WebSearch aggregation"},
   {"id":"gouravelli","name":"Gouravelli Reservoir","river":"Offline reservoir (Kaleshwaram branch)","basin":"Godavari","subbasin":"Kaleshwaram offline chain","district":"Siddipet","lat":18.28,"lon":79.02,"coordApprox":true,"frl_m":420.0,"gross_tmc":8.23,"live_tmc":null,"type":"Reservoir","irrigation":"lift","year":2020,"notes":"Fed by three 132 MW pumps at Regonda pump house lifting water 126 m; serves the Husnabad area, branching off the Mid Manair chain.","source":"Telangana Today"},
@@ -847,7 +868,7 @@ const RESERVOIRS = [
   {"id":"dindi","name":"Dindi Reservoir","river":"Offline reservoir (Dindi Lift Scheme)","basin":"Krishna","subbasin":"Krishna offline chain","district":"Nagarkurnool","lat":16.5361,"lon":78.6611,"coordApprox":false,"frl_m":null,"gross_tmc":2.08,"live_tmc":null,"type":"Reservoir","irrigation":"gravity","year":null,"notes":"One of 9 reservoirs (not 12, per the Irrigation Dept.'s 2024 figures) in the R. Vidyasagar Rao Dindi Scheme's gravity cascade. Despite the 'lift scheme' name, DLIS has no pump house of its own — its water arrives by gravity from PRLIS's Yedula Reservoir, which performs the actual ~175 m Srisailam lift. Not yet operational as of 2026 (stalled on land acquisition and an NGT/Supreme Court environmental-clearance dispute).","source":"Irrigation Dept. project documents"},
   {"id":"osmansagar","name":"Osman Sagar (Gandipet)","river":"Musi","basin":"Krishna","subbasin":"Musi","district":"Ranga Reddy","lat":17.3833,"lon":78.3,"coordApprox":false,"frl_m":545.59,"gross_tmc":3.9,"live_tmc":null,"type":"Dam","irrigation":"gravity","year":1921,"notes":"Built after the 1908 Great Musi Flood to protect and supply Hyderabad; original 5.54 TMC design capacity reduced by siltation.","source":"Wikipedia"},
   {"id":"himayatsagar","name":"Himayat Sagar","river":"Esi (Musi tributary)","basin":"Krishna","subbasin":"Musi","district":"Ranga Reddy","lat":17.3,"lon":78.35,"coordApprox":false,"frl_m":537.5,"gross_tmc":2.97,"live_tmc":2.521,"type":"Dam","irrigation":"gravity","year":1927,"notes":"Companion drinking-water reservoir to Osman Sagar for Hyderabad; command area protected from encroachment under GO 111.","source":"Wikipedia"},
-  {"id":"kinnerasani","name":"Kinnerasani Dam","river":"Kinnerasani","basin":"Godavari","subbasin":"Kinnerasani","district":"Bhadradri Kothagudem","lat":17.775,"lon":80.559,"coordApprox":true,"frl_m":124.05,"gross_tmc":8.4,"live_tmc":null,"type":"Dam","irrigation":"gravity","year":null,"notes":"Storage reservoir inside the Kinnerasani Wildlife Sanctuary; coordinates are the sanctuary centroid, not the dam site precisely.","source":"WebSearch aggregation"},
+  {"id":"kinnerasani","name":"Kinnerasani Dam","river":"Kinnerasani","basin":"Godavari","subbasin":"Kinnerasani","district":"Bhadradri Kothagudem","lat":17.775,"lon":80.559,"coordApprox":true,"frl_m":124.05,"gross_tmc":8.4,"live_tmc":null,"type":"Dam","irrigation":"gravity","year":null,"notes":"Storage reservoir inside the Kinnerasani Wildlife Sanctuary; coordinates are the sanctuary centroid, not the dam site precisely.","source":"WebSearch aggregation","image":"https://upload.wikimedia.org/wikipedia/commons/1/10/View_from_a_dam_in_Kinnarsani_WS%2C_AP_W_IMG_5776.jpg","imageCredit":"J.M.Garg, CC BY-SA 4.0, via Wikimedia Commons","imageCreditUrl":"https://commons.wikimedia.org/wiki/File:View_from_a_dam_in_Kinnarsani_WS,_AP_W_IMG_5776.jpg"},
   {"id":"wyra","name":"Wyra Reservoir","river":"Wyra","basin":"Krishna","subbasin":"Wyra","district":"Khammam","lat":17.2,"lon":80.375,"coordApprox":true,"frl_m":null,"gross_tmc":2.47,"live_tmc":2.12,"type":"Reservoir","irrigation":"gravity","year":1930,"notes":"Also receives supplementary water from the Nagarjuna Sagar left canal.","source":"Wikipedia"},
   {"id":"palair","name":"Palair Lake","river":"Fed by Lal Bahadur (NSP left) canal","basin":"Krishna","subbasin":"NSP left canal system","district":"Khammam","lat":17.22,"lon":79.9,"coordApprox":false,"frl_m":null,"gross_tmc":2.5,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":null,"notes":"Balancing reservoir for the Nagarjuna Sagar left-bank canal; a major freshwater source for Khammam district.","source":"Wikipedia"},
   {"id":"pakhal","name":"Pakhal Lake","river":"Kakatiya-era tank","basin":"Krishna","subbasin":"Kakatiya tanks","district":"Warangal / Mulugu","lat":17.9528,"lon":80.0014,"coordApprox":false,"frl_m":252.92,"gross_tmc":3.23,"live_tmc":null,"type":"Lake","irrigation":"gravity","year":1213,"notes":"Built in 1213 CE by Kakatiya king Ganapati Deva; a 2021 lift scheme from the Godavari augmented storage by ~3 TMC.","source":"Wikipedia"},
@@ -1018,6 +1039,27 @@ const CHAINS = {
   ]
 }
 ;
+/* tier 1 = state capital, 2 = district HQ, 3 = smaller reference town. Coordinates via Wikipedia infobox lookups. */
+const CITIES = [
+  {"id":"hyderabad","name":"Hyderabad","lat":17.3617,"lon":78.4747,"tier":1},
+  {"id":"nizamabad","name":"Nizamabad","lat":18.672,"lon":78.094,"tier":2},
+  {"id":"karimnagar","name":"Karimnagar","lat":18.4386,"lon":79.1288,"tier":2},
+  {"id":"warangal","name":"Warangal","lat":17.9689,"lon":79.5941,"tier":2},
+  {"id":"khammam","name":"Khammam","lat":17.2473,"lon":80.1514,"tier":2},
+  {"id":"nalgonda","name":"Nalgonda","lat":17.0575,"lon":79.2684,"tier":2},
+  {"id":"mahbubnagar","name":"Mahbubnagar","lat":16.7488,"lon":78.0035,"tier":2},
+  {"id":"adilabad","name":"Adilabad","lat":19.67,"lon":78.53,"tier":2},
+  {"id":"siddipet","name":"Siddipet","lat":18.1019,"lon":78.8519,"tier":2},
+  {"id":"sangareddy","name":"Sangareddy","lat":17.6119,"lon":78.0819,"tier":3},
+  {"id":"medak","name":"Medak","lat":18.046,"lon":78.263,"tier":3},
+  {"id":"kamareddy","name":"Kamareddy","lat":18.3205,"lon":78.337,"tier":3},
+  {"id":"ramayampet","name":"Ramayampet","lat":18.1166,"lon":78.4298,"tier":3},
+  {"id":"jagtial","name":"Jagtial","lat":18.7895,"lon":78.912,"tier":3},
+  {"id":"mancherial","name":"Mancherial","lat":18.8714,"lon":79.4443,"tier":3},
+  {"id":"suryapet","name":"Suryapet","lat":17.1415,"lon":79.6236,"tier":3},
+  {"id":"kothagudem","name":"Kothagudem","lat":17.55,"lon":80.63,"tier":3},
+  {"id":"bhadrachalam","name":"Bhadrachalam","lat":17.6669,"lon":80.8826,"tier":3}
+];
 
 /* ============ projection ============ */
 let B = { minLon: 1e9, maxLon: -1e9, minLat: 1e9, maxLat: -1e9 };
@@ -1109,6 +1151,28 @@ RIVERS.forEach(r => {
   const mid = r.path[Math.floor(r.path.length*0.62)];
   const [lx,ly] = project(mid);
   el('text', { class: 'river-label', x: lx+6, y: ly-4 }, riversLayer).textContent = r.name;
+});
+
+/* ============ cities (orientation reference points, not part of the water data) ============ */
+const citiesLayer = document.getElementById('citiesLayer');
+let citiesVisible = true;
+function renderCities() {
+  citiesLayer.innerHTML = '';
+  if (!citiesVisible) return;
+  CITIES.forEach(c => {
+    const [x, y] = project([c.lon, c.lat]);
+    const r = c.tier === 1 ? 5 : c.tier === 2 ? 3.4 : 2.4;
+    const g = el('g', { class: `city tier-${c.tier}`, transform: `translate(${x.toFixed(1)},${y.toFixed(1)})` }, citiesLayer);
+    el('circle', { r }, g);
+    el('text', { class: 'city-label', x: r + 4, y: 3 }, g).textContent = c.name;
+  });
+}
+renderCities();
+const citiesToggleBtn = document.getElementById('citiesToggle');
+citiesToggleBtn.addEventListener('click', () => {
+  citiesVisible = !citiesVisible;
+  citiesToggleBtn.setAttribute('aria-pressed', String(citiesVisible));
+  renderCities();
 });
 
 /* ============ inter-reservoir connections ============
@@ -1227,6 +1291,43 @@ function closeDrawer() {
   drawer.classList.remove('open');
   document.querySelectorAll('.marker.selected').forEach(m => m.classList.remove('selected'));
 }
+
+/* ---- Wikipedia lead-image lookup, cached in localStorage so repeat visits are instant ---- */
+const IMG_CACHE_KEY = 'wla_img_cache_v1';
+let imageCache = {};
+try { imageCache = JSON.parse(localStorage.getItem(IMG_CACHE_KEY) || '{}'); } catch (e) {}
+function saveImageCache() { try { localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(imageCache)); } catch (e) {} }
+
+async function wikiOpensearchTitle(query) {
+  const osRes = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=1&namespace=0&format=json&origin=*`);
+  const os = await osRes.json();
+  return (os && os[1] && os[1][0]) || null;
+}
+async function fetchReservoirImage(r) {
+  if (r.image) return { src: r.image, pageUrl: r.imageCreditUrl, credit: r.imageCredit };
+  if (Object.prototype.hasOwnProperty.call(imageCache, r.id)) return imageCache[r.id];
+  const query = r.wiki || r.name;
+  try {
+    let title = await wikiOpensearchTitle(query);
+    if (!title) {
+      // many entries carry a parenthetical alt-name the dam isn't actually titled under on Wikipedia
+      const stripped = query.replace(/\s*\([^)]*\)\s*$/, '').trim();
+      if (stripped !== query) title = await wikiOpensearchTitle(stripped);
+    }
+    if (!title) { imageCache[r.id] = null; saveImageCache(); return null; }
+    const sumRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+    const sum = await sumRes.json();
+    const src = (sum.originalimage && sum.originalimage.source) || (sum.thumbnail && sum.thumbnail.source) || null;
+    const result = src ? { src, pageUrl: sum.content_urls && sum.content_urls.desktop && sum.content_urls.desktop.page } : null;
+    imageCache[r.id] = result;
+    saveImageCache();
+    return result;
+  } catch (e) {
+    return null; // network hiccup: don't cache, so it's retried on next open
+  }
+}
+
+let drawerReqToken = 0;
 function openDrawer(r) {
   document.querySelectorAll('.marker.selected').forEach(m => m.classList.remove('selected'));
   const mEl = markerEls[r.id]; if (mEl) mEl.g.classList.add('selected');
@@ -1237,6 +1338,7 @@ function openDrawer(r) {
   if (r.coordApprox) badges.push('approximate location');
   if (r.source && r.source.toLowerCase().includes('interp')) badges.push('interpolated elevation');
   drawerContent.innerHTML = `
+    <div class="d-image loading" id="dImage"></div>
     <p class="d-eyebrow">${r.type} &middot; ${r.district}</p>
     <h2>${r.name}</h2>
     <p class="d-sub">${r.river} &middot; ${r.basin} basin${r.year ? ' &middot; built ' + r.year : ''}</p>
@@ -1256,6 +1358,29 @@ function openDrawer(r) {
     <p class="d-src">Source: ${r.source}</p>
   `;
   drawer.classList.add('open');
+
+  const token = ++drawerReqToken;
+  const imgSlot = document.getElementById('dImage');
+  fetchReservoirImage(r).then(img => {
+    if (token !== drawerReqToken || !imgSlot.isConnected) return;
+    if (!img) { imgSlot.remove(); return; }
+    imgSlot.classList.remove('loading');
+    const el = document.createElement('img');
+    el.src = img.src;
+    el.alt = r.name;
+    el.loading = 'lazy';
+    el.addEventListener('error', () => imgSlot.remove());
+    imgSlot.appendChild(el);
+    if (img.pageUrl) {
+      const credit = document.createElement('a');
+      credit.className = 'd-image-credit';
+      credit.href = img.pageUrl;
+      credit.target = '_blank';
+      credit.rel = 'noopener';
+      credit.textContent = img.credit || 'Photo via Wikipedia';
+      imgSlot.appendChild(credit);
+    }
+  });
 }
 
 /* ============ interactions: hover / click ============ */
